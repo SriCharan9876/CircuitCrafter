@@ -7,6 +7,11 @@ import cors from "cors";
 import session from 'express-session';
 import BaseModel from './models/baseModel.js';
 import auth from './auth.js';
+
+import categoryRouter from './routes/category.js';
+// import userRouter from "./routes/user.js";
+// import modelRouter from"./routes/baseModel.js";
+
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -127,28 +132,7 @@ app.get("/api/auth/me",(req,res)=>{
 });//Auth User
 
 //Categories routes............................................................
-app.get("/api/categories",async (req,res)=>{ 
-    const allCategories=await Category.find({});
-    res.json({allCategories:allCategories});
-});
-
-app.post("/api/categories",async (req,res)=>{
-
-    //const categoryData=req.body.categoryData;
-
-    const categoryData={
-        name:"amplifier",
-        label:"Amplifiers",
-        description:"Amplify signal"
-    }
-
-    const newCategory=new Category(categoryData);
-    await newCategory.save();
-    console.log("New category created");
-    console.log(newCategory);
-
-    res.send("Created a new category");
-});//Admin
+app.use("/api/categories",categoryRouter);
 
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 
