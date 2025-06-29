@@ -1,20 +1,21 @@
 import dotenv from 'dotenv';
+//if(process.env.NODE_ENV!='production'){
+    dotenv.config();
+//}
+
 import Category from "./models/category.js";
 import User from "./models/user.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcryptjs";
 import cors from "cors";
 import session from 'express-session';
 import BaseModel from './models/baseModel.js';
 import auth from './auth.js';
 
 import categoryRouter from './routes/category.js';
+import baseModelRouter from './routes/baseModel.js';
+import authenticationRouter from './routes/auth.js'
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
 
-//if(process.env.NODE_ENV!='production'){
-    dotenv.config();
-//}
 
 import express from 'express';
 const app=express();
@@ -35,7 +36,7 @@ const sessionOptions={
 };
 const allowedOrigins=[
     "http://localhost:5173",
-    "http://localhost:5174"
+    "http://localhost:5174",
 ]
 app.use(cors({
     origin:(origin,callback)=>{
@@ -60,22 +61,7 @@ app.listen(port,()=>{
 });
 
 //Authentication routes............................................................
-app.post("/api/auth/signup",async(req,res)=>{
-    try {
-    const { name,email,role,password } = req.body;
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "Email already in use" });
-    }
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const new_user = new User({ name, email, password: hashedPassword,role });
-    await new_user.save();
-    res.status(201).json({ message: "User created" }); 
-  } catch (error) {
-    console.error("Signup Error:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-});
+app.use("/api/auth",authenticationRouter);//for signup, login,.. authenticationrelated routes
 
 app.get("/demoSignup",async(req,res)=>{
     try{
@@ -93,99 +79,13 @@ app.get("/demoSignup",async(req,res)=>{
     }catch(err){
         console.log("error occured")
     }
-    
 })
 
-app.post("/api/auth/login", async (req, res) => {
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
-    }
-
-    const user = await User.findOne({ email:email });
-    if (!user) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-        return res.status(401).json({ message: 'Invalid credentials' });
-    }
-
-    const token = jwt.sign(
-        {
-            userId: user._id,
-            name: user.name,
-            email: user.email
-        },
-        JWT_SECRET,
-        { expiresIn: '1h' }
-    );
-
-    res.status(200).json({ token });
-});
-
-
-app.get("/api/auth/me",(req,res)=>{
-    res.send("Get current user profile");
-});//Auth User
-
-//Categories routes............................................................
+//Handling backend routes............................................................
 app.use("/api/categories",categoryRouter);
-
+app.use("/api/models",baseModelRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
-
-//CircuitModels routes...............................................................
-app.get("/api/models",async(req,res)=>{
-    try{
-        const allModels=await BaseModel.find({}).populate("createdBy");
-        return res.json({message:"Success",allModels:allModels});
-    }catch(err){
-        console.log(err);
-        return res.json({message:"Error"});
-    }
-});
-app.get("/api/models/:id",async(req,res)=>{
-    try{
-        const {id}=req.params;
-        const pmodel=await BaseModel.findById(id);
-        return res.json({found:true,pmodel:pmodel});
-    }catch(err){
-        console.log(err);
-        return res.json({found:false});
-    }
-})
-
-app.post("/api/models",auth,async(req,res)=>{
-    try{
-        const formData=req.body;
-        const newmod={
-            ... formData,
-            createdBy:req.user.userId
-        }
-        console.log(newmod)
-        const new_model=new BaseModel(newmod);
-        await new_model.save();
-        return res.json({added:true,message:"Successfully added"});
-    }catch(err){
-        console.log(err);
-        return res.json({added:false,message:"failed to add"});
-    }
-})
-
-
-app.get("/api/models/pending",(req,res)=>{
-    res.send("List all pending models");
-});//Admin	
-
-app.put("/api/models/:id/approve",(req,res)=>{
-    res.send("Approve a user-submitted model");
-});//Admin	
-
-app.delete("/api/models/:id",(req,res)=>{
-    res.send("Delete model");
-});//Admin	
+	
 
 //Circuit generation routes (for client usage of models)
 app.post("/api/generate",(req,res)=>{
@@ -196,10 +96,6 @@ app.get("/api/download",(req,res)=>{
     res.send("Download generated circuit file");
 });//Auth User
 
-//User specified routes
-app.get("/api/my-models",(req,res)=>{
-    res.send("Get models created by user");
-});//Auth User
 
 // app.use((req, res, next) => {
 //   next(new ExpressError(404, "Page not found!"));
