@@ -125,22 +125,28 @@ app.get("/api/auth/me",(req,res)=>{
 });//Auth User
 
 //Categories routes............................................................
-app.get("/api/categories",async (req,res)=>{
-    const demoCategory={
+app.get("/api/categories",async (req,res)=>{ 
+    allCategories=await Categories.find({});
+    res.json({allCategories:allCategories});
+    console.log("Fetch all available circuit categories");
+});
+
+app.post("/api/categories",async (req,res)=>{
+
+    //const categoryData=req.body.categoryData;
+
+    const categoryData={
         name:"amplifier",
         label:"Amplifiers",
         description:"Amplify signal"
     }
 
-    const newCategory=new Category(demoCategory);
+    const newCategory=new Category(categoryData);
     await newCategory.save();
+    console.log("New category created");
     console.log(newCategory);
-    res.send("Fetch all available circuit categories");
-});
 
-app.post("/api/categories",(req,res)=>{
-
-    res.send("Create a new category");
+    res.send("Created a new category");
 });//Admin
 
 //  "/api/models?category=xyz"	route for fetching models under a specific category

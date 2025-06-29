@@ -4,6 +4,8 @@ import SignUp from "./Pages/signUp";
 import Login from "./Pages/login";
 import Explore from "./Pages/explore";
 import AddModel from "./Pages/addModel";
+import Categories from "./Pages/categories"
+
 function App() {
   return (
     <BrowserRouter>
@@ -12,6 +14,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/explore" element={<Explore />} />
         <Route path="/explore/addModel" element={<AddModel />} />
+        <Route path="/categories" element={<Categories />} />
       </Routes>
     </BrowserRouter>
   );
