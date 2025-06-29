@@ -6,6 +6,7 @@ import bcrypt from "bcryptjs";
 import cors from "cors";
 import session from 'express-session';
 import BaseModel from './models/baseModel.js';
+import auth from './auth.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -160,8 +161,24 @@ app.get("/getModels",async(req,res)=>{
         console.log(err);
         return res.json({message:"Error"});
     }
-    res.send("Fetch all approved circuit models");
 });
+
+app.post("/addModel",auth,async(req,res)=>{
+    try{
+        const formData=req.body;
+        const newmod={
+            ... formData,
+            createdBy:req.user.userId
+        }
+        console.log(newmod)
+        const new_model=new BaseModel(newmod);
+        await new_model.save();
+        return res.json({added:true,message:"Successfully added"});
+    }catch(err){
+        console.log(err);
+        return res.json({added:false,message:"failed to add"});
+    }
+})
 
 app.get("/api/models/:id",(req,res)=>{
     res.send("Get a specific model by ID");

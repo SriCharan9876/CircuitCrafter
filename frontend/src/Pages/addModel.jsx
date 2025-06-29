@@ -4,27 +4,25 @@ import axios from "axios";
 const AddModel = () => {
     const [formData, setFormData] = useState({
         modelName: "",
-        typeId: "",
         typeName: "",
         description: "",
         fileUrl: "",
-        createdBy: "", // should be filled using logged-in user id
     });
-
+    const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
-    const [categories, setCategories] = useState([]);
+    const [categories, setCategories] = useState([{_id:1,name:"amplifiers"}]);
 
     // Load categories from backend to populate dropdown (optional)
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/categories");
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
                 setCategories(res.data); // assuming data is array of { _id, name }
             } catch (error) {
                 console.error("Error fetching categories", error);
             }
         };
-        fetchCategories();
+        // fetchCategories();
     }, []);
 
     const handleChange = (e) => {
@@ -36,18 +34,21 @@ const AddModel = () => {
         e.preventDefault();
 
         try {
-            const res = await axios.post("http://localhost:5000/addModel", formData, {
+            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addModel`, formData, {
                 withCredentials: true,
+                headers:{Authorization:`Bearer ${token}`}
             });
-            setMessage("Model added successfully!");
+            if(res.data.added){
+                setMessage("Model added successfully!");
+            }else{
+                setMessage("Model failed to add!");
+            }
             console.log(res.data);
             setFormData({
                 modelName: "",
-                typeId: "",
                 typeName: "",
                 description: "",
                 fileUrl: "",
-                createdBy: "",
             });
         } catch (error) {
             setMessage("Failed to add model.");
@@ -74,33 +75,20 @@ const AddModel = () => {
                 <div>
                     <label>Type (Category):</label><br />
                     <select
-                        name="typeId"
-                        value={formData.typeId}
+                        name="typeName"
+                        value={formData.typeName}
                         onChange={handleChange}
                         required
                         style={{ width: "100%", padding: "8px" }}
                     >
                         <option value="">Select Type</option>
                         {categories.map((cat) => (
-                            <option key={cat._id} value={cat._id}>
+                            <option key={cat._id} value={cat.name}>
                                 {cat.name}
                             </option>
                         ))}
                     </select>
                 </div>
-
-                <div>
-                    <label>Type Name:</label><br />
-                    <input
-                        type="text"
-                        name="typeName"
-                        value={formData.typeName}
-                        onChange={handleChange}
-                        required
-                        style={{ width: "100%", padding: "8px" }}
-                    />
-                </div>
-
                 <div>
                     <label>Description:</label><br />
                     <textarea
@@ -123,19 +111,6 @@ const AddModel = () => {
                         style={{ width: "100%", padding: "8px" }}
                     />
                 </div>
-
-                <div>
-                    <label>Created By (User ID):</label><br />
-                    <input
-                        type="text"
-                        name="createdBy"
-                        value={formData.createdBy}
-                        onChange={handleChange}
-                        required
-                        style={{ width: "100%", padding: "8px" }}
-                    />
-                </div>
-
                 <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }}>
                     Submit
                 </button>

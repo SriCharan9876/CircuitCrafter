@@ -7,11 +7,6 @@ const baseModelSchema=new Schema({
         type:String,
         required:true,
     },
-    typeId: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category',
-        required: true
-    },
     typeName: {
         type: String,
         required: true
