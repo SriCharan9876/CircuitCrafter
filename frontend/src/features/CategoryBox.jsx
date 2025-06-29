@@ -1,4 +1,5 @@
 import React from "react";
+import "./CategoryBox.css";
 
 const CategoryBox=({category})=>{
     return(

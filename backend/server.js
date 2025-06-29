@@ -28,7 +28,8 @@ const sessionOptions={
     },
 };
 const allowedOrigins=[
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "http://localhost:5174"
 ]
 app.use(cors({
     origin:(origin,callback)=>{
@@ -126,9 +127,8 @@ app.get("/api/auth/me",(req,res)=>{
 
 //Categories routes............................................................
 app.get("/api/categories",async (req,res)=>{ 
-    allCategories=await Categories.find({});
+    const allCategories=await Category.find({});
     res.json({allCategories:allCategories});
-    console.log("Fetch all available circuit categories");
 });
 
 app.post("/api/categories",async (req,res)=>{
