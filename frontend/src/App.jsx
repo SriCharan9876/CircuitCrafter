@@ -5,7 +5,7 @@ import Login from "./Pages/login";
 import Explore from "./Pages/explore";
 import AddModel from "./Pages/addModel";
 import Categories from "./Pages/categories"
-
+import EachModel from "./Pages/modelEach";
 function App() {
   return (
     <BrowserRouter>
@@ -15,6 +15,8 @@ function App() {
         <Route path="/explore" element={<Explore />} />
         <Route path="/explore/addModel" element={<AddModel />} />
         <Route path="/categories" element={<Categories />} />
+        <Route path="/explore/:model" element={<EachModel />} />
+
       </Routes>
     </BrowserRouter>
   );

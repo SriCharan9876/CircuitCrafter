@@ -139,7 +139,8 @@ app.use("/api/categories",categoryRouter);
 //CircuitModels routes...............................................................
 app.get("/getModels",async(req,res)=>{
     try{
-        const allModels=await BaseModel.find({});
+        const allModels=await BaseModel.find({}).populate("createdBy");
+        console.log(allModels);
         return res.json({message:"Success",allModels:allModels});
     }catch(err){
         console.log(err);
