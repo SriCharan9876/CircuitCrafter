@@ -8,7 +8,7 @@ const Explore = () => {
     const navigate=useNavigate();
     const getModels = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/getModels`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models`, {
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -27,8 +27,8 @@ const Explore = () => {
     useEffect(() => {
         getModels();
     }, []);
-    const handleNavigate=(model)=>{
-        navigate(`/explore/models/${model}`);
+    const handleNavigate=(modelId)=>{
+        navigate(`/models/${modelId}`);
     }
 
     return (

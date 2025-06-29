@@ -3,12 +3,12 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 const EachModel=()=>{
-    const {model}= useParams();
+    const {id}= useParams();
     const [pmodel,setmodel]=useState();
     const [got,setgot]=useState(false);
     const token=localStorage.getItem("token");
     const getThisModel=async()=>{
-        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model}`,{
+        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`,{
             withCredentials:true,
             headers:{Authorization:`Bearer ${token}`}
         })

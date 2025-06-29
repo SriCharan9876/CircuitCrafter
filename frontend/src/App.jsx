@@ -12,10 +12,10 @@ function App() {
       <Routes>
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/explore" element={<Explore />} />
-        <Route path="/explore/addModel" element={<AddModel />} />
+        <Route path="/models" element={<Explore />} />
+        <Route path="/models/create" element={<AddModel />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/explore/models/:model" element={<EachModel />} />
+        <Route path="/models/:id" element={<EachModel />} />
 
       </Routes>
     </BrowserRouter>

@@ -137,20 +137,19 @@ app.use("/api/categories",categoryRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 
 //CircuitModels routes...............................................................
-app.get("/api/getModels",async(req,res)=>{
+app.get("/api/models",async(req,res)=>{
     try{
         const allModels=await BaseModel.find({}).populate("createdBy");
-        console.log(allModels);
         return res.json({message:"Success",allModels:allModels});
     }catch(err){
         console.log(err);
         return res.json({message:"Error"});
     }
 });
-app.get("/api/models/:model",async(req,res)=>{
+app.get("/api/models/:id",async(req,res)=>{
     try{
-        const {model}=req.params;
-        const pmodel=await BaseModel.findById(model);
+        const {id}=req.params;
+        const pmodel=await BaseModel.findById(id);
         return res.json({found:true,pmodel:pmodel});
     }catch(err){
         console.log(err);
