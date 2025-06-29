@@ -5,7 +5,38 @@ import dotenv from 'dotenv';
 //}
 
 import express from 'express';
+import User from './models/user.js';
 const app=express();
+app.use(express.json());
+app.use(express.urlencoded({extended:true}));
+// app.set("trust proxy", 1);
+const sessionOptions={
+    secret:process.env.SECRET,
+    resave:false,
+    saveUninitialized:false,
+    cookie:{
+        httpOnly:true,
+        sameSite:"none",
+        secure:true,
+        domain:"localhost:5000",
+        maxAge:7 * 24 * 60 * 60 * 1000,
+    },
+};
+const allowedOrigins=[
+    "http://localhost:5173"
+]
+app.use(cors({
+    origin:(origin,callback)=>{
+        console.log("CORS request from:", origin);
+        if (!origin || allowedOrigins.includes(origin)) {
+          callback(null, true);
+        } else {
+          callback(new Error("Not allowed by CORS"));
+        }
+    },
+    credentials:true
+}))
+app.use(session(sessionOptions));
 const port=5000;
 import connectDB from './config/db.js';
 connectDB();
@@ -24,6 +55,25 @@ app.get("/",(req,res)=>{
 app.post("/api/auth/signup",(req,res)=>{
     res.send("User registration");
 });
+
+app.get("/demoSignup",async(req,res)=>{
+    try{
+        const details={
+            name:"admin",
+            email:"admin@xyz.com",
+            password:"xyz",
+            role:"admin",
+        }
+        const new_user=new User(details);
+        await new_user.save();
+        console.log("user created")
+        res.send("user created")
+        // alert("user created");
+    }catch(err){
+        console.log("error occured")
+    }
+    
+})
 
 app.post("/api/auth/login",(req,res)=>{
     res.send("User login");
