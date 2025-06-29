@@ -1,9 +1,9 @@
-const mongoose=require("mongoose");
+import mongoose from "mongoose";
 const Schema= mongoose.Schema;
 
 //Schema for baseModels
 const baseModelSchema=new Schema({
-    name:{
+    modelName:{
         type:String,
         required:true,
     },
@@ -37,4 +37,4 @@ const baseModelSchema=new Schema({
 });
 
 const BaseModel=mongoose.model("BaseModel",baseModelSchema);
-module.exports=BaseModel;
+export default BaseModel;

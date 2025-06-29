@@ -7,22 +7,22 @@ const Login = () => {
     const [message, setMessage] = useState("");
 
     const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            const loginData={
-                email:email,
-                password:password
-            }
-            const response = await axios.post("http://localhost:5000/api/auth/login", {
-                loginData
-            },{withCredentials:true});
-            setMessage("Login successful!");
-            console.log(response.data); // handle response as needed (e.g., store token)
-        } catch (error) {
-            setMessage("Login failed. Please check your credentials.");
-            console.error(error);
-        }
-    };
+    e.preventDefault();
+    try {
+        const response = await axios.post("http://localhost:5000/api/auth/login", {
+            email,
+            password
+        }, { withCredentials: true });
+
+        localStorage.setItem("token", response.data.token);
+        setMessage("Login successful!");
+        console.log(response.data);
+    } catch (error) {
+        setMessage("Login failed. Please check your credentials.");
+        console.error(error);
+    }
+};
+
 
     return (
         <div style={{ maxWidth: "400px", margin: "auto", marginTop: "50px" }}>

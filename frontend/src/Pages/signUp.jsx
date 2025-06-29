@@ -22,7 +22,9 @@ const SignUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/api/auth/signup", formData);
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, {name:formData.name,email:formData.email,role:formData.role,password:formData.password},{
+                withCredentials:true
+            });
             setMessage("Signup successful!");
             console.log(response.data);
             // Optionally redirect or reset form

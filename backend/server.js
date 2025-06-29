@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
-import Category from "./models/Category.js";
-import User from "./models/User.js";
+import Category from "./models/category.js";
+import User from "./models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
-
+import cors from "cors";
+import session from 'express-session';
+import BaseModel from './models/baseModel.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -51,8 +53,21 @@ app.listen(port,()=>{
 });
 
 //Authentication routes............................................................
-app.post("/api/auth/signup",(req,res)=>{
-    res.send("User registration");
+app.post("/api/auth/signup",async(req,res)=>{
+    try {
+    const { name,email,role,password } = req.body;
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({ message: "Email already in use" });
+    }
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const new_user = new User({ name, email, password: hashedPassword,role });
+    await new_user.save();
+    res.status(201).json({ message: "User created" }); 
+  } catch (error) {
+    console.error("Signup Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
 });
 
 app.get("/demoSignup",async(req,res)=>{
@@ -74,31 +89,36 @@ app.get("/demoSignup",async(req,res)=>{
     
 })
 
-app.post("/api/auth/login",async (req,res)=>{
-    const loginData=req.body.loginData;
+app.post("/api/auth/login", async (req, res) => {
+    const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: 'Email and password are required' });
+        return res.status(400).json({ message: 'Email and password are required' });
     }
 
-    const user = await User.findOne({ email });
-    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+    const user = await User.findOne({ email:email });
+    if (!user) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+    if (!isMatch) {
+        return res.status(401).json({ message: 'Invalid credentials' });
+    }
 
     const token = jwt.sign(
-        { 
+        {
             userId: user._id,
-            username:user.username,
-            email:user.email
+            name: user.name,
+            email: user.email
         },
         JWT_SECRET,
-        { expiresIn: '1h' });
+        { expiresIn: '1h' }
+    );
 
     res.status(200).json({ token });
-
 });
+
 
 app.get("/api/auth/me",(req,res)=>{
     res.send("Get current user profile");
@@ -126,7 +146,14 @@ app.post("/api/categories",(req,res)=>{
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 
 //CircuitModels routes...............................................................
-app.get("/api/models",(req,res)=>{
+app.get("/getModels",async(req,res)=>{
+    try{
+        const allModels=await BaseModel.find({});
+        return res.json({message:"Success",allModels:allModels});
+    }catch(err){
+        console.log(err);
+        return res.json({message:"Error"});
+    }
     res.send("Fetch all approved circuit models");
 });
 
@@ -164,14 +191,15 @@ app.get("/api/my-models",(req,res)=>{
     res.send("Get models created by user");
 });//Auth User
 
-app.use((req, res, next) => {
-  next(new ExpressError(404, "Page not found!"));
-});
+// app.use((req, res, next) => {
+//   next(new ExpressError(404, "Page not found!"));
+// });
 
-app.use((err,req,res,next)=>{
-    let {statusCode=500,message="Some error occured"}=err;
-    res.status(statusCode).render("error.ejs",{message});
-});
+// app.use((err,req,res,next)=>{
+//     let {statusCode=500,message="Some error occured"}=err;
+//     res.status(401).json({message:"error occured"});
+//     // res.status(statusCode).render("error.ejs",{message});
+// });
 
 //Root directory................................................................
 app.get("/",(req,res)=>{
