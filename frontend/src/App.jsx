@@ -15,7 +15,7 @@ function App() {
         <Route path="/explore" element={<Explore />} />
         <Route path="/explore/addModel" element={<AddModel />} />
         <Route path="/categories" element={<Categories />} />
-        <Route path="/explore/:model" element={<EachModel />} />
+        <Route path="/explore/models/:model" element={<EachModel />} />
 
       </Routes>
     </BrowserRouter>

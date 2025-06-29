@@ -34,7 +34,7 @@ const AddModel = () => {
         e.preventDefault();
 
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/addModel`, formData, {
+            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, formData, {
                 withCredentials: true,
                 headers:{Authorization:`Bearer ${token}`}
             });

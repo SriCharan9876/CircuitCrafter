@@ -137,7 +137,7 @@ app.use("/api/categories",categoryRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 
 //CircuitModels routes...............................................................
-app.get("/getModels",async(req,res)=>{
+app.get("/api/getModels",async(req,res)=>{
     try{
         const allModels=await BaseModel.find({}).populate("createdBy");
         console.log(allModels);
@@ -147,8 +147,18 @@ app.get("/getModels",async(req,res)=>{
         return res.json({message:"Error"});
     }
 });
+app.get("/api/models/:model",async(req,res)=>{
+    try{
+        const {model}=req.params;
+        const pmodel=await BaseModel.findById(model);
+        return res.json({found:true,pmodel:pmodel});
+    }catch(err){
+        console.log(err);
+        return res.json({found:false});
+    }
+})
 
-app.post("/addModel",auth,async(req,res)=>{
+app.post("/api/models",auth,async(req,res)=>{
     try{
         const formData=req.body;
         const newmod={
@@ -165,13 +175,6 @@ app.post("/addModel",auth,async(req,res)=>{
     }
 })
 
-app.get("/api/models/:id",(req,res)=>{
-    res.send("Get a specific model by ID");
-});
-
-app.post("/api/models",(req,res)=>{
-    res.send("User submits new model (defaults approved: false)");
-});//Auth User	
 
 app.get("/api/models/pending",(req,res)=>{
     res.send("List all pending models");

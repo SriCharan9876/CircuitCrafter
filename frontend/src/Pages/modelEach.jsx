@@ -8,11 +8,11 @@ const EachModel=()=>{
     const [got,setgot]=useState(false);
     const token=localStorage.getItem("token");
     const getThisModel=async()=>{
-        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/${model}`,{
+        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model}`,{
             withCredentials:true,
             headers:{Authorization:`Bearer ${token}`}
         })
-        if(res.data.got){
+        if(res.data.found){
             setmodel(res.data.pmodel);
             setgot(true);
         }
@@ -22,28 +22,28 @@ const EachModel=()=>{
     },[]);
     return(
         <div style={{ padding: "20px" }}>
-            <h1>All Models</h1>
+            <h1>Model</h1>
             {!got ? (
                 <p>No models found.</p>
             ) : (
                 // allModels.map((model) => (
                     <div
-                        key={model._id}
+                        key={pmodel._id}
                         style={{
                             width: "98%",
-                            border: "1px solid #ccc",
+                            // border: "1px solid #ccc",
                             borderRadius: "8px",
                             padding: "10px",
                             marginBottom: "20px"
                         }}
                     >
-                        <h2>{model.modelName}</h2>
-                        <p><strong>Type:</strong> {model.typeName}</p>
-                        <p><strong>Description:</strong> {model.description || "N/A"}</p>
-                        <p><strong>File URL:</strong> <a href={model.fileUrl} target="_blank" rel="noreferrer">{model.fileUrl}</a></p>
-                        <p><strong>Created By:</strong> {model.createdBy.name}</p>
-                        <p><strong>Approved:</strong> {model.approved ? "Yes" : "No"}</p>
-                        <p><strong>Created At:</strong> {new Date(model.createdAt).toLocaleString()}</p>
+                        <h2>{pmodel.modelName}</h2>
+                        <p><strong>Type:</strong> {pmodel.typeName}</p>
+                        <p><strong>Description:</strong> {pmodel.description || "N/A"}</p>
+                        <p><strong>File URL:</strong> <a href={pmodel.fileUrl} target="_blank" rel="noreferrer">{pmodel.fileUrl}</a></p>
+                        <p><strong>Created By:</strong> {pmodel.createdBy.name}</p>
+                        <p><strong>Approved:</strong> {pmodel.approved ? "Yes" : "No"}</p>
+                        <p><strong>Created At:</strong> {new Date(pmodel.createdAt).toLocaleString()}</p>
                     </div>
                 // ))
             )}
