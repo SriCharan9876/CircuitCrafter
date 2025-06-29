@@ -1,11 +1,14 @@
 import dotenv from 'dotenv';
+import Category from "./models/Category.js";
+import User from "./models/User.js";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcryptjs";
 
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
 
 import express from 'express';
-import User from './models/user.js';
 const app=express();
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
@@ -38,17 +41,13 @@ app.use(cors({
 }))
 app.use(session(sessionOptions));
 const port=5000;
+const JWT_SECRET=process.env.JWT_SECRET;
 import connectDB from './config/db.js';
 connectDB();
 
 
 app.listen(port,()=>{
     console.log("Server started at port ",port)
-});
-
-//Root directory................................................................
-app.get("/",(req,res)=>{
-    res.send("Root directory");
 });
 
 //Authentication routes............................................................
@@ -75,8 +74,30 @@ app.get("/demoSignup",async(req,res)=>{
     
 })
 
-app.post("/api/auth/login",(req,res)=>{
-    res.send("User login");
+app.post("/api/auth/login",async (req,res)=>{
+    const loginData=req.body.loginData;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email and password are required' });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) return res.status(401).json({ message: 'Invalid credentials' });
+
+    const token = jwt.sign(
+        { 
+            userId: user._id,
+            username:user.username,
+            email:user.email
+        },
+        JWT_SECRET,
+        { expiresIn: '1h' });
+
+    res.status(200).json({ token });
+
 });
 
 app.get("/api/auth/me",(req,res)=>{
@@ -84,11 +105,21 @@ app.get("/api/auth/me",(req,res)=>{
 });//Auth User
 
 //Categories routes............................................................
-app.get("/api/categories",(req,res)=>{
+app.get("/api/categories",async (req,res)=>{
+    const demoCategory={
+        name:"amplifier",
+        label:"Amplifiers",
+        description:"Amplify signal"
+    }
+
+    const newCategory=new Category(demoCategory);
+    await newCategory.save();
+    console.log(newCategory);
     res.send("Fetch all available circuit categories");
 });
 
 app.post("/api/categories",(req,res)=>{
+
     res.send("Create a new category");
 });//Admin
 
@@ -132,3 +163,17 @@ app.get("/api/download",(req,res)=>{
 app.get("/api/my-models",(req,res)=>{
     res.send("Get models created by user");
 });//Auth User
+
+app.use((req, res, next) => {
+  next(new ExpressError(404, "Page not found!"));
+});
+
+app.use((err,req,res,next)=>{
+    let {statusCode=500,message="Some error occured"}=err;
+    res.status(statusCode).render("error.ejs",{message});
+});
+
+//Root directory................................................................
+app.get("/",(req,res)=>{
+    res.send("Root directory");
+});
