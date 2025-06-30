@@ -11,13 +11,15 @@ export const index=async(req,res)=>{
 }//To show all listings
 
 export const createModel=async(req,res)=>{
+    console.log(req.user);
     try{
         const formData=req.body;
         const newmod={
             ... formData,
             createdBy:req.user.userId
         }
-        console.log(newmod)
+        console.log("New model added successfully:");
+        console.log(newmod);
         const new_model=new BaseModel(newmod);
         await new_model.save();
         return res.json({added:true,message:"Successfully added"});

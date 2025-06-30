@@ -1,24 +1,34 @@
 import Category from "../models/category.js"
 
-export const index=async (req,res)=>{ 
-    const allCategories=await Category.find({});
-    res.json({allCategories:allCategories});
-}
+export const index=async (req,res)=>{
+    try{
+        const allCategories=await Category.find({});
+        return res.json({allCategories:allCategories});
+    }catch(err){
+        console.log(err);
+        return res.json({message:"Error"});
+    }
+    
+}//To show all categories
 
 export const createCategory=async (req,res)=>{
 
-    const categoryData=req.body.categoryData;
+    console.log(req.user);
+    try{
+        const categoryData=req.body;
+        if(req.user.role!="admin"){
+            console.log("Only admin has access to create category.");
+            return res.json({added:false,message:"failed to add"});
+        }
+        const newCategory=new Category(categoryData);
+        await newCategory.save();
+        console.log("New category created");
+        console.log(newCategory);
 
-    // const categoryData={
-    //     name:"filter",
-    //     label:"Filters",
-    //     description:"Filter given signal"
-    // }
+        return res.json({added:true,message:"Successfully added"});
+    }catch(err){
+        console.log(err);
+        return res.json({added:false,message:"failed to add"});
+    }
 
-    const newCategory=new Category(categoryData);
-    await newCategory.save();
-    console.log("New category created");
-    console.log(newCategory);
-
-    res.send("Created a new category");
 }//Admin

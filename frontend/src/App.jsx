@@ -6,6 +6,8 @@ import Explore from "./Pages/explore";
 import AddModel from "./Pages/addModel";
 import Categories from "./Pages/categories"
 import EachModel from "./Pages/modelEach";
+import AddCategory from "./Pages/addCategory";
+
 function App() {
   return (
     <BrowserRouter>
@@ -14,9 +16,9 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/models" element={<Explore />} />
         <Route path="/models/create" element={<AddModel />} />
-        <Route path="/categories" element={<Categories />} />
         <Route path="/models/:id" element={<EachModel />} />
-
+        <Route path="/categories" element={<Categories />} />
+        <Route path="/categories/create" element={<AddCategory />} />
       </Routes>
     </BrowserRouter>
   );
