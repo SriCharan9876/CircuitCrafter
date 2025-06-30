@@ -30,7 +30,7 @@ export const createModel=async(req,res)=>{
 export const getModel=async(req,res)=>{
     try{
         const {id}=req.params;
-        const pmodel=await BaseModel.findById(id);
+        const pmodel=await BaseModel.findById(id).populate("createdBy");
         return res.json({found:true,pmodel:pmodel});
     }catch(err){
         console.log(err);
