@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Explore = () => {
     const token = localStorage.getItem("token");
     const [allModels, setAllModels] = useState([]);
-    const navigate=useNavigate();
+    const navigate = useNavigate();
+
+    //Get category query if exists
+    const location = useLocation(); // Get current URL info
+    const queryParams = new URLSearchParams(location.search); // return function to search in parsed query string (?key=value)
+    const selectedCategory = queryParams.get("category"); // Get value of 'category' param
+
+
     const getModels = async () => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models`, {
+                params:queryParams?{category:selectedCategory}:{},
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -35,10 +43,10 @@ const Explore = () => {
         <div style={{ padding: "20px" }}>
             <h1>All Models</h1>
             {allModels.length === 0 ? (
-                <p>No models found.</p>
+                <p>Loading models....</p>
             ) : (
                 allModels.map((model) => (
-                    <div
+                    <div className="modelBox"
                         key={model._id}
                         style={{
                             width: "98%",

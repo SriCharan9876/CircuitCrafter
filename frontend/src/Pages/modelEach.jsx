@@ -24,7 +24,7 @@ const EachModel=()=>{
         <div style={{ padding: "20px" }}>
             <h1>Model</h1>
             {!got ? (
-                <p>No models found.</p>
+                <p>Loading model.....</p>
             ) : (
                 // allModels.map((model) => (
                     <div

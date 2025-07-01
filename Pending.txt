@@ -1,1 +1,35 @@
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
+
+database:.............................
+storing, connecting images for categories, models, userprofilepic
+storing, connecting python, .asc files
+icons for categories
+
+backend:...............................
+auth:getmydata page,route (also his current downloaded file)
+models:delete model, show pending models for admin, show models created by current user, approve model by admin
+categories:on clicking on a category, redirect to /models but with query of category name
+
+view status line when user checks his own model
+model calculation, generation
+authentication, authorization error generation at all routes
+client side, server side validations
+full scale error handling
+alerts
+
+frontend:...............................
+navbar,footer,sidebar
+loader while loading pages,file generation,..
+react,css styling
+
+final changes...........................
+explore page
+show models/view a model after checking approved:true
+http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
+
+extentions...............................
+person to person messaging, community
+sort by recent, popular, most generated
+Likes, ratings, comments, views
+edit profile, models
+delete own account with asking to deleting his models, messages, ....

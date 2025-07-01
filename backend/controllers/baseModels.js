@@ -1,14 +1,16 @@
 import BaseModel from '../models/baseModel.js';
 
 export const index=async(req,res)=>{
+    const { category } = req.query;
+    const filter=category?{typeName:category}:{}  //find({approved:false})
     try{
-        const allModels=await BaseModel.find({}).populate("createdBy");
-        return res.json({message:"Success",allModels:allModels});
+        const allModels=await BaseModel.find(filter).populate("createdBy");
+        return res.json({message:"Success",allModels});
     }catch(err){
-        console.log(err);
-        return res.json({message:"Error"});
+        console.error("Error fetching models:", err);
+        res.status(500).json({ message: "Failed to fetch models" });
     }
-}//To show all listings
+}//To show all models
 
 export const createModel=async(req,res)=>{
     console.log(req.user);
