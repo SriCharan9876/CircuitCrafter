@@ -65,10 +65,10 @@ const EachModel=()=>{
                         <div className="fields">
                             {clicked && 
                                 <>  
-                                    {pmodel.requiredInputs &&
+                                    {pmodel.designParameters &&
                                         <div className="options" style={{display:"flex",flexDirection:"column",width:"15rem"}}>
                                             {
-                                                pmodel.requiredInputs.map((value,index)=>(<React.Fragment key={index}>
+                                                pmodel.designParameters.map((value,index)=>(<React.Fragment key={index}>
                                                     <label>{value}</label>
                                                     <input type="text" name={value} value={inputValues[value] || ""} onChange={handleInputValueChange} key={index}/></React.Fragment>
                                                 ))

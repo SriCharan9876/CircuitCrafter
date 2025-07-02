@@ -7,7 +7,7 @@ const AddModel = () => {
         typeName: "",
         description: "",
         fileUrl: "",
-        requiredInputs:[""],
+        designParameters:[""],
     });
     const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
@@ -51,7 +51,7 @@ const AddModel = () => {
                 typeName: "",
                 description: "",
                 fileUrl: "",
-                requiredInputs: [""],
+                designParameters: [""],
             });
         } catch (error) {
             setMessage("Failed to add model.");
@@ -61,15 +61,15 @@ const AddModel = () => {
     const addinput=()=>{
         setFormData(prev=>({
             ...prev,
-            requiredInputs:[...prev.requiredInputs,""]
+            designParameters:[...prev.designParameters,""]
         }))
     }
     const handleInputChange = (index, value) => {
-        const updatedInputs = [...formData.requiredInputs];
+        const updatedInputs = [...formData.designParameters];
         updatedInputs[index] = value;
         setFormData(prev => ({
             ...prev,
-            requiredInputs: updatedInputs
+            designParameters: updatedInputs
         }));
     };
 
@@ -130,7 +130,7 @@ const AddModel = () => {
                 </div>
                 <div className="inputs">
                     <label>Required Inputs:</label>
-                    {formData.requiredInputs && formData.requiredInputs.map((val, index) => (
+                    {formData.designParameters && formData.designParameters.map((val, index) => (
                         <input
                             key={index}
                             type="text"

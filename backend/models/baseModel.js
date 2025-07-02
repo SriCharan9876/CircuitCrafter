@@ -21,7 +21,26 @@ const baseModelSchema=new Schema({
         ref: 'User',
         required:true
     },
-    requiredInputs:{
+    designParameters:{
+        type:[
+            {
+                parameter:{type:String,required:true},
+                upperLimit:{type:Number,required:true},
+                lowerLimit:{type:Number,required:true}
+            }
+        ],
+        default:[]
+    },
+    calcParams:{
+        type:[
+            {
+                compName:{type:String,required:true},
+                comp:{type:String,required:true}
+            }
+        ],
+        default:[]
+    },
+    relations:{
         type:[String],
         required:true,
         default:[]
