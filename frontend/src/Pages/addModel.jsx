@@ -7,7 +7,20 @@ const AddModel = () => {
         typeName: "",
         description: "",
         fileUrl: "",
-        designParameters:[""],
+        designParameters: [
+            {
+            parameter: "",
+            upperLimit: 10,
+            lowerLimit: 0,
+            },
+        ],
+        calcParams: [
+            {
+            compName: "",
+            comp: "resistor",
+            },
+        ],
+        relations: [""],
     });
     const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
@@ -51,30 +64,80 @@ const AddModel = () => {
                 typeName: "",
                 description: "",
                 fileUrl: "",
-                designParameters: [""],
+                designParameters: [
+                    {
+                        parameter:"",
+                        upperLimit:10,
+                        lowerLimit:0
+                    }
+                ],
+                calcParams:[
+                    {
+                        compName:"",
+                        comp:"resistor"
+                    }
+                ],
+                relations:[""]
             });
         } catch (error) {
             setMessage("Failed to add model.");
             console.error(error);
         }
     };
-    const addinput=()=>{
-        setFormData(prev=>({
+    const addinput = () => {
+        setFormData((prev) => ({
             ...prev,
-            designParameters:[...prev.designParameters,""]
-        }))
-    }
-    const handleInputChange = (index, value) => {
-        const updatedInputs = [...formData.designParameters];
-        updatedInputs[index] = value;
-        setFormData(prev => ({
+            designParameters: [
+            ...prev.designParameters,
+            { parameter: "", upperLimit: 10, lowerLimit: 0 },
+            ],
+        }));
+    };
+
+    const addCalcParam = () => {
+        setFormData((prev) => ({
             ...prev,
-            designParameters: updatedInputs
+            calcParams: [...prev.calcParams, { compName: "", comp: "resistor" }],
+        }));
+    };
+
+        const addRelation = () => {
+        setFormData((prev) => ({
+            ...prev,
+            relations: [...prev.relations, ""],
+        }));
+    };
+
+
+    const handleDesignParamChange = (index, field, value) => {
+        const updatedParams = [...formData.designParameters];
+        updatedParams[index][field] = value;
+        setFormData((prev) => ({
+            ...prev,
+            designParameters: updatedParams,
+        }));
+    };
+
+    const handleCalcParamChange = (index, field, value) => {
+        const updated = [...formData.calcParams];
+        updated[index][field] = value;
+        setFormData((prev) => ({
+            ...prev,
+            calcParams: updated,
+        }));
+    };
+
+    const handleRelationChange = (index, value) => {
+        const updated = [...formData.relations];
+        updated[index] = value;
+        setFormData((prev) => ({
+            ...prev,
+            relations: updated,
         }));
     };
 
     return (
-        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "50px" }}>
+        <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }}>
             <h2>Add New Model</h2>
             <form onSubmit={handleSubmit}>
                 <div>
@@ -129,21 +192,87 @@ const AddModel = () => {
                     />
                 </div>
                 <div className="inputs">
-                    <label>Required Inputs:</label>
-                    {formData.designParameters && formData.designParameters.map((val, index) => (
-                        <input
-                            key={index}
-                            type="text"
-                            value={val}
-                            onChange={(e) => handleInputChange(index, e.target.value)}
-                            placeholder={`Input ${index + 1}`}
-                            style={{ marginBottom: "8px", width: "100%", padding: "8px" }}
-                        />
+                    <label>Design Parameters:</label>
+                    {formData.designParameters && formData.designParameters.map((param, index) => (
+                        <div key={index} style={{ marginBottom: "12px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px", maxWidth:"100%"}}>
+                            <input
+                                type="text"
+                                value={param.parameter}
+                                onChange={(e) => handleDesignParamChange(index, "parameter", e.target.value)}
+                                placeholder={`Parameter ${index + 1} name`}
+                                style={{ width: "30%", padding: "8px", marginLeft: "1%", marginRight: "1%" }}
+                                id="parameter"
+                            />
+                            <label htmlFor="upperLimit">Upper limit:</label>
+                            <input
+                                type="number"
+                                value={param.upperLimit}
+                                onChange={(e) => handleDesignParamChange(index, "upperLimit", parseFloat(e.target.value))}
+                                placeholder="Upper Limit"
+                                style={{ width: "10%", padding: "8px", marginLeft: "1%", marginRight: "1%"  }}
+                                id="upperLimit"
+                            />
+                            <label htmlFor="lowerLimit">Lower limit:</label>
+                            <input
+                                type="number"
+                                value={param.lowerLimit}
+                                onChange={(e) => handleDesignParamChange(index, "lowerLimit", parseFloat(e.target.value))}
+                                placeholder="Lower Limit"
+                                style={{ width: "10%", padding: "8px", marginLeft: "1%", marginRight: "1%"  }}
+                                id="lowerLimit"
+                            />
+                        </div>
                     ))}
                     <button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
-                        Add another input
+                        Add another Parameter
                     </button>
                 </div>
+
+                <div className="inputs" style={{ marginTop: "20px" }}>
+                    <label>Calculated Components:</label>
+                    {formData.calcParams.map((param, index) => (
+                        <div key={index} style={{ marginBottom: "12px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px" }}>
+                        <input
+                            type="text"
+                            value={param.compName}
+                            onChange={(e) => handleCalcParamChange(index, "compName", e.target.value)}
+                            placeholder={`Component Name ${index + 1}`}
+                            style={{ width: "100%", padding: "8px", marginBottom: "6px" }}
+                        />
+                        <select
+                            value={param.comp}
+                            onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
+                            style={{ width: "100%", padding: "8px" }}
+                        >
+                            <option value="resistor">Resistor</option>
+                            <option value="capacitor">Capacitor</option>
+                            <option value="inductor">Inductor</option>
+                            {/* Add more if needed */}
+                        </select>
+                        </div>
+                    ))}
+                    <button type="button" onClick={addCalcParam} style={{ marginTop: "10px" }}>
+                        Add another component
+                    </button>
+                </div>
+
+                <div className="inputs" style={{ marginTop: "20px" }}>
+                    <label>Relations / Equations:</label>
+                    {formData.relations.map((relation, index) => (
+                        <input
+                        key={index}
+                        type="text"
+                        value={relation}
+                        onChange={(e) => handleRelationChange(index, e.target.value)}
+                        placeholder={`Relation ${index + 1}`}
+                        style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
+                        />
+                    ))}
+                    <button type="button" onClick={addRelation}>
+                        Add another relation
+                    </button>
+                </div>
+
                 <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }}>
                     Submit
                 </button>
