@@ -21,6 +21,11 @@ const baseModelSchema=new Schema({
         ref: 'User',
         required:true
     },
+    requiredInputs:{
+        type:[String],
+        required:true,
+        default:[]
+    },
     approved:{
         type:Boolean,
         default:false

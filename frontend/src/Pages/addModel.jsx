@@ -7,22 +7,24 @@ const AddModel = () => {
         typeName: "",
         description: "",
         fileUrl: "",
+        requiredInputs:[""],
     });
     const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
-    const [categories, setCategories] = useState([{_id:1,name:"amplifiers"}]);
+    const [categories, setCategories] = useState([]);
 
     // Load categories from backend to populate dropdown (optional)
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
-                setCategories(res.data); // assuming data is array of { _id, name }
+                console.log(res.data.allCategories);
+                setCategories(res.data.allCategories); // assuming data is array of { _id, name }
             } catch (error) {
                 console.error("Error fetching categories", error);
             }
         };
-        // fetchCategories();
+        fetchCategories();
     }, []);
 
     const handleChange = (e) => {
@@ -49,11 +51,26 @@ const AddModel = () => {
                 typeName: "",
                 description: "",
                 fileUrl: "",
+                requiredInputs: [""],
             });
         } catch (error) {
             setMessage("Failed to add model.");
             console.error(error);
         }
+    };
+    const addinput=()=>{
+        setFormData(prev=>({
+            ...prev,
+            requiredInputs:[...prev.requiredInputs,""]
+        }))
+    }
+    const handleInputChange = (index, value) => {
+        const updatedInputs = [...formData.requiredInputs];
+        updatedInputs[index] = value;
+        setFormData(prev => ({
+            ...prev,
+            requiredInputs: updatedInputs
+        }));
     };
 
     return (
@@ -110,6 +127,22 @@ const AddModel = () => {
                         required
                         style={{ width: "100%", padding: "8px" }}
                     />
+                </div>
+                <div className="inputs">
+                    <label>Required Inputs:</label>
+                    {formData.requiredInputs && formData.requiredInputs.map((val, index) => (
+                        <input
+                            key={index}
+                            type="text"
+                            value={val}
+                            onChange={(e) => handleInputChange(index, e.target.value)}
+                            placeholder={`Input ${index + 1}`}
+                            style={{ marginBottom: "8px", width: "100%", padding: "8px" }}
+                        />
+                    ))}
+                    <button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
+                        Add another input
+                    </button>
                 </div>
                 <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }}>
                     Submit
