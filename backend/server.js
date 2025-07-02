@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import modifyGain from './modelfiles/modify_inv_amp.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -88,9 +89,21 @@ app.use("/api/models",baseModelRouter);
 	
 
 //Circuit generation routes (for client usage of models)
-app.post("/api/generate",(req,res)=>{
-    res.send("Generate circuit from user input");
-});//Auth User
+app.post("/api/generate", async (req, res) => {
+    const { pmodel, inputValues } = req.body;
+    const desiredGain = inputValues.gain;
+    const inputFile = 'backend/modelfiles/inv_amp.asc';
+    const outputFile = 'backend/modelfiles/inv_amp_modified.asc';
+
+    try {
+        await modifyGain(inputFile,outputFile,desiredGain);
+        res.json({ success: true, message: "Circuit generated successfully." });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ success: false, error: "Failed to generate circuit." });
+    }
+});
+
 
 app.get("/api/download",(req,res)=>{
     res.send("Download generated circuit file");
