@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import modifyGain from './modelfiles/modify_inv_amp.js';
+import modifyLtspiceFile from './modelfiles/generalised.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -90,13 +91,27 @@ app.use("/api/models",baseModelRouter);
 
 //Circuit generation routes (for client usage of models)
 app.post("/api/generate", async (req, res) => {
-    const { pmodel, inputValues } = req.body;
-    const desiredGain = inputValues.gain;
+    const { pmodel,inputValues,calc2,relations } = req.body;
     const inputFile = 'backend/modelfiles/inv_amp.asc';
     const outputFile = 'backend/modelfiles/inv_amp_modified.asc';
+    // const inputValues = {
+    //     "gain": 10,
+    //     "x":10,
+    //     "y":20,
+    //     "z":1000
+    //     // fc: 1000
+    // };
+
+    // const calcParams = ['Rin', 'Rf'];
+
+    // const relations = [
+    //     'Rin=1000',
+    //     'Rf=Rin*(gain + 1)*(gain*x*y)/(2*z)'
+    //     // 'C1 = 1 / (2 * 3.14 * R1 * fc)'
+    // ];
 
     try {
-        await modifyGain(inputFile,outputFile,desiredGain);
+        await modifyLtspiceFile(inputFile, outputFile, inputValues, calc2, relations);
         res.json({ success: true, message: "Circuit generated successfully." });
     } catch (err) {
         console.error(err);

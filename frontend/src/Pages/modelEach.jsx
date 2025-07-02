@@ -8,7 +8,7 @@ const EachModel=()=>{
     const [got,setgot]=useState(false);
     const token=localStorage.getItem("token");
     const [clicked,setClicked]=useState(false);
-    const [inputValues,setInputValues]=useState([]);
+    const [inputValues,setInputValues]=useState({});
     const getThisModel=async()=>{
         const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`,{
             withCredentials:true,
@@ -31,7 +31,13 @@ const EachModel=()=>{
     }
     const generateModel=async()=>{
         console.log(inputValues);
-        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/generate`,{pmodel,inputValues},{
+        const calc2=[];
+        for(const each of pmodel.calcParams){
+            calc2.push(each.compName);
+        }
+        const relations=pmodel.relations;
+        console.log(calc2);
+        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/generate`,{pmodel,inputValues,calc2,relations},{
             withCredentials:true,
             headers:{Authorization:`Bearer ${token}`}
         })
@@ -65,12 +71,12 @@ const EachModel=()=>{
                         <div className="fields">
                             {clicked && 
                                 <>  
-                                    {pmodel.designParameters &&
+                                    {pmodel.designParameters.length>0 &&
                                         <div className="options" style={{display:"flex",flexDirection:"column",width:"15rem"}}>
                                             {
                                                 pmodel.designParameters.map((value,index)=>(<React.Fragment key={index}>
-                                                    <label>{value}</label>
-                                                    <input type="text" name={value} value={inputValues[value] || ""} onChange={handleInputValueChange} key={index}/></React.Fragment>
+                                                    <label>{value.parameter}</label>
+                                                    <input type="number" name={value.parameter} value={inputValues[value.parameter] || ""} onChange={handleInputValueChange} key={index} min={value.lowerLimit} max={value.upperLimit}/></React.Fragment>
                                                 ))
                                             }
                                         </div>

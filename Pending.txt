@@ -24,6 +24,7 @@ loader while loading pages,file generation,..
 react,css styling
 
 minor changes, final changes...........................
+validating the input entered with the given upper and lower limit in model
 show models/view a model after checking approved:true
 explore page
 logo in website, on browser window
