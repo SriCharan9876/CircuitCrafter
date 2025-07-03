@@ -45,9 +45,11 @@ const baseModelSchema=new Schema({
         required:true,
         default:[]
     },
-    approved:{
-        type:Boolean,
-        default:false
+    status:{
+        type:String,
+        enum:["approved","rejected","pending"],
+        default:"pending",
+        required:true
     },
     createdAt:{
         type:Date,

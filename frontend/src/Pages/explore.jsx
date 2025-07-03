@@ -17,13 +17,14 @@ const Explore = () => {
     const getModels = async () => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models`, {
-                params:queryParams?{category:selectedCategory}:{},
+                params:selectedCategory?{category:selectedCategory}:{},
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             if (res.data.message === "Success") {
                 setAllModels(res.data.allModels);
+                console.log(res.data.allModels);
             } else {
                 alert("Failed to fetch models");
             }
@@ -45,7 +46,7 @@ const Explore = () => {
                 <p>Loading models....</p>
             ) : (
                 allModels.map((model) => (
-                    <ModelBox model={model} key={model._id}/>
+                    <ModelBox model={model} key={model._id} onDelete={getModels}/>
                 ))
             )}
         </div>

@@ -1,6 +1,7 @@
 import express from "express";
 import {signup, login,getmydata} from "../controllers/auth.js";
 const router=express.Router();
+import {auth} from '../middlewares/authenticate.js';
 
 //Categories routes
 router
@@ -13,6 +14,6 @@ router
 
 router
     .route("/me")
-    .get(getmydata)
+    .get(auth,getmydata)
 
 export default router;

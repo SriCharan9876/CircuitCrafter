@@ -63,7 +63,7 @@ const EachModel=()=>{
                         <p><strong>Description:</strong> {pmodel.description || "N/A"}</p>
                         <p><strong>File URL:</strong> <a href={pmodel.fileUrl} target="_blank" rel="noreferrer">{pmodel.fileUrl}</a></p>
                         <p><strong>Owned By:</strong> {pmodel.createdBy.name}</p>
-                        <p><strong>Approved:</strong> {pmodel.approved ? "Yes" : "No"}</p>
+                        <p><strong>Status:</strong> {pmodel.status}</p>
                         <p><strong>Created At:</strong> {new Date(pmodel.createdAt).toLocaleString()}</p>
                     </div>
                     <div className="customization">

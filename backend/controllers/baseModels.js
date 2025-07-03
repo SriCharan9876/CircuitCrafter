@@ -2,7 +2,7 @@ import BaseModel from '../models/baseModel.js';
 
 export const index=async(req,res)=>{
     const { category } = req.query;
-    const filter=category?{typeName:category}:{}  //find({approved:false})
+    const filter=category?{typeName:category}:{}  //find({status:"approved"})
     try{
         const allModels=await BaseModel.find(filter).populate("createdBy");
         return res.json({message:"Success",allModels});
@@ -43,7 +43,16 @@ export const getModel=async(req,res)=>{
 }//To show a model
 
 export const deleteModel=async(req,res)=>{
-    res.send("Delete model");
+    try{
+        const {id}=req.params;
+        const deletedModel=await BaseModel.findByIdAndDelete(id);
+        console.log("Model deleted successfully: ");
+        console.log(deletedModel);
+        return res.json({deleted:true,message:"Model deleted successfully"});
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({ deleted: false, message: "Failed to delete model" });
+    }
 }//To delete model
 
 export const getPendingModels= async (req,res)=>{
@@ -54,6 +63,6 @@ export const getMyModels=async(req,res)=>{
     res.send("Get models created by user");
 };//to show models created by current user for user
 
-export const approveModel=(req,res)=>{
-    res.send("Approve a user-submitted model");
+export const updateModelStatus=(req,res)=>{
+    res.send("Update status of a user-submitted model");
 };// to approve pending model created by user (access to admin)

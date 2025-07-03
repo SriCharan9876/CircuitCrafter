@@ -10,7 +10,7 @@ import User from "./models/user.js";
 import cors from "cors";
 import session from 'express-session';
 import BaseModel from './models/baseModel.js';
-import auth from './auth.js';
+import {auth} from './middlewares/authenticate.js';
 
 import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';

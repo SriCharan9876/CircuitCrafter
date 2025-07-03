@@ -1,6 +1,7 @@
 import express from "express";
-import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,approveModel} from "../controllers/baseModels.js";
-import auth from '../auth.js';
+import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus} from "../controllers/baseModels.js";
+import {auth} from '../middlewares/authenticate.js';
+import {isAdmin,isOwnerOrAdmin} from '../middlewares/authorize.js';
 
 const router=express.Router();
 
@@ -12,19 +13,19 @@ router
 
 router
     .route("/pending")
-    .get(getPendingModels)
+    .get(auth,isAdmin,getPendingModels)
 
 router
     .route("/mymodels")
-    .get(getMyModels)
+    .get(auth,getMyModels)
 
 router
     .route("/:id")
     .get(getModel)
-    .delete(auth,deleteModel)//access to same user, admin
+    .delete(auth,isOwnerOrAdmin,deleteModel)//access to same user, admin
 
 router
-    .route("/:id/pending")
-    .put(approveModel)//access to admin only
+    .route("/:id/status")
+    .put(auth,isAdmin,updateModelStatus)//access to admin only
 
 export default router;
