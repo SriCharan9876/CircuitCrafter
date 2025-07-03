@@ -25,6 +25,8 @@ const AddModel = () => {
     const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
     const [categories, setCategories] = useState([]);
+    const [file, setFile] = useState(null);
+    const [uploadedUrl, setUploadedUrl] = useState("");
 
     // Load categories from backend to populate dropdown (optional)
     useEffect(() => {
@@ -135,6 +137,25 @@ const AddModel = () => {
             relations: updated,
         }));
     };
+    const handleUploadSubmit = async (e) => {
+      e.preventDefault();
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append("file", file);
+      console.log("form: ",formData)
+      try {
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/upload`, formData,{
+            headers: {
+              'Content-Type': 'multipart/form-data', // 👈 explicitly set
+            },
+        });
+        setUploadedUrl(res.data.fileUrl);
+        setFormData(prev => ({ ...prev, fileUrl: res.data.fileUrl }));
+      } catch (err) {
+        console.error("Upload failed", err);
+      }
+    };
 
     return (
         <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }}>
@@ -181,15 +202,9 @@ const AddModel = () => {
                 </div>
 
                 <div>
-                    <label>File URL:</label><br />
-                    <input
-                        type="text"
-                        name="fileUrl"
-                        value={formData.fileUrl}
-                        onChange={handleChange}
-                        required
-                        style={{ width: "100%", padding: "8px" }}
-                    />
+                  <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                  <button type="button" onClick={handleUploadSubmit}>Upload</button>
+                  {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
                 </div>
                 <div className="inputs">
                     <label>Design Parameters:</label>

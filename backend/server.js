@@ -14,7 +14,8 @@ import {auth} from './middlewares/authenticate.js';
 
 import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';
-import authenticationRouter from './routes/auth.js'
+import authenticationRouter from './routes/auth.js';
+import uploadRoute from './routes/upload.js';
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
 
@@ -86,6 +87,7 @@ app.get("/demoSignup",async(req,res)=>{
 //Handling backend routes............................................................
 app.use("/api/categories",categoryRouter);
 app.use("/api/models",baseModelRouter);
+app.use('/api', uploadRoute);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 	
 
