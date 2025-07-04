@@ -9,6 +9,8 @@ const EachModel=()=>{
     const token=localStorage.getItem("token");
     const [clicked,setClicked]=useState(false);
     const [inputValues,setInputValues]=useState({});
+    const [cloudinaryUrl,setCloudinary]=useState("");
+    const [success,setSuccess]=useState(false);
     const getThisModel=async()=>{
         const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`,{
             withCredentials:true,
@@ -41,6 +43,10 @@ const EachModel=()=>{
             withCredentials:true,
             headers:{Authorization:`Bearer ${token}`}
         })
+        if(res.data.success){
+            setSuccess(true);
+            setCloudinary(res.data.cloudinaryUrl);
+        }
     }
     return(
         <div style={{ padding: "20px" }}>
@@ -85,6 +91,7 @@ const EachModel=()=>{
                             }
                         </div>
                         {clicked && <button onClick={()=>generateModel()}>Generate Customized model</button>}
+                        {success && <a href={cloudinaryUrl}>Download File</a>}
                     </div>
                     </>
             )}

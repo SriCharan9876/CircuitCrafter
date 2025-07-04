@@ -113,8 +113,9 @@ app.post("/api/generate", async (req, res) => {
     // ];
 
     try {
-        await modifyLtspiceFile(inputFile, outputFile, inputValues, calc2, relations);
-        res.json({ success: true, message: "Circuit generated successfully." });
+        const {cloudinaryUrl,values}=await modifyLtspiceFile(inputFile, inputValues, calc2, relations);
+        console.log(cloudinaryUrl);
+        res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl:cloudinaryUrl});
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: "Failed to generate circuit." });
