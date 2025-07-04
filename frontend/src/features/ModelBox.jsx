@@ -1,14 +1,29 @@
 import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { jwtDecode } from "jwt-decode";
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
+
+    //Getting current user information using jwt_decode
     const token=localStorage.getItem("token");
+    let currentUser={};
+    if(token){
+        try{
+            currentUser=jwtDecode(token);
+        }catch(e){
+            console.error("Error in loading current user information");
+        }
+    }
+    const isAdmin=currentUser.role=="admin";
+    const isOwner=model.createdBy._id==currentUser.userId;
+
+
     const handleNavigate=(modelId)=>{
         navigate(`/models/${modelId}`);
     }
+
     const deleteModel = async (modelId) => {
         try {
             await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/models/${modelId}`, {
@@ -39,25 +54,30 @@ const ModelBox=(({model, onDelete})=>{
                     >
                         <h2>{model.modelName}</h2>
                         <p><strong>Type:</strong> {model.typeName}</p>
-                        {/* <p><strong>Description:</strong> {model.description || "N/A"}</p> */}
-                        {/* <p><strong>File URL:</strong> <a href={model.fileUrl} target="_blank" rel="noreferrer">{model.fileUrl}</a></p> */}
                         <p><strong>Owned By:</strong> {model.createdBy.name}</p>
-                        {/* <p><strong>Approved:</strong> {model.approved ? "Yes" : "No"}</p> */}
-                        {/* <p><strong>Created At:</strong> {new Date(model.createdAt).toLocaleString()}</p> */}
-                        {model.status=="pending"?
-                        <>
-                        <button>Approve</button>
-                        <button>Reject</button>
-                        </>:
-                        <>
-                        <button>UnApprove</button>
-                        </>}
+
+                        {isAdmin && model.status === "pending" && (
+                            <>
+                            <button>Approve</button>
+                            <button>Reject</button>
+                            </>
+                        )}
+                        {isAdmin && model.status !== "pending" && (
+                            <button>UnApprove</button>
+                        )}
                         
-                        <button>Edit</button>
-                        <button onClick={(e) => {
-                            e.stopPropagation();
-                            deleteModel(model._id);
-                        }}>Delete</button>
+                        {/* Owner or Admin buttons */}
+                        {(isOwner || isAdmin) && (
+                            <>
+                            <button>Edit</button>
+                            <button
+                                onClick={(e) => {
+                                e.stopPropagation();
+                                deleteModel(model._id);
+                                }}>Delete
+                            </button>
+                            </>
+                        )}
 
                     </div>
     )
