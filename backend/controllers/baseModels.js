@@ -15,9 +15,9 @@ export const index=async(req,res)=>{
 export const createModel=async(req,res)=>{
     console.log(req.user);
     try{
-        const formData=req.body;
+        const finalData=req.body;
         const newmod={
-            ... formData,
+            ... finalData,
             createdBy:req.user.userId
         }
         console.log("New model added successfully:");
