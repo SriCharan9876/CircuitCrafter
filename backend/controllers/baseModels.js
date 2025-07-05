@@ -58,6 +58,7 @@ export const deleteModel=async(req,res)=>{
 }//To delete model
 
 export const getPendingModels= async (req,res)=>{
+
     const filter={status:"pending"};
     try{
         const allModels=await BaseModel.find(filter).populate("createdBy");
@@ -69,7 +70,16 @@ export const getPendingModels= async (req,res)=>{
 };//to Show all pending models for admin (to be accepted or rejected)
 
 export const getMyModels=async(req,res)=>{
-    res.send("Get models created by user");
+    const currUser=req.user.userId;
+    const filter={createdBy:currUser};   
+
+    try{
+        const allModels=await BaseModel.find(filter).populate("createdBy");
+        return res.json({message:"Success",allModels});
+    }catch(err){
+        console.error("Error fetching models:", err);
+        res.status(500).json({ message: "Failed to fetch models" });
+    }
 };//to show models created by current user for user
 
 export const updateModelStatus=async(req,res)=>{

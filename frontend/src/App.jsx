@@ -8,6 +8,7 @@ import Categories from "./Pages/categories"
 import EachModel from "./Pages/modelEach";
 import AddCategory from "./Pages/addCategory";
 import PendingModels from "./Pages/pendingModels";
+import MyModels from "./Pages/myModels";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path="/models" element={<Explore />} />
         <Route path="/models/create" element={<AddModel />} />
         <Route path="/models/pending" element={<PendingModels />} />
+        <Route path="/models/mymodels" element={<MyModels/>} />
         <Route path="/models/:id" element={<EachModel />} />
         <Route path="/categories" element={<Categories />} />
         <Route path="/categories/create" element={<AddCategory />} />

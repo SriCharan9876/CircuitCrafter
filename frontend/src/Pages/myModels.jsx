@@ -2,13 +2,13 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModelBox from "../features/ModelBox";
 
-const PendingModels = () => {
+const MyModels = () => {
     const token = localStorage.getItem("token");
     const [allModels, setAllModels] = useState([]);
 
     const getModels = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/pending`, {
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/mymodels`, {
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -32,7 +32,7 @@ const PendingModels = () => {
 
     return (
         <div style={{ padding: "20px" }}>
-            <h1>Models to be approved / rejected</h1>
+            <h1>My Models</h1>
             {allModels.length === 0 ? (
                 <p>Loading models....</p>
             ) : (
@@ -44,4 +44,4 @@ const PendingModels = () => {
     );
 };
 
-export default PendingModels;
+export default MyModels;
