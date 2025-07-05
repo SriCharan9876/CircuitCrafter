@@ -22,6 +22,7 @@ frontend:...............................
 navbar,footer,sidebar
 loader while loading pages,file generation,..
 react,css styling
+feature of sharing the  model
 
 minor changes, final changes...........................
 validating the input entered with the given upper and lower limit in model

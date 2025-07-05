@@ -38,7 +38,31 @@ const ModelBox=(({model, onDelete})=>{
             console.error("Delete error:", error.response?.data || error.message);
         }
     };
+    const unApproveModel=async()=>{
+        const status="pending";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        onDelete();
+    }
+    const ApproveModel=async()=>{
+        const status="approved";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        onDelete();
+    }
 
+    const rejectModel=async()=>{
+        const status="rejected";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        onDelete();
+    }
     return(
         <div className="modelBox"
                         key={model._id}
@@ -58,12 +82,27 @@ const ModelBox=(({model, onDelete})=>{
 
                         {isAdmin && model.status === "pending" && (
                             <>
-                            <button>Approve</button>
-                            <button>Reject</button>
+                            <button
+                                onClick={(e) => {
+                                e.stopPropagation();
+                                ApproveModel();
+                                }}>Approve
+                            </button>
+                            <button
+                                onClick={(e) => {
+                                e.stopPropagation();
+                                rejectModel();
+                                }}>Reject
+                            </button>
                             </>
                         )}
                         {isAdmin && model.status !== "pending" && (
-                            <button>UnApprove</button>
+                            <button
+                                onClick={(e) => {
+                                e.stopPropagation();
+                                unApproveModel();
+                                }}>UnApprove
+                            </button>
                         )}
                         
                         {/* Owner or Admin buttons */}

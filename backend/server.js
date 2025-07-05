@@ -88,6 +88,7 @@ app.get("/demoSignup",async(req,res)=>{
 app.use("/api/categories",categoryRouter);
 app.use("/api/models",baseModelRouter);
 app.use('/api', uploadRoute);
+app.use('/api',authenticationRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 	
 

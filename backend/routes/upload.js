@@ -1,6 +1,6 @@
 import express from 'express';
 import multer from 'multer';
-import storage from '../config/storage.js';
+import storage from '../config/BaseModel_storage.js';
 
 const router = express.Router();
 const upload = multer({ storage });

@@ -51,5 +51,5 @@ export const login=async (req, res) => {
 }
 
 export const getmydata=async(req,res)=>{
-    res.send("Get current user profile");
+    res.json({fetched:true,me:req.user});
 }

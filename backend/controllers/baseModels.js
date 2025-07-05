@@ -72,6 +72,11 @@ export const getMyModels=async(req,res)=>{
     res.send("Get models created by user");
 };//to show models created by current user for user
 
-export const updateModelStatus=(req,res)=>{
-    res.send("Update status of a user-submitted model");
+export const updateModelStatus=async(req,res)=>{
+    const {id}=req.params;
+    const {status}=req.body;
+    const model=await BaseModel.findById(id);
+    model.status=status;
+    await model.save();
+    return res.json({updated:true})
 };// to approve pending model created by user (access to admin)
