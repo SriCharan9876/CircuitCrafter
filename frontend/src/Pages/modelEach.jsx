@@ -173,7 +173,7 @@ const EachModel=()=>{
                             }}>UnApprove
                         </button>
                     )}
-                    {isAdmin && pmodel.status == "rejected" && (<>
+                    {isOwner && pmodel.status == "rejected" && (<>
                         <p>Model is rejected</p>
                         <button
                             onClick={(e) => {

@@ -11,6 +11,7 @@ import PendingModels from "./Pages/pendingModels";
 import MyModels from "./Pages/myModels";
 import EditModel from "./Pages/editModel";
 import MyProfile from "./Pages/myProfile";
+import Sidebar from "./features/biolerplate";
 
 function App() {
   return (
@@ -18,15 +19,18 @@ function App() {
       <Routes>
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/myprofile" element={<MyProfile />} />
-        <Route path="/models" element={<Explore />} />
-        <Route path="/models/create" element={<AddModel />} />
-        <Route path="/models/:id/edit" element={<EditModel />} />
-        <Route path="/models/pending" element={<PendingModels />} />
-        <Route path="/models/mymodels" element={<MyModels/>} />
-        <Route path="/models/:id" element={<EachModel />} />
-        <Route path="/categories" element={<Categories />} />
-        <Route path="/categories/create" element={<AddCategory />} />
+        {/* <Route element={<Sidebar/>}> */}
+          <Route path="/myprofile" element={<MyProfile />} />
+          <Route path="/models" element={<Explore />} />
+          <Route path="/models/create" element={<AddModel />} />
+          <Route path="/models/:id/edit" element={<EditModel />} />
+          <Route path="/models/pending" element={<PendingModels />} />
+          <Route path="/models/mymodels" element={<MyModels/>} />
+          <Route path="/models/:id" element={<EachModel />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/categories/create" element={<AddCategory />} />
+        {/* </Route> */}
+        
       </Routes>
     </BrowserRouter>
   );

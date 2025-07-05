@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import modifyGain from './modelfiles/modify_inv_amp.js';
 import modifyLtspiceFile from './modelfiles/generalised.js';
+import modifyLtspiceFileFromCloud from './modelfiles/generalised.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -95,26 +96,9 @@ app.use('/api',authenticationRouter);
 //Circuit generation routes (for client usage of models)
 app.post("/api/generate", async (req, res) => {
     const { pmodel,inputValues,calc2,relations } = req.body;
-    const inputFile = 'backend/modelfiles/inv_amp.asc';
-    const outputFile = 'backend/modelfiles/inv_amp_modified.asc';
-    // const inputValues = {
-    //     "gain": 10,
-    //     "x":10,
-    //     "y":20,
-    //     "z":1000
-    //     // fc: 1000
-    // };
-
-    // const calcParams = ['Rin', 'Rf'];
-
-    // const relations = [
-    //     'Rin=1000',
-    //     'Rf=Rin*(gain + 1)*(gain*x*y)/(2*z)'
-    //     // 'C1 = 1 / (2 * 3.14 * R1 * fc)'
-    // ];
-
+    const inputFile = pmodel.fileUrl;
     try {
-        const {cloudinaryUrl,values}=await modifyLtspiceFile(inputFile, inputValues, calc2, relations);
+        const {cloudinaryUrl,values}=await modifyLtspiceFileFromCloud(inputFile, inputValues, calc2, relations);
         console.log(cloudinaryUrl);
         res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl:cloudinaryUrl});
     } catch (err) {
