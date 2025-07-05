@@ -31,7 +31,7 @@ const PendingModels = () => {
     
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: "20px" }} className="allPages">
             <h1>Models to be approved / rejected</h1>
             {allModels.length === 0 ? (
                 <p>Loading models....</p>

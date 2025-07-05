@@ -31,7 +31,7 @@ const MyModels = () => {
     
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: "20px" }} className="allPages">
             <h1>My Models</h1>
             {allModels.length === 0 ? (
                 <p>Loading models....</p>

@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import ModelBox from "../features/ModelBox";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import "../Styles/explore.css"
 
 const Explore = () => {
     const token = localStorage.getItem("token");
@@ -55,7 +56,7 @@ const Explore = () => {
     }
 
     return (
-        <div style={{ padding: "20px" }}>
+        <div className="allPages">
             <h1>All Models</h1>
             {isAdmin&&(
                 <button onClick={()=>pendingModels()}>Models to be Approved</button>

@@ -125,7 +125,7 @@ const EachModel=()=>{
     },[]);
 
     return(
-        <div style={{ padding: "20px" }}>
+        <div style={{ padding: "20px" }} className="allPages">
             <h1>Model</h1>
             {!got ? (
                 <p>Loading model.....</p>

@@ -29,7 +29,7 @@ const MyProfile = () => {
   }, []);
 
   return (
-    <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }}>
+    <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
       <h2>My Profile</h2>
       {userdata ? (
         <div style={{ marginTop: "20px" }}>

@@ -1,0 +1,9 @@
+.allPages{
+    padding: 20px;
+    position: fixed;
+    left: 210px;
+    bottom: 0;
+    top: 11vh;
+    right: 0;
+    overflow-y: auto;
+}

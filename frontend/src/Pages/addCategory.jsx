@@ -41,7 +41,7 @@ const AddCategory = () => {
     };
 
     return (
-        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "50px" }}>
+        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "50px" }} className="allPages">
             <h2>Add New Category</h2>
             <form onSubmit={handleSubmit}>
                 <div>

@@ -16,7 +16,7 @@ const Categories=()=>{
     },[]);
 
     return(
-        <div>
+        <div className="allPages">
             <h2>All Categories</h2>
             <div className="categoryList">
                 <div className="row">

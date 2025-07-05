@@ -11,15 +11,14 @@ import PendingModels from "./Pages/pendingModels";
 import MyModels from "./Pages/myModels";
 import EditModel from "./Pages/editModel";
 import MyProfile from "./Pages/myProfile";
-import Sidebar from "./features/biolerplate";
-
+import Layout from "./layout";
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
-        {/* <Route element={<Sidebar/>}> */}
+        <Route path="/" element={<Layout/>}>
           <Route path="/myprofile" element={<MyProfile />} />
           <Route path="/models" element={<Explore />} />
           <Route path="/models/create" element={<AddModel />} />
@@ -29,7 +28,7 @@ function App() {
           <Route path="/models/:id" element={<EachModel />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/categories/create" element={<AddCategory />} />
-        {/* </Route> */}
+        </Route>
         
       </Routes>
     </BrowserRouter>

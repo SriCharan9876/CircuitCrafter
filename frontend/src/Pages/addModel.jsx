@@ -188,7 +188,7 @@ const AddModel = () => {
     // };
 
     return (
-        <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }}>
+        <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
             <h2>Add New Model</h2>
             <form onSubmit={handleSubmit}>
                 <div>

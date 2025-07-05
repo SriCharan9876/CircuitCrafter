@@ -126,7 +126,7 @@ const EditModel = () => {
   };
 
   return (
-    <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }}>
+    <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
       <h2>Edit Model</h2>
       <form onSubmit={handleSubmit}>
         <div>
