@@ -65,7 +65,7 @@ const EachModel=()=>{
         }
         const relations=pmodel.relations;
         console.log(calc2);
-        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/generate`,{pmodel,inputValues,calc2,relations},{
+        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/userfile`,{pmodel,inputValues,calc2,relations},{
             withCredentials:true,
             headers:{Authorization:`Bearer ${token}`}
         })

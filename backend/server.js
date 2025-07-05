@@ -1,5 +1,4 @@
 import dotenv from 'dotenv';
-import modifyLtspiceFileFromCloud from './modelfiles/generalised.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
 //}
@@ -9,12 +8,11 @@ import User from "./models/user.js";
 import cors from "cors";
 import session from 'express-session';
 import BaseModel from './models/baseModel.js';
-import {auth} from './middlewares/authenticate.js';
 
 import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';
 import authenticationRouter from './routes/auth.js';
-import uploadRoute from './routes/upload.js';
+import filesRouter from './routes/files.js';
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
 
@@ -68,46 +66,10 @@ app.use("/api/auth",authenticationRouter);//for signup, login,.. authenticationr
 //Handling backend routes............................................................
 app.use("/api/categories",categoryRouter);
 app.use("/api/models",baseModelRouter);
-app.use('/api', uploadRoute);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 	
-import { v2 as cloudinary } from "cloudinary";
-
-//Circuit generation routes (for client usage of models)
-app.post("/api/generate",auth, async (req, res) => {
-    const { pmodel,inputValues,calc2,relations } = req.body;
-    const inputFile = pmodel.fileUrl;
-    const user = await User.findById(req.user.userId);
-    if (user.generatedFile?.public_id) {
-        try {
-            await cloudinary.uploader.destroy(user.generatedFile.public_id, {
-            resource_type: "raw",
-            });
-        } catch (err) {
-            console.warn("Failed to delete previous file:", err.message);
-        }
-    }
-
-    try {
-        const {cloudinaryUrl,public_id,values}=await modifyLtspiceFileFromCloud(pmodel.fileUrl, inputValues, calc2, relations);
-        console.log(cloudinaryUrl);
-        user.generatedFile = {
-            public_id,
-            url: cloudinaryUrl,
-            baseModelId: pmodel._id
-        };
-        await user.save();
-        res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl,values});
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ success: false, error: "Failed to generate circuit." });
-    }
-});
-
-
-app.get("/api/download",(req,res)=>{
-    res.send("Download generated circuit file");
-});//Auth User
+//File handling routes (for client usage of models)
+app.use("/api/files",filesRouter);
 
 
 // app.use((req, res, next) => {

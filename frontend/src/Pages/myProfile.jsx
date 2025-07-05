@@ -34,6 +34,7 @@ const MyProfile = () => {
       {userdata ? (
         <div style={{ marginTop: "20px" }}>
           <p><strong>Name:</strong> {userdata.name}</p>
+          <img src={userdata.profilePic?.url} alt="Profile" />
           <p><strong>Email:</strong> {userdata.email}</p>
           <p><strong>Role:</strong> {userdata.role}</p>
           {userdata.generatedFile?.url && (

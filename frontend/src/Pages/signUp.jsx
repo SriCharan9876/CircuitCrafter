@@ -10,6 +10,8 @@ const SignUp = () => {
     });
 
     const [message, setMessage] = useState("");
+    const [file, setFile] = useState(null);
+    const [uploadedUrl, setUploadedUrl] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -82,6 +84,11 @@ const SignUp = () => {
                         <option value="user">User</option>
                         <option value="admin">Admin</option>
                     </select>
+                </div>
+                <div>
+                    <label>Upload your profile picture</label>
+                    <input type="file" onChange={(e) => setFile(e.target.files[0])} />
+                    {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
                 </div>
                 <button type="submit" style={{ padding: "10px 20px" }}>
                     Sign Up

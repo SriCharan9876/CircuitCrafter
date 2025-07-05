@@ -26,6 +26,16 @@ const userSchema=new Schema({
         url: String,
         baseModelId: { type: mongoose.Schema.Types.ObjectId, ref: "BaseModel" }
     },
+    profilePic: {
+        public_id: {
+            type: String,
+            default: ""
+        },
+        url: {
+            type: String,
+            default: "https://res.cloudinary.com/demo/image/upload/v1710000000/default-avatar.png"
+        }
+    },
     createdAt:{
         type:Date,
         default:Date.now

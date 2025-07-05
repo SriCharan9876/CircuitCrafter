@@ -48,72 +48,68 @@ const AddModel = () => {
     };
 
     const handleSubmit = async (e) => {
-      e.preventDefault();
-      if (!file) {
-        setMessage("Please upload a file before submitting.");
-        return;
-      }
-
-      try {
-        // STEP 1: Upload the file
-        const formData2 = new FormData();
-        formData2.append("file", file);
-
-        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/upload`, formData2, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        const uploadedUrl2 = uploadRes.data.fileUrl;
-        console.log(uploadedUrl2);
-        // STEP 2: Now submit the form with the uploaded URL
-        const finalData = {
-          ...formData,
-          fileUrl: uploadedUrl2,
-        };
-
-        const modelRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, finalData, {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` },
-        });
-
-        if (modelRes.data.added) {
-          setMessage("Model added successfully!");
-        } else {
-          setMessage("Model failed to add!");
+        e.preventDefault();
+        if (!file) {
+            setMessage("Please upload a file before submitting.");
+            return;
         }
+        try {
 
-        console.log(modelRes.data);
+            // STEP 1: Upload the file
+            const formData2 = new FormData();
+            formData2.append("file", file);
+            const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/basefile`, formData2, {
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                },
+            });
 
-        // Reset form after success
-        setFormData({
-          modelName: "",
-          typeName: "",
-          description: "",
-          fileUrl: "",
-          designParameters: [
-            {
-              parameter: "",
-              upperLimit: 10,
-              lowerLimit: 0,
-            },
-          ],
-          calcParams: [
-            {
-              compName: "",
-              comp: "resistor",
-            },
-          ],
-          relations: [""],
-        });
-        setFile(null);
-        setUploadedUrl("");
-
-      } catch (err) {
-        console.error("Error during submission:", err);
-        setMessage("Failed to upload or submit model.");
-      }
+            const uploadedUrl2 = uploadRes.data.fileUrl;
+            console.log(uploadedUrl2);
+            // STEP 2: Now submit the form with the uploaded URL
+            const finalData = {
+                ...formData,
+                fileUrl: uploadedUrl2,
+            };
+            const modelRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, finalData, {
+                withCredentials: true,
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (modelRes.data.added) {
+                setMessage("Model added successfully!");
+            } else {
+                setMessage("Model failed to add!");
+            }
+            console.log(modelRes.data);
+            // Reset form after success
+            setFormData({
+                modelName: "",
+                typeName: "",
+                description: "",
+                fileUrl: "",
+                designParameters: [
+                    {
+                    parameter: "",
+                    upperLimit: 10,
+                    lowerLimit: 0,
+                    },
+                ],
+                calcParams: [
+                    {
+                    compName: "",
+                    comp: "resistor",
+                    },
+                ],
+                relations: [""],
+            });
+            setFile(null);
+            setUploadedUrl("");
+        } catch (err) {
+            console.error("Error during submission:", err);
+            setMessage("Failed to upload or submit model.");
+        }
     };
 
     const addinput = () => {
@@ -133,7 +129,7 @@ const AddModel = () => {
         }));
     };
 
-        const addRelation = () => {
+    const addRelation = () => {
         setFormData((prev) => ({
             ...prev,
             relations: [...prev.relations, ""],
@@ -167,25 +163,6 @@ const AddModel = () => {
             relations: updated,
         }));
     };
-    // const handleUploadSubmit = async (e) => {
-    //   e.preventDefault();
-    //   if (!file) return;
-
-    //   const formData = new FormData();
-    //   formData.append("file", file);
-    //   console.log("form: ",formData)
-    //   try {
-    //     const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/upload`, formData,{
-    //         headers: {
-    //           'Content-Type': 'multipart/form-data', // 👈 explicitly set
-    //         },
-    //     });
-    //     setUploadedUrl(res.data.fileUrl);
-    //     setFormData(prev => ({ ...prev, fileUrl: res.data.fileUrl }));
-    //   } catch (err) {
-    //     console.error("Upload failed", err);
-    //   }
-    // };
 
     return (
         <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
@@ -220,6 +197,7 @@ const AddModel = () => {
                         ))}
                     </select>
                 </div>
+
                 <div>
                     <label>Description:</label><br />
                     <textarea
@@ -235,6 +213,7 @@ const AddModel = () => {
                   <input type="file" onChange={(e) => setFile(e.target.files[0])} />
                   {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
                 </div>
+
                 <div className="inputs">
                     <label>Design Parameters:</label>
                     {formData.designParameters && formData.designParameters.map((param, index) => (
