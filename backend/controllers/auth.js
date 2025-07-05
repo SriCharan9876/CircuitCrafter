@@ -52,8 +52,15 @@ export const login=async (req, res) => {
 
 export const getmydata = async (req, res) => {
     try {
-        const currUser = req.user; // req.user is set by your auth middleware
-        res.json({ fetched: true, me: currUser });
+        const userid = req.user.userId; // req.user is set by your auth middleware
+        try{
+            const userData=await User.findOne({_id:userid});
+            return res.json({ fetched: true, me: userData });
+        }catch(err){
+            console.error("Error fetching current user details:", err);
+            res.status(500).json({ fetched: false, message: "Failed to fetch user details" });
+        }
+        
     } catch (err) {
         console.error("Error fetching current user data:", err);
         res.status(500).json({ fetched: false, message: "Error fetching profile" });

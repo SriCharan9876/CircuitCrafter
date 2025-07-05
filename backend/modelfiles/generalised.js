@@ -93,78 +93,19 @@ async function modifyLtspiceFileFromCloud(inputFileUrl, inputValues, calc2, rela
     };
 
     const uploadResult = await uploadStream();
-
-    return {
-        cloudinaryUrl: uploadResult.secure_url,
-        values: calc2.map(c => ({ [c]: formatValue(context[c]) }))
-    };
-}
-
-
-/**
- * Main function to modify and upload LTspice .asc file to Cloudinary.
- */
-async function modifyLtspiceFileAndUpload(inputFile, inputValues, calc2, relations) {
-    const filePath = path.resolve(inputFile);
-    const content = fs.readFileSync(filePath, 'utf8');
-    const lines = content.split('\n');
-
-    // Step 1: Evaluate variables
-    const context = { ...inputValues };
-    for (const relation of relations) {
-        const [key, expr] = relation.split('=').map(s => s.trim());
-        try {
-            context[key] = safeEval(expr, context);
-        } catch (err) {
-            throw new Error(`Failed to evaluate "${relation}": ${err.message}`);
+    for (const c of calc2) {
+        if (context[c] === undefined) {
+            console.warn(`Warning: Value for "${c}" is undefined in context.`);
         }
     }
 
-    // Step 2: Replace component values in .asc file
-    for (let i = 0; i < lines.length - 1; i++) {
-        const line = lines[i].trim();
-        if (line.startsWith('SYMATTR InstName')) {
-            const compName = line.split(' ').pop();
-            if (calc2.includes(compName)) {
-                const valueLineIdx = i + 1;
-                if (lines[valueLineIdx].trim().startsWith('SYMATTR Value')) {
-                    const newValStr = formatValue(context[compName]);
-                    lines[valueLineIdx] = `SYMATTR Value ${newValStr}`;
-                }
-            }
-        }
-    }
-
-    const modifiedContent = lines.join('\n');
-
-    // Step 3: Upload modified content to Cloudinary
-    const uploadStream = () => {
-        return new Promise((resolve, reject) => {
-            const stream = cloudinary.uploader.upload_stream({
-                resource_type: "raw",
-                folder:'CircuitCrafter',
-                public_id: `ltspice_outputs/${Date.now()}_modified.asc`,
-                use_filename: true,
-                unique_filename: false,
-                overwrite: true,
-            }, (error, result) => {
-                if (error) reject(error);
-                else resolve(result);
-            });
-
-            streamifier.createReadStream(modifiedContent).pipe(stream);
-        });
-    };
-
-    const uploadResult = await uploadStream();
-
-    // Optional log
-    console.log(`✅ Uploaded to Cloudinary: ${uploadResult.secure_url}`);
 
     return {
         cloudinaryUrl: uploadResult.secure_url,
-        values: calc2.map(c => ({ [c]: formatValue(context[c]) }))
+        public_id: uploadResult.public_id,   // ✅ this line added
+        values: calc2.filter(c => context[c] !== undefined).map(c => ({ [c]: formatValue(context[c]) }))
     };
+
 }
 
 export default modifyLtspiceFileFromCloud;

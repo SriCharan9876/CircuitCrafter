@@ -14,6 +14,7 @@ const MyProfile = () => {
 
       if (res.data.fetched) {
         setUserData(res.data.me);
+        console.log(res.data.me);
       } else {
         alert("Failed to fetch profile");
       }
@@ -35,6 +36,11 @@ const MyProfile = () => {
           <p><strong>Name:</strong> {userdata.name}</p>
           <p><strong>Email:</strong> {userdata.email}</p>
           <p><strong>Role:</strong> {userdata.role}</p>
+          {userdata.generatedFile?.url && (
+            <>
+              <p><strong>Generated File:</strong> <a href={userdata.generatedFile.url} target="_blank" rel="noopener noreferrer">View File</a></p>
+            </>
+          )}
         </div>
       ) : (
         <p>Loading user data...</p>

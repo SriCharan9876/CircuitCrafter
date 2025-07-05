@@ -1,6 +1,4 @@
 import dotenv from 'dotenv';
-import modifyGain from './modelfiles/modify_inv_amp.js';
-import modifyLtspiceFile from './modelfiles/generalised.js';
 import modifyLtspiceFileFromCloud from './modelfiles/generalised.js';
 //if(process.env.NODE_ENV!='production'){
     dotenv.config();
@@ -67,40 +65,39 @@ app.listen(port,()=>{
 //Authentication routes............................................................
 app.use("/api/auth",authenticationRouter);//for signup, login,.. authenticationrelated routes
 
-app.get("/demoSignup",async(req,res)=>{
-    try{
-        const details={
-            name:"admin",
-            email:"admin@xyz.com",
-            password:"xyz",
-            role:"admin",
-        }
-        const new_user=new User(details);
-        await new_user.save();
-        console.log("user created")
-        res.send("user created")
-        // alert("user created");
-    }catch(err){
-        console.log("error occured")
-    }
-})
-
 //Handling backend routes............................................................
 app.use("/api/categories",categoryRouter);
 app.use("/api/models",baseModelRouter);
 app.use('/api', uploadRoute);
-app.use('/api',authenticationRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 	
+import { v2 as cloudinary } from "cloudinary";
 
 //Circuit generation routes (for client usage of models)
-app.post("/api/generate", async (req, res) => {
+app.post("/api/generate",auth, async (req, res) => {
     const { pmodel,inputValues,calc2,relations } = req.body;
     const inputFile = pmodel.fileUrl;
+    const user = await User.findById(req.user.userId);
+    if (user.generatedFile?.public_id) {
+        try {
+            await cloudinary.uploader.destroy(user.generatedFile.public_id, {
+            resource_type: "raw",
+            });
+        } catch (err) {
+            console.warn("Failed to delete previous file:", err.message);
+        }
+    }
+
     try {
-        const {cloudinaryUrl,values}=await modifyLtspiceFileFromCloud(inputFile, inputValues, calc2, relations);
+        const {cloudinaryUrl,public_id,values}=await modifyLtspiceFileFromCloud(pmodel.fileUrl, inputValues, calc2, relations);
         console.log(cloudinaryUrl);
-        res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl:cloudinaryUrl});
+        user.generatedFile = {
+            public_id,
+            url: cloudinaryUrl,
+            baseModelId: pmodel._id
+        };
+        await user.save();
+        res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl,values});
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: "Failed to generate circuit." });
