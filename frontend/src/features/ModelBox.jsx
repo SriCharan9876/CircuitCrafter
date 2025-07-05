@@ -107,7 +107,7 @@ const ModelBox=(({model, onDelete})=>{
                                 }}>UnApprove
                             </button>
                         )}
-                        {isAdmin && model.status == "rejected" && (<>
+                        {isOwner && model.status == "rejected" && (<>
                             <p>Model is rejected</p>
                             <button
                                 onClick={(e) => {
