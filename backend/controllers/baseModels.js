@@ -3,6 +3,8 @@ import BaseModel from '../models/baseModel.js';
 export const index=async(req,res)=>{
     const { category } = req.query;
     const filter=category?{typeName:category}:{}  //find({status:"approved"})
+    filter.status="approved";
+    console.log(filter);
     try{
         const allModels=await BaseModel.find(filter).populate("createdBy");
         return res.json({message:"Success",allModels});
@@ -56,7 +58,14 @@ export const deleteModel=async(req,res)=>{
 }//To delete model
 
 export const getPendingModels= async (req,res)=>{
-    res.send("List all pending models");
+    const filter={status:"pending"};
+    try{
+        const allModels=await BaseModel.find(filter).populate("createdBy");
+        return res.json({message:"Success",allModels});
+    }catch(err){
+        console.error("Error fetching models:", err);
+        res.status(500).json({ message: "Failed to fetch models" });
+    }
 };//to Show all pending models for admin (to be accepted or rejected)
 
 export const getMyModels=async(req,res)=>{

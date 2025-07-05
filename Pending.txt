@@ -7,7 +7,7 @@ icons for categories
 labels for models
 
 backend:...............................
-auth:getmydata page,route (also his current downloaded file)
+auth:getmydata page,route (also his current downloaded file), nodemailer for real email implementation
 models: show pending models for admin, show models created by current user, approve model by admin, edit model
 categories:
 
