@@ -1,5 +1,5 @@
 import express from "express";
-import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus} from "../controllers/baseModels.js";
+import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel} from "../controllers/baseModels.js";
 import {auth} from '../middlewares/authenticate.js';
 import {isAdmin,isOwnerOrAdmin} from '../middlewares/authorize.js';
 
@@ -22,6 +22,7 @@ router
 router
     .route("/:id")
     .get(getModel)
+    .put(editModel)
     .delete(auth,isOwnerOrAdmin,deleteModel)//access to same user, admin
 
 router

@@ -63,6 +63,9 @@ const ModelBox=(({model, onDelete})=>{
         });
         onDelete();
     }
+    const handleEdit=async()=>{
+        navigate(`/models/${model._id}/edit`);
+    }
     return(
         <div className="modelBox"
                         key={model._id}
@@ -96,7 +99,7 @@ const ModelBox=(({model, onDelete})=>{
                             </button>
                             </>
                         )}
-                        {isAdmin && model.status !== "pending" && (
+                        {isAdmin && model.status == "approved" && (
                             <button
                                 onClick={(e) => {
                                 e.stopPropagation();
@@ -104,11 +107,22 @@ const ModelBox=(({model, onDelete})=>{
                                 }}>UnApprove
                             </button>
                         )}
+                        {isAdmin && model.status == "rejected" && (<>
+                            <p>Model is rejected</p>
+                            <button
+                                onClick={(e) => {
+                                e.stopPropagation();
+                                unApproveModel();
+                                }}>Send for re-verification
+                            </button></>
+                        )}
                         
                         {/* Owner or Admin buttons */}
                         {(isOwner || isAdmin) && (
                             <>
-                            <button>Edit</button>
+                            <button onClick={(e)=>{
+                                e.stopPropagation();
+                                handleEdit()}}>Edit</button>
                             <button
                                 onClick={(e) => {
                                 e.stopPropagation();

@@ -90,3 +90,21 @@ export const updateModelStatus=async(req,res)=>{
     await model.save();
     return res.json({updated:true})
 };// to approve pending model created by user (access to admin)
+
+export const editModel = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedModel = req.body;
+
+        const model = await BaseModel.findByIdAndUpdate(id, updatedModel, { new: true });
+
+        if (!model) {
+            return res.status(404).json({ updated: false, message: "Model not found." });
+        }
+
+        res.status(200).json({ updated: true, message: "Model updated successfully.", model });
+    } catch (err) {
+        console.error("Error updating model:", err);
+        res.status(500).json({ updated: false, message: "Server error while updating model." });
+    }
+};

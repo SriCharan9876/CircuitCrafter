@@ -3,10 +3,13 @@ import { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import { model } from "mongoose";
+import { useNavigate } from "react-router-dom";
 
 const EachModel=()=>{
     const token=localStorage.getItem("token");
     const {id}= useParams();
+    const navigate=useNavigate();
     const [pmodel,setmodel]=useState();
     const [got,setgot]=useState(false);
     const [clicked,setClicked]=useState(false);
@@ -87,6 +90,36 @@ const EachModel=()=>{
         }
     };
 
+    const unApproveModel=async()=>{
+        const status="pending";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        getThisModel();
+    }
+    const ApproveModel=async()=>{
+        const status="approved";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        getThisModel();
+    }
+
+    const rejectModel=async()=>{
+        const status="rejected";
+        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        getThisModel();
+
+    }
+    const handleEdit=async()=>{
+        navigate(`/models/${id}/edit`);
+    }
+
     useEffect(()=>{
         getThisModel();
     },[]);
@@ -118,18 +151,44 @@ const EachModel=()=>{
 
                     {isAdmin && pmodel.status === "pending" && (
                         <>
-                        <button>Approve</button>
-                        <button>Reject</button>
+                        <button
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            ApproveModel();
+                            }}>Approve
+                        </button>
+                        <button
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            rejectModel();
+                            }}>Reject
+                        </button>
                         </>
                     )}
-                    {isAdmin && pmodel.status !== "pending" && (
-                        <button>UnApprove</button>
+                    {isAdmin && pmodel.status == "approved" && (
+                        <button
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            unApproveModel();
+                            }}>UnApprove
+                        </button>
+                    )}
+                    {isAdmin && pmodel.status == "rejected" && (<>
+                        <p>Model is rejected</p>
+                        <button
+                            onClick={(e) => {
+                            e.stopPropagation();
+                            unApproveModel();
+                            }}>Send for re-verification
+                        </button></>
                     )}
                     
                     {/* Owner or Admin buttons */}
                     {(isOwner || isAdmin) && (
                         <>
-                        <button>Edit</button>
+                        <button onClick={(e)=>{
+                                // e.stopPropagation();
+                                handleEdit()}}>Edit</button>
                         <button
                             onClick={(e) => {
                             e.stopPropagation();
