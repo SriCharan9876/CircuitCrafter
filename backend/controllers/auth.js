@@ -50,6 +50,12 @@ export const login=async (req, res) => {
     res.status(200).json({ token });
 }
 
-export const getmydata=async(req,res)=>{
-    res.json({fetched:true,me:req.user});
-}
+export const getmydata = async (req, res) => {
+    try {
+        const currUser = req.user; // req.user is set by your auth middleware
+        res.json({ fetched: true, me: currUser });
+    } catch (err) {
+        console.error("Error fetching current user data:", err);
+        res.status(500).json({ fetched: false, message: "Error fetching profile" });
+    }
+};

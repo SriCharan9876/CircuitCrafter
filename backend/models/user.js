@@ -20,6 +20,12 @@ const userSchema=new Schema({
         enum:["admin","user"],
         default:"user"
     },
+    // In user.js schema
+    generatedFile: {
+        public_id: String,
+        url: String,
+        baseModelId: { type: mongoose.Schema.Types.ObjectId, ref: "BaseModel" }
+    },
     createdAt:{
         type:Date,
         default:Date.now

@@ -4,7 +4,6 @@ export const index=async(req,res)=>{
     const { category } = req.query;
     const filter=category?{typeName:category}:{}  //find({status:"approved"})
     filter.status="approved";
-    console.log(filter);
     try{
         const allModels=await BaseModel.find(filter).populate("createdBy");
         return res.json({message:"Success",allModels});
@@ -15,7 +14,6 @@ export const index=async(req,res)=>{
 }//To show all models
 
 export const createModel=async(req,res)=>{
-    console.log(req.user);
     try{
         const finalData=req.body;
         const newmod={

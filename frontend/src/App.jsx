@@ -10,12 +10,15 @@ import AddCategory from "./Pages/addCategory";
 import PendingModels from "./Pages/pendingModels";
 import MyModels from "./Pages/myModels";
 import EditModel from "./Pages/editModel";
+import MyProfile from "./Pages/myProfile";
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/myprofile" element={<MyProfile />} />
         <Route path="/models" element={<Explore />} />
         <Route path="/models/create" element={<AddModel />} />
         <Route path="/models/:id/edit" element={<EditModel />} />
