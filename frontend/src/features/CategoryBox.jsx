@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 const CategoryBox=({category})=>{
     const navigate=useNavigate();
-    const handleNavigate=(categoryName)=>{
-        navigate(`/models?category=${categoryName}`);
+    const handleNavigate=()=>{
+        navigate(`/models?category=${category.name}`);
     }
     return(
         <div className="categoryBox col" style={{
@@ -15,7 +15,7 @@ const CategoryBox=({category})=>{
                             marginBottom: "20px",
                             cursor:"pointer"
                         }}
-                        onClick={()=>handleNavigate(category.name)}
+                        onClick={()=>handleNavigate(e)}
         >
             <h4>{category.label}</h4>
             <p>{category.description}</p>

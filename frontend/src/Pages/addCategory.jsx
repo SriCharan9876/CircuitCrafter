@@ -1,40 +1,24 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 
 const AddCategory = () => {
     const navigate=useNavigate();
+    const { user, token } = useAuth();
     const [formData, setFormData] = useState({
         name: "",
         label: "",
         description: ""
     });
-    const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
-    const [userData,setUserData]=useState({});
 
-    useEffect(()=>{
-        const check_login=()=>{
-            if(token){
-                try{
-                    const user=jwtDecode(token);
-                    console.log(user);
-                    setUserData(user);
-                    if(user.role!="admin"){
-                        alert("login as admin");
-                        navigate("/login");
-
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            }else{
-                navigate("/login");
-            }
+    useEffect(() => {
+        if (!user || user.role !== "admin") {
+            alert("Login as admin");
+            navigate("/login");
         }
-        check_login();
-    },[])
+    }, [user]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -50,11 +34,10 @@ const AddCategory = () => {
                 headers:{Authorization:`Bearer ${token}`}
             });
             if(res.data.added){
-                setMessage("Model added successfully!");
+                setMessage("Category added successfully!");
             }else{
-                setMessage("Model failed to add!");
+                setMessage("Category failed to add!");
             }
-            console.log(res.data);
             setFormData({
                 name: "",
                 label: "",
@@ -105,7 +88,7 @@ const AddCategory = () => {
                     />
                 </div>
 
-                <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }}>
+                <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }} disabled={!formData.name || !formData.label}>
                     Submit
                 </button>
             </form>

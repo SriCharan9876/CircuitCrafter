@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
-
+import { useAuth } from "../contexts/authContext";
 
 const AddModel = () => {
-    const [userData,setUserData]=useState({});
     const navigate=useNavigate();
+    const { user, token } = useAuth();
     const [formData, setFormData] = useState({
         modelName: "",
         typeName: "",
@@ -27,29 +26,17 @@ const AddModel = () => {
         ],
         relations: [""],
     });
-    const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
     const [categories, setCategories] = useState([]);
     const [file, setFile] = useState(null);
     const [uploadedUrl, setUploadedUrl] = useState("");
 
-    // Load categories from backend to populate dropdown (optional)
     useEffect(()=>{
-        const check_login=()=>{
-            if(token){
-                try{
-                    const user=jwtDecode(token);
-                    console.log(user);
-                    setUserData(user);
-                }catch(err){
-                    console.log(err);
-                }
-            }else{
-                navigate("/login");
-            }
+        if (!user) {
+            navigate("/login");
         }
-        check_login();
-    },[])
+    },[user])
+    
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -99,9 +86,10 @@ const AddModel = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (modelRes.data.added) {
-                setMessage("Model added successfully!");
+                setMessage("Model submitted for approval!");
+                setTimeout(() => navigate("/models/mymodels"), 1000);
             } else {
-                setMessage("Model failed to add!");
+                setMessage("Failed to submit model. Please check input or try again.");
             }
             console.log(modelRes.data);
             // Reset form after success

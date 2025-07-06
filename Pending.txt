@@ -1,6 +1,7 @@
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 database:.............................
+check cloud uploading in edit model form
 storing, connecting images for categories, models, userprofilepic
 storing, connecting python, .asc files
 icons for categories
@@ -20,6 +21,7 @@ alerts
 
 frontend:...............................
 navbar,footer,sidebar
+protected routes for few pages
 loader while loading pages,file generation,..
 react,css styling
 feature of sharing the  model

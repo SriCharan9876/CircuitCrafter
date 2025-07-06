@@ -27,7 +27,17 @@
 }
 
 .nav-item {
-  padding: 0.5rem 0.5rem;
+  padding: 1rem 1rem;
+}
+
+.nav-item:hover {
+  background-color: #57606f;
+  color: #ffffff;
+  cursor: pointer;
+}
+.nav-link.active {
+  background-color:#57606f ;
+  border-radius: 5px;
 }
 
 .nav-link {
@@ -42,24 +52,18 @@
   transition: background-color 0.3s ease;
 }
 
-.nav-link:hover {
-  background-color: #57606f;
-  color: #ffffff;
-}
-
-.icon {
-  font-size: 0.8rem;
-}
-
 .close-btn {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  height: 4rem;
 }
+
 #close-button{
-    background-color: rgb(81, 80, 80);
-    border: none;
-    border-radius: 10px;
-    padding: 0.1rem;
-    cursor: pointer;
+  background-color: #57606f;
+  border: none;
+  border-radius: 0.3rem;
+  padding: 0.8rem;
+  margin: 0.5rem;
+  cursor: pointer;
 }

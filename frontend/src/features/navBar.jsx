@@ -1,26 +1,9 @@
 import {Link,useNavigate} from "react-router-dom";
 import "../Styles/navBar.css";
-import { useState,useEffect } from "react";
-import axios from "axios";
-import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../contexts/authContext";
 
 export default function NavBar(){
-  const [curruser,setUser]=useState(null);
-
-  useEffect(()=>{
-    const token=localStorage.getItem("token");
-    // Decode and set permissions
-    if (token) {
-      try {
-        const user=jwtDecode(token);
-        setUser(user);
-        console.log(user)
-      } catch (e) {
-        console.error("Invalid token");
-        localStorage.removeItem("token");
-      }
-    }
-  },[])
+  const { user } = useAuth(); // get user from context
 
   return(
       <div className="navBar">
@@ -37,7 +20,7 @@ export default function NavBar(){
         </div>
 
         <div className="navRight">
-          {curruser&&curruser?(
+          {user?(
             <>
             <div className="navItem">
               <Link to="/models/create" className="navLink">Add new model</Link>

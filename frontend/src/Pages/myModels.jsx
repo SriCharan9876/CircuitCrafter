@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModelBox from "../features/ModelBox";
+import { useAuth } from "../contexts/authContext";
 
 const MyModels = () => {
-    const token = localStorage.getItem("token");
+    const { token } = useAuth();
     const [allModels, setAllModels] = useState([]);
 
     const getModels = async () => {

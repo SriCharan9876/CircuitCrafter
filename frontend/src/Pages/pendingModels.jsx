@@ -1,34 +1,23 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModelBox from "../features/ModelBox";
-import { jwtDecode } from "jwt-decode";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 
 const PendingModels = () => {
-    const token = localStorage.getItem("token");
+    const { user, token } = useAuth();
     const [allModels, setAllModels] = useState([]);
-    const [userData,setUserData]=useState({});
     const navigate=useNavigate();
-    useEffect(()=>{
-        const check_login=()=>{
-            if(token){
-                try{
-                    const user=jwtDecode(token);
-                    console.log(user);
-                    setUserData(user);
-                    if(user.role!="admin"){
-                        alert("login as admin");
-                        navigate("/login");
-                    }else{
-                        getModels();
-                    }
-                }catch(err){
-                    console.log(err);
-                }
-            }
+    
+    useEffect(() => {
+        if (!user) return; // wait for auth to initialize
+        if (user.role !== "admin") {
+        alert("Only admin can access this page");
+        navigate("/login");
+        } else {
+        getModels();
         }
-        check_login();
-    },[])
+    }, [user]);
 
     const getModels = async () => {
         try {
@@ -39,19 +28,13 @@ const PendingModels = () => {
 
             if (res.data.message === "Success") {
                 setAllModels(res.data.allModels);
-                console.log(res.data.allModels);
             } else {
                 alert("Failed to fetch models");
             }
         } catch (err) {
             console.error("Error fetching models:", err);
-            alert("Error occurred while fetching models");
         }
     };
-
-    useEffect(() => {
-    }, []);
-    
 
     return (
         <div style={{ padding: "20px" }} className="allPages">
@@ -64,11 +47,8 @@ const PendingModels = () => {
                     <ModelBox model={model} key={model._id} onDelete={getModels}/>
                 ))}
               </div>
-
             )}
-              </div>
-
-        // </div>
+        </div>
     );
 };
 

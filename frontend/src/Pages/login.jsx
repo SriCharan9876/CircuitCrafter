@@ -1,27 +1,31 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useAuth } from "../contexts/authContext";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [message, setMessage] = useState("");
 
-    const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-        const response = await axios.post("http://localhost:5000/api/auth/login", {
-            email,
-            password
-        }, { withCredentials: true });
+    const { login } = useAuth();
 
-        localStorage.setItem("token", response.data.token);
-        setMessage("Login successful!");
-        console.log(response.data);
-    } catch (error) {
-        setMessage("Login failed. Please check your credentials.");
-        console.error(error);
-    }
-};
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
+                email,
+                password
+            }, { withCredentials: true });
+
+            if (response.data.token && response.data.user) {
+                login(response.data.token, response.data.user); // from useAuth()
+            }
+            setMessage("Login successful!");
+        } catch (error) {
+            setMessage("Login failed. Please check your credentials.");
+            console.error(error);
+        }
+    };
 
 
     return (

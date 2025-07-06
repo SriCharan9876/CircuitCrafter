@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../contexts/authContext";
 
 const EditModel = () => {
   const { id } = useParams();
+  const { token } = useAuth();
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const [formData, setFormData] = useState({
     modelName: "",
@@ -58,7 +59,7 @@ const EditModel = () => {
       if (file) {
         const uploadForm = new FormData();
         uploadForm.append("file", file);
-        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/upload`, uploadForm, {
+        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/baseFile`, uploadForm, {
           headers: { "Content-Type": "multipart/form-data" },
         });
         fileUrl = uploadRes.data.fileUrl;

@@ -3,11 +3,11 @@ import axios from "axios";
 import { useLocation } from "react-router-dom";
 import ModelBox from "../features/ModelBox";
 import { useNavigate } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
 import "../Styles/explore.css"
+import { useAuth } from "../contexts/authContext";
 
 const Explore = () => {
-    const token = localStorage.getItem("token");
+    const { user, token } = useAuth(); // use context
     const navigate=useNavigate();
     const [allModels, setAllModels] = useState([]);
 
@@ -15,19 +15,6 @@ const Explore = () => {
     const location = useLocation(); // Get current URL info
     const queryParams = new URLSearchParams(location.search); // return function to search in parsed query string (?key=value)
     const selectedCategory = queryParams.get("category"); // Get value of 'category' param
-
-    //Getting current user information using jwt_decode
-    let currentUser={};
-    let isAdmin;
-    if(token){
-        try{
-            currentUser=jwtDecode(token);
-            isAdmin=currentUser.role=="admin";
-        }catch(e){
-            console.error("Error in loading current user information");
-        }
-    }
-    
 
     const getModels = async () => {
         try {
@@ -51,11 +38,7 @@ const Explore = () => {
 
     useEffect(() => {
         getModels();
-    }, []);
-
-    const pendingModels=async()=>{
-        navigate("/models/pending")
-    }
+    }, [selectedCategory]);
 
     return (
         <div className="allPages">

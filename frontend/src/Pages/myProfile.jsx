@@ -1,55 +1,33 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
+import "../Styles/myProfile.css";
 
 const MyProfile = () => {
-  const [userdata, setUserData] = useState({});
-  const token = localStorage.getItem("token");
+  const { user, logout } = useAuth();
   const navigate=useNavigate();
-
-  const getMyProfile = async () => {
-    try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
-        withCredentials: true,
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (res.data.fetched) {
-        setUserData(res.data.me);
-      } else {
-        alert("Failed to fetch profile");
-      }
-    } catch (err) {
-      console.error("Error fetching profile:", err);
-      alert("Error occurred while fetching profile");
-    }
-  };
-  const logout=()=>{
-    localStorage.removeItem("token");
-    setUserData({});
-    navigate("/login");
-  }
-
-  useEffect(() => {
-    getMyProfile();
-  }, []);
 
   return (
     <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
       <h2>My Profile</h2>
-      {userdata ? (
+      {user? (
         <div style={{ marginTop: "20px" }}>
-          <p><strong>Name:</strong> {userdata.name}</p>
-          <img src={userdata.profilePic?.url} alt="Profile" style={{width:"20rem",height:"20rem"}}/>
-          <p><strong>Email:</strong> {userdata.email}</p>
-          <p><strong>Role:</strong> {userdata.role}</p>
-          {userdata.generatedFile?.url && (
+          <p><strong>Name:</strong> {user.name}</p>
+          <img src={user.profilePic?.url} alt="Profile" className="userimg"/>
+          <p><strong>Email:</strong> {user.email}</p>
+          <p><strong>Role:</strong> {user.role}</p>
+          {user.generatedFile?.url && (
             <>
-              <p><strong>Generated File:</strong> <a href={userdata.generatedFile.url} target="_blank" rel="noopener noreferrer">View File</a></p>
+            <p><strong>Generated File:</strong> <a href={user.generatedFile.url} target="_blank" rel="noopener noreferrer">View File</a></p>
             </>
           )}
+          <button
+            className="profile-btn"
+            onClick={(e) => navigate(`/models/mymodels`)}
+          >My models
+          </button>
           <div className="logout">
-            <button onClick={()=>logout()}>LogOut</button>
+            <button className="profile-btn" onClick={logout}>LogOut</button>
           </div>
         </div>
       ) : (

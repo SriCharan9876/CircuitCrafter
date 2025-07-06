@@ -2,14 +2,13 @@ import React from "react";
 import { useState,useEffect } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import { jwtDecode } from "jwt-decode";
-import { model } from "mongoose";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../contexts/authContext";
 import "../Styles/modelEach.css"
 
 const EachModel=()=>{
-    const token=localStorage.getItem("token");
     const {id}= useParams();
+    const { user,token } = useAuth();
     const navigate=useNavigate();
     const [pmodel,setmodel]=useState();
     const [got,setgot]=useState(false);
@@ -24,8 +23,8 @@ const EachModel=()=>{
     const getThisModel = async () => {
         try {
             const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`, {
-            withCredentials: true,
-            headers: { Authorization: `Bearer ${token}` }
+                withCredentials: true,
+                headers: { Authorization: `Bearer ${token}` }
             });
 
             if (res.data.found) {
@@ -34,15 +33,9 @@ const EachModel=()=>{
             setgot(true);
 
             // Decode and set permissions
-            if (token) {
-                try {
-                const currentUser = jwtDecode(token);
-                setIsAdmin(currentUser.role === "admin");
-                setIsOwner(model.createdBy._id === currentUser.userId);
-                } catch (e) {
-                console.error("JWT decode error:", e);
-                }
-            }
+            setIsAdmin(user?.role === "admin");
+            setIsOwner(model.createdBy._id === user?._id);
+
             }
         } catch (err) {
             console.error("Error fetching model:", err);
@@ -117,9 +110,6 @@ const EachModel=()=>{
         getThisModel();
 
     }
-    const handleEdit=async()=>{
-        navigate(`/models/${id}/edit`);
-    }
 
     useEffect(()=>{
         getThisModel();
@@ -186,9 +176,10 @@ const EachModel=()=>{
                     {/* Owner or Admin buttons */}
                     {(isOwner || isAdmin) && (
                         <>
-                        <button className="model-button2" onClick={(e)=>{
-                                // e.stopPropagation();
-                                handleEdit()}}>Edit</button>
+                        <button 
+                            className="model-button2" 
+                            onClick={(e)=>{navigate(`/models/${id}/edit`)}}
+                            >Edit</button>
                         <button
                             className="model-button2"
                             onClick={(e) => {
