@@ -1,0 +1,9 @@
+.footer{
+  width: calc(100% - 210px);
+  position: fixed;
+  left: 210px;
+  top: 89vh;
+  bottom: 0;
+  right: 0;
+  background-color: grey;
+}
