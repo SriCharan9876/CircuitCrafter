@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
+
 
 const AddModel = () => {
+    const [userData,setUserData]=useState({});
+    const navigate=useNavigate();
     const [formData, setFormData] = useState({
         modelName: "",
         typeName: "",
@@ -29,6 +34,22 @@ const AddModel = () => {
     const [uploadedUrl, setUploadedUrl] = useState("");
 
     // Load categories from backend to populate dropdown (optional)
+    useEffect(()=>{
+        const check_login=()=>{
+            if(token){
+                try{
+                    const user=jwtDecode(token);
+                    console.log(user);
+                    setUserData(user);
+                }catch(err){
+                    console.log(err);
+                }
+            }else{
+                navigate("/login");
+            }
+        }
+        check_login();
+    },[])
     useEffect(() => {
         const fetchCategories = async () => {
             try {
@@ -165,7 +186,7 @@ const AddModel = () => {
     };
 
     return (
-        <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
+        <div style={{ maxWidth: "600px", margin: "auto" }} className="allPages">
             <h2>Add New Model</h2>
             <form onSubmit={handleSubmit}>
                 <div>

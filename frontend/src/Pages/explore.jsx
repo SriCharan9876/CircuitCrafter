@@ -18,14 +18,16 @@ const Explore = () => {
 
     //Getting current user information using jwt_decode
     let currentUser={};
+    let isAdmin;
     if(token){
         try{
             currentUser=jwtDecode(token);
+            isAdmin=currentUser.role=="admin";
         }catch(e){
             console.error("Error in loading current user information");
         }
     }
-    const isAdmin=currentUser.role=="admin";
+    
 
     const getModels = async () => {
         try {

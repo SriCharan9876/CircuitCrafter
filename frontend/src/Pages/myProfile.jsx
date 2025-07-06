@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const MyProfile = () => {
   const [userdata, setUserData] = useState({});
   const token = localStorage.getItem("token");
+  const navigate=useNavigate();
 
   const getMyProfile = async () => {
     try {
@@ -23,6 +25,11 @@ const MyProfile = () => {
       alert("Error occurred while fetching profile");
     }
   };
+  const logout=()=>{
+    localStorage.removeItem("token");
+    setUserData({});
+    navigate("/login");
+  }
 
   useEffect(() => {
     getMyProfile();
@@ -42,6 +49,9 @@ const MyProfile = () => {
               <p><strong>Generated File:</strong> <a href={userdata.generatedFile.url} target="_blank" rel="noopener noreferrer">View File</a></p>
             </>
           )}
+          <div className="logout">
+            <button onClick={()=>logout()}>LogOut</button>
+          </div>
         </div>
       ) : (
         <p>Loading user data...</p>

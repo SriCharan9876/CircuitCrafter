@@ -1,10 +1,11 @@
 .navBar {
   position: fixed;
   top: 0;
-  left: 210px;
+  left: 47px;
   right: 0;
   display: flex;
   justify-content: space-between;
+  height: 9vh;
   background-color: grey;
   height: 9vh;
   align-items: center;

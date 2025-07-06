@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const AddCategory = () => {
+    const navigate=useNavigate();
     const [formData, setFormData] = useState({
         name: "",
         label: "",
@@ -9,6 +12,29 @@ const AddCategory = () => {
     });
     const token=localStorage.getItem("token");
     const [message, setMessage] = useState("");
+    const [userData,setUserData]=useState({});
+
+    useEffect(()=>{
+        const check_login=()=>{
+            if(token){
+                try{
+                    const user=jwtDecode(token);
+                    console.log(user);
+                    setUserData(user);
+                    if(user.role!="admin"){
+                        alert("login as admin");
+                        navigate("/login");
+
+                    }
+                }catch(err){
+                    console.log(err);
+                }
+            }else{
+                navigate("/login");
+            }
+        }
+        check_login();
+    },[])
 
     const handleChange = (e) => {
         const { name, value } = e.target;
