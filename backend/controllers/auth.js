@@ -4,13 +4,13 @@ import bcrypt from "bcryptjs";
 
 export const signup=async(req,res)=>{
     try {
-    const { name,email,role,password } = req.body;
+    const { name,email,role,password,profilePic } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const new_user = new User({ name, email, password: hashedPassword,role });
+    const new_user = new User({ name, email, password: hashedPassword,role,profilePic });
     await new_user.save();
     res.status(201).json({ message: "User created" }); 
   } catch (error) {

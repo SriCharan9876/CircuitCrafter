@@ -16,7 +16,6 @@ const MyProfile = () => {
 
       if (res.data.fetched) {
         setUserData(res.data.me);
-        console.log(res.data.me);
       } else {
         alert("Failed to fetch profile");
       }
@@ -41,7 +40,7 @@ const MyProfile = () => {
       {userdata ? (
         <div style={{ marginTop: "20px" }}>
           <p><strong>Name:</strong> {userdata.name}</p>
-          <img src={userdata.profilePic?.url} alt="Profile" />
+          <img src={userdata.profilePic?.url} alt="Profile" style={{width:"20rem",height:"20rem"}}/>
           <p><strong>Email:</strong> {userdata.email}</p>
           <p><strong>Role:</strong> {userdata.role}</p>
           {userdata.generatedFile?.url && (

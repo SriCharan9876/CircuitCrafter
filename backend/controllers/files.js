@@ -44,3 +44,24 @@ export const generateUserFile=async (req, res) => {
         res.status(500).json({ success: false, error: "Failed to generate circuit." });
     }
 }
+
+export const uploadProfilePic = async (req, res) => {
+    try {
+        console.log("Received file:", req.file); // DEBUG
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "profile_pics"
+        });
+        console.log("Upload result:", result); // DEBUG
+        return res.status(200).json({
+            public_id: result.public_id,
+            url: result.secure_url
+        });
+
+    } catch (err) {
+        console.error("Profile upload error:", err);
+        return res.status(500).json({ message: "Upload failed" });
+    }
+};

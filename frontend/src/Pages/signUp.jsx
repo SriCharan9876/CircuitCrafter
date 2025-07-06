@@ -11,7 +11,6 @@ const SignUp = () => {
 
     const [message, setMessage] = useState("");
     const [file, setFile] = useState(null);
-    const [uploadedUrl, setUploadedUrl] = useState("");
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -23,16 +22,41 @@ const SignUp = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (!file) {
+            setMessage("Please upload an image for profile picture before submitting.");
+            return;
+        }
+        const imageForm=new FormData();
+        imageForm.append("file",file);
+        const imageUploadres = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/profile`,imageForm,{
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            }
+        });
+        const { public_id, url } = imageUploadres.data;
+        
         try {
-            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, {name:formData.name,email:formData.email,role:formData.role,password:formData.password},{
+            const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`, {
+                ...formData,
+                profilePic: { public_id, url }
+            },{
                 withCredentials:true
             });
             setMessage("Signup successful!");
-            console.log(response.data);
-            // Optionally redirect or reset form
+
+            //redirect or reset form
+            setFormData({
+                name: "",
+                email: "",
+                password: "",
+                role: "user",
+            });
+            setFile(null);
+
         } catch (error) {
-            setMessage("Signup failed. Please try again.");
             console.error(error);
+            const errMsg = error.response?.data?.message || "Signup failed. Please try again.";
+            setMessage(errMsg);
         }
     };
 
@@ -88,7 +112,7 @@ const SignUp = () => {
                 <div>
                     <label>Upload your profile picture</label>
                     <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-                    {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
+                    {/* {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>} */}
                 </div>
                 <button type="submit" style={{ padding: "10px 20px" }}>
                     Sign Up
