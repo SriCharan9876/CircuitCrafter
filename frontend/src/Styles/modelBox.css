@@ -1,0 +1,36 @@
+.model-button {
+  background-color: #007bff;
+  color: white;
+  padding: 6px 12px;
+  margin: 4px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.model-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+.model-button:active {
+  transform: scale(0.97);
+}
+
+.model-button.danger {
+  background-color: #dc3545;
+}
+
+.model-button.danger:hover {
+  background-color: #a71d2a;
+}
+
+.model-button.secondary {
+  background-color: #6c757d;
+}
+
+.model-button.secondary:hover {
+  background-color: #4e5357;
+}

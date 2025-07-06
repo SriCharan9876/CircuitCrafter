@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import { model } from "mongoose";
 import { useNavigate } from "react-router-dom";
+import "../Styles/modelEach.css"
 
 const EachModel=()=>{
     const token=localStorage.getItem("token");
@@ -131,33 +132,30 @@ const EachModel=()=>{
                 <p>Loading model.....</p>
             ) : (
                 <>
-                    <div
-                        key={pmodel._id}
-                        style={{
-                            width: "98%",
-                            borderRadius: "8px",
-                            padding: "10px",
-                            marginBottom: "20px"
-                        }}
-                    >
-                        <h2>{pmodel.modelName}</h2>
-                        <p><strong>Type:</strong> {pmodel.typeName}</p>
-                        <p><strong>Description:</strong> {pmodel.description || "N/A"}</p>
-                        <p><strong>File URL:</strong> <a href={pmodel.fileUrl} target="_blank" rel="noreferrer">{pmodel.fileUrl}</a></p>
-                        <p><strong>Owned By:</strong> {pmodel.createdBy.name}</p>
-                        <p><strong>Status:</strong> {pmodel.status}</p>
-                        <p><strong>Created At:</strong> {new Date(pmodel.createdAt).toLocaleString()}</p>
+                    <div className="model-details-grid">
+                      <div><strong>Model Name:</strong></div><div>{pmodel.modelName}</div>
+                      <div><strong>Type:</strong></div><div>{pmodel.typeName}</div>
+                      <div><strong>Description:</strong></div><div>{pmodel.description || "N/A"}</div>
+                      <div><strong>File URL:</strong></div>
+                      <div>
+                        <a href={pmodel.fileUrl} target="_blank" rel="noreferrer">{pmodel.fileUrl}</a>
+                      </div>
+                      <div><strong>Owned By:</strong></div><div>{pmodel.createdBy.name}</div>
+                      <div><strong>Status:</strong></div><div>{pmodel.status}</div>
+                      <div><strong>Created At:</strong></div><div>{new Date(pmodel.createdAt).toLocaleString()}</div>
                     </div>
 
                     {isAdmin && pmodel.status === "pending" && (
                         <>
                         <button
+                            className="model-button2"
                             onClick={(e) => {
                             e.stopPropagation();
                             ApproveModel();
                             }}>Approve
                         </button>
                         <button
+                            className="model-button2"
                             onClick={(e) => {
                             e.stopPropagation();
                             rejectModel();
@@ -167,6 +165,7 @@ const EachModel=()=>{
                     )}
                     {isAdmin && pmodel.status == "approved" && (
                         <button
+                            className="model-button2"
                             onClick={(e) => {
                             e.stopPropagation();
                             unApproveModel();
@@ -176,6 +175,7 @@ const EachModel=()=>{
                     {isOwner && pmodel.status == "rejected" && (<>
                         <p>Model is rejected</p>
                         <button
+                            className="model-button2"
                             onClick={(e) => {
                             e.stopPropagation();
                             unApproveModel();
@@ -186,10 +186,11 @@ const EachModel=()=>{
                     {/* Owner or Admin buttons */}
                     {(isOwner || isAdmin) && (
                         <>
-                        <button onClick={(e)=>{
+                        <button className="model-button2" onClick={(e)=>{
                                 // e.stopPropagation();
                                 handleEdit()}}>Edit</button>
                         <button
+                            className="model-button2"
                             onClick={(e) => {
                             e.stopPropagation();
                             deleteModel(pmodel._id);
@@ -199,7 +200,8 @@ const EachModel=()=>{
                     )}
 
                     <div className="customization">
-                        <button onClick={clickedbut}>Customize this model</button>
+                        {!clicked && <button onClick={clickedbut}>Customize this model</button>}
+                        {clicked && <button onClick={clickedbut}>Back</button>}
                         <div className="fields">
                             {clicked && 
                                 <>  

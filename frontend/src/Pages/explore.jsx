@@ -60,16 +60,14 @@ const Explore = () => {
     return (
         <div className="allPages">
             <h1>All Models</h1>
-            {isAdmin&&(
-                <button onClick={()=>pendingModels()}>Models to be Approved</button>
-            )}
-
             {allModels.length === 0 ? (
-                <p>Loading models....</p>
+              <p>Loading models....</p>
             ) : (
-                allModels.map((model) => (
-                    <ModelBox model={model} key={model._id} onDelete={getModels}/>
-                ))
+              <div className="model-grid">
+                {allModels.map((model) => (
+                  <ModelBox model={model} key={model._id} onDelete={getModels} />
+                ))}
+              </div>
             )}
         </div>
     );

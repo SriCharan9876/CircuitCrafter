@@ -1,10 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModelBox from "../features/ModelBox";
+import { jwtDecode } from "jwt-decode";
+import { useNavigate } from "react-router-dom";
 
 const PendingModels = () => {
     const token = localStorage.getItem("token");
     const [allModels, setAllModels] = useState([]);
+    const [userData,setUserData]=useState({});
+    const navigate=useNavigate();
+    useEffect(()=>{
+        const check_login=()=>{
+            if(token){
+                try{
+                    const user=jwtDecode(token);
+                    console.log(user);
+                    setUserData(user);
+                    if(user.role!="admin"){
+                        alert("login as admin");
+                        navigate("/login");
+                    }else{
+                        getModels();
+                    }
+                }catch(err){
+                    console.log(err);
+                }
+            }
+        }
+        check_login();
+    },[])
 
     const getModels = async () => {
         try {
@@ -26,7 +50,6 @@ const PendingModels = () => {
     };
 
     useEffect(() => {
-        getModels();
     }, []);
     
 
@@ -36,11 +59,16 @@ const PendingModels = () => {
             {allModels.length === 0 ? (
                 <p>Loading models....</p>
             ) : (
-                allModels.map((model) => (
+              <div className="model-grid">
+                {allModels.map((model) => (
                     <ModelBox model={model} key={model._id} onDelete={getModels}/>
-                ))
+                ))}
+              </div>
+
             )}
-        </div>
+              </div>
+
+        // </div>
     );
 };
 

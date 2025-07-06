@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
+import "../Styles/modelBox.css";
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
@@ -67,18 +68,22 @@ const ModelBox=(({model, onDelete})=>{
         navigate(`/models/${model._id}/edit`);
     }
     return(
-        <div className="modelBox"
-                        key={model._id}
-                        style={{
-                            width: "98%",
+        <div
+                          className="modelBox"
+                          key={model._id}
+                          style={{
                             border: "1px solid #ccc",
-                            borderRadius: "8px",
-                            padding: "10px",
-                            marginBottom: "20px",
-                            cursor:"pointer"
-                        }}
-                        onClick={()=>handleNavigate(model._id)}
-                    >
+                            borderRadius: "10px",
+                            padding: "16px",
+                            backgroundColor: "#fff",
+                            boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                            transition: "transform 0.2s",
+                            cursor: "pointer"
+                          }}
+                          onClick={() => handleNavigate(model._id)}
+                          onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
+                          onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
+                        >
                         <h2>{model.modelName}</h2>
                         <p><strong>Type:</strong> {model.typeName}</p>
                         <p><strong>Owned By:</strong> {model.createdBy.name}</p>
@@ -86,12 +91,14 @@ const ModelBox=(({model, onDelete})=>{
                         {isAdmin && model.status === "pending" && (
                             <>
                             <button
+                                className="model-button"
                                 onClick={(e) => {
                                 e.stopPropagation();
                                 ApproveModel();
                                 }}>Approve
                             </button>
                             <button
+                                className="model-button"
                                 onClick={(e) => {
                                 e.stopPropagation();
                                 rejectModel();
@@ -101,6 +108,7 @@ const ModelBox=(({model, onDelete})=>{
                         )}
                         {isAdmin && model.status == "approved" && (
                             <button
+                                className="model-button"
                                 onClick={(e) => {
                                 e.stopPropagation();
                                 unApproveModel();
@@ -110,6 +118,7 @@ const ModelBox=(({model, onDelete})=>{
                         {isOwner && model.status == "rejected" && (<>
                             <p>Model is rejected</p>
                             <button
+                                className="model-button"
                                 onClick={(e) => {
                                 e.stopPropagation();
                                 unApproveModel();
@@ -120,10 +129,13 @@ const ModelBox=(({model, onDelete})=>{
                         {/* Owner or Admin buttons */}
                         {(isOwner || isAdmin) && (
                             <>
-                            <button onClick={(e)=>{
+                            <button 
+                                className="model-button"
+                                onClick={(e)=>{
                                 e.stopPropagation();
                                 handleEdit()}}>Edit</button>
                             <button
+                                className="model-button"
                                 onClick={(e) => {
                                 e.stopPropagation();
                                 deleteModel(model._id);
