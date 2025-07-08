@@ -41,8 +41,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           {isOpen?( 
             <>
             {/*Logo object from navbar: */}
-            <div className="navItem">
-              <Link to="/models" className="logo navLink">Circuitcrafter</Link>
+            <div className="navItem" id="hom">
+              <Link to="/models" className="logo navLink" >Circuitcrafter</Link>
             </div>
 
             <button onClick={toggleSidebar} id="close-button">
@@ -50,7 +50,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             </button>
             </>
               ):(
-                <button onClick={toggleSidebar} id="close-button">
+                <button onClick={toggleSidebar} id="close-button" className="close-btn-nav">
                   <MenuIcon style={{ fontSize: "1.5rem", color: "white" }} />
                 </button>
               )

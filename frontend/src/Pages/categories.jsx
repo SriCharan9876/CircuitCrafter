@@ -1,6 +1,7 @@
 import { useState,useEffect } from "react";
 import CategoryBox from "../features/CategoryBox"
 import axios from 'axios';
+import "../Styles/categories.css"
 
 const Categories=()=>{
     const [allCategories,setAllCategories]=useState([]);
