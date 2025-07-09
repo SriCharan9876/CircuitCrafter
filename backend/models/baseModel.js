@@ -16,6 +16,10 @@ const baseModelSchema=new Schema({
         type:String,
         required:true
     },
+    previewImg: {
+        public_id: { type: String },
+        url: { type: String }
+    },
     createdBy: { 
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

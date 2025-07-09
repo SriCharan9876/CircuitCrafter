@@ -123,17 +123,28 @@ const EachModel=()=>{
             ) : (
                 <>
                     <div className="model-details-grid">
-                      <div><strong>Model Name:</strong></div><div>{pmodel.modelName}</div>
-                      <div><strong>Type:</strong></div><div>{pmodel.typeName}</div>
-                      <div><strong>Description:</strong></div><div>{pmodel.description || "N/A"}</div>
-                      <div><strong>File URL:</strong></div>
-                      <div>
+                    <div>
+                        <img
+                            src={pmodel.previewImg?.url}
+                            alt={pmodel.modelName}
+                            className="preview-image"
+                            style={{
+                                width:"600px"
+                            }}
+                        />
+                      </div>
+                      <br />
+                      <div><strong>Model Name: </strong>{pmodel.modelName}</div>
+                      <div><strong>Type: </strong>{pmodel.typeName}</div>
+                      <div><strong>Description: </strong>{pmodel.description || "N/A"}</div>
+                      <div><strong>File URL: </strong>
                         <a href={pmodel.fileUrl} target="_blank" rel="noreferrer">{pmodel.fileUrl}</a>
                       </div>
-                      <div><strong>Owned By:</strong></div><div>{pmodel.createdBy.name}</div>
-                      <div><strong>Status:</strong></div><div>{pmodel.status}</div>
-                      <div><strong>Created At:</strong></div><div>{new Date(pmodel.createdAt).toLocaleString()}</div>
+                      <div><strong>Owned By: </strong>{pmodel.createdBy.name}</div>
+                      <div><strong>Status: </strong>{pmodel.status}</div>
+                      <div><strong>Created At: </strong>{new Date(pmodel.createdAt).toLocaleString()}</div>
                     </div>
+                    <br />
 
                     {isAdmin && pmodel.status === "pending" && (
                         <>

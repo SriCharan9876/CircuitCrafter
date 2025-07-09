@@ -13,6 +13,10 @@ const EditModel = () => {
     typeName: "",
     description: "",
     fileUrl: "",
+    previewImg:{
+      public_id:"",
+      url:""
+    },
     designParameters: [{ parameter: "", upperLimit: 10, lowerLimit: 0 }],
     calcParams: [{ compName: "", comp: "resistor" }],
     relations: [""],
@@ -20,6 +24,7 @@ const EditModel = () => {
 
   const [categories, setCategories] = useState([]);
   const [file, setFile] = useState(null);
+  const [previewFile, setPreviewFile] = useState(null);
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -51,6 +56,17 @@ const EditModel = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handlePreviewFileChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile && !selectedFile.type.startsWith("image/")) {
+        setMessage("Only image files are allowed for profile picture.");
+        setFile(null);
+    } else {
+        setPreviewFile(selectedFile);
+        setMessage(""); // clear old error
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -65,15 +81,41 @@ const EditModel = () => {
         fileUrl = uploadRes.data.fileUrl;
       }
 
-      const updatedModel = {
-        ...formData,
-        fileUrl,
+      let previewImgData = null;
+      if(previewFile){
+        const imgFormData=new FormData();
+        imgFormData.append("file",previewFile);
+        const imageUploadRes=await axios.post(
+          `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
+          imgFormData,
+          {headers:{
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}`
+          }}
+        );
+        const {public_id,url}=imageUploadRes.data;
+        console.log("Uploaded preview image:", public_id, url);
+        previewImgData={public_id,url};
       };
 
-      const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`, updatedModel, {
-        headers: { Authorization: `Bearer ${token}` },
-        withCredentials: true,
-      });
+      const updatedModel = {
+        ...formData,
+        fileUrl: fileUrl || formData.fileUrl,
+        ...(previewImgData && { previewImg: previewImgData }),
+      };
+      console.log("Updated Model Payload:", updatedModel);
+
+
+      const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`,
+        updatedModel,
+        {
+          headers:{ 
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${token}` 
+          },
+          withCredentials: true,
+        }
+      );
 
       if (res.data.updated) {
         setMessage("Model updated successfully!");
@@ -179,6 +221,23 @@ const EditModel = () => {
             </a>
           )}
         </div>
+
+        <div>
+          <label>Upload your circuit preview image (optional):</label>
+          <input type="file"  onChange={handlePreviewFileChange} />
+          <button type="button" onClick={() => setPreviewFile(null)}>remove image</button>
+        </div>
+
+        {previewFile && (
+          <div style={{ marginTop: "10px" }}>
+            <h3>Circuit image preview:</h3>
+            <img
+            src={URL.createObjectURL(previewFile)}
+            alt="Preview"
+            style={{ width: "600px", marginTop: "10px", borderRadius: "6px" }}
+            />
+          </div>
+        )}
 
         <div className="inputs">
           <label>Design Parameters:</label>

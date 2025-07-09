@@ -42,7 +42,10 @@ const Explore = () => {
 
     return (
         <div className="allPages">
-            <h1>All Models</h1>
+            <div className="subnavbar">
+                <h1>All Models</h1>
+                Filters
+            </div>
             {allModels.length === 0 ? (
               <p>Loading models....</p>
             ) : (

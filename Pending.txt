@@ -20,6 +20,8 @@ full scale error handling
 alerts
 
 frontend:...............................
+button, .. as as ui components
+implementing hooks,apis folders
 navbar,footer,sidebar
 protected routes for few pages
 loader while loading pages,file generation,..

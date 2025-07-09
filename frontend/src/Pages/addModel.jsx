@@ -6,11 +6,15 @@ import { useAuth } from "../contexts/authContext";
 const AddModel = () => {
     const navigate=useNavigate();
     const { user, token } = useAuth();
-    const [formData, setFormData] = useState({
+    const initialFormData ={
         modelName: "",
         typeName: "",
         description: "",
         fileUrl: "",
+        previewImg:{
+            public_id:"",
+            url:""
+        },
         designParameters: [
             {
             parameter: "",
@@ -25,11 +29,14 @@ const AddModel = () => {
             },
         ],
         relations: [""],
-    });
+    };
+    const [formData, setFormData] = useState(initialFormData);
     const [message, setMessage] = useState("");
     const [categories, setCategories] = useState([]);
     const [file, setFile] = useState(null);
     const [uploadedUrl, setUploadedUrl] = useState("");
+    const [previewFile, setPreviewFile] = useState(null);
+
 
     useEffect(()=>{
         if (!user) {
@@ -41,7 +48,6 @@ const AddModel = () => {
         const fetchCategories = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
-                console.log(res.data.allCategories);
                 setCategories(res.data.allCategories); // assuming data is array of { _id, name }
             } catch (error) {
                 console.error("Error fetching categories", error);
@@ -55,6 +61,17 @@ const AddModel = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handlePreviewFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile && !selectedFile.type.startsWith("image/")) {
+            setMessage("Only image files are allowed for profile picture.");
+            setFile(null);
+        } else {
+            setPreviewFile(selectedFile);
+            setMessage(""); // clear old error
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
@@ -63,7 +80,7 @@ const AddModel = () => {
         }
         try {
 
-            // STEP 1: Upload the file
+            // STEP 1a: Upload the .asc file
             const formData2 = new FormData();
             formData2.append("file", file);
             const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/basefile`, formData2, {
@@ -75,11 +92,30 @@ const AddModel = () => {
             });
 
             const uploadedUrl2 = uploadRes.data.fileUrl;
-            console.log(uploadedUrl2);
+            setUploadedUrl(uploadedUrl2);
+
+            // STEP 1b: Upload the preview image file
+            let previewImgData = null;
+            if(previewFile){
+                const imgFormData=new FormData();
+                imgFormData.append("file",previewFile);
+                const imageUploadRes=await axios.post(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
+                    imgFormData,
+                    {headers:{
+                        'Content-Type': 'multipart/form-data',
+                        Authorization: `Bearer ${token}`
+                    }}
+                );
+                const {public_id,url}=imageUploadRes.data;
+                previewImgData={public_id,url};
+            };
+
             // STEP 2: Now submit the form with the uploaded URL
             const finalData = {
                 ...formData,
                 fileUrl: uploadedUrl2,
+                previewImg:previewImgData,
             };
             const modelRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, finalData, {
                 withCredentials: true,
@@ -91,28 +127,8 @@ const AddModel = () => {
             } else {
                 setMessage("Failed to submit model. Please check input or try again.");
             }
-            console.log(modelRes.data);
             // Reset form after success
-            setFormData({
-                modelName: "",
-                typeName: "",
-                description: "",
-                fileUrl: "",
-                designParameters: [
-                    {
-                    parameter: "",
-                    upperLimit: 10,
-                    lowerLimit: 0,
-                    },
-                ],
-                calcParams: [
-                    {
-                    compName: "",
-                    comp: "resistor",
-                    },
-                ],
-                relations: [""],
-            });
+            setFormData(initialFormData);
             setFile(null);
             setUploadedUrl("");
         } catch (err) {
@@ -173,6 +189,14 @@ const AddModel = () => {
         }));
     };
 
+    const removeDesignParam = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            designParameters: prev.designParameters.filter((_, i) => i !== index),
+        }));
+    };
+
+
     return (
         <div style={{ maxWidth: "600px", margin: "auto" }} className="allPages">
             <h2>Add New Model</h2>
@@ -219,9 +243,27 @@ const AddModel = () => {
                 </div>
 
                 <div>
+                    <label>Upload your circuit file (.asc): </label>
                   <input type="file" onChange={(e) => setFile(e.target.files[0])} />
                   {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
                 </div>
+
+                <div>
+                    <label>Upload your circuit preview image (optional):</label>
+                    <input type="file"  onChange={handlePreviewFileChange} />
+                    <button type="button" onClick={() => setPreviewFile(null)}>remove image</button>
+                </div>
+
+                {previewFile && (
+                    <div style={{ marginTop: "10px" }}>
+                        <h3>Circuit image preview:</h3>
+                        <img
+                        src={URL.createObjectURL(previewFile)}
+                        alt="Preview"
+                        style={{ width: "600px", marginTop: "10px", borderRadius: "6px" }}
+                        />
+                    </div>
+                )}
 
                 <div className="inputs">
                     <label>Design Parameters:</label>
@@ -253,6 +295,7 @@ const AddModel = () => {
                                 style={{ width: "10%", padding: "8px", marginLeft: "1%", marginRight: "1%"  }}
                                 id="lowerLimit"
                             />
+                            <button onClick={() => removeDesignParam(index)}>Remove</button>
                         </div>
                     ))}
                     <button type="button" onClick={addinput} style={{ marginTop: "10px" }}>

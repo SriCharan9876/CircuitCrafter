@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 
 const SignUp = () => {
-    const [formData, setFormData] = useState({
+    const initialFormData={
         name: "",
         email: "",
         password: "",
         role: "user", // Default role
-    });
+    };
+    const [formData, setFormData] = useState(initialFormData);
 
     const [message, setMessage] = useState("");
     const [file, setFile] = useState(null);
@@ -19,6 +20,18 @@ const SignUp = () => {
             [name]: value,
         }));
     };
+
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile && !selectedFile.type.startsWith("image/")) {
+            setMessage("Only image files are allowed for profile picture.");
+            setFile(null);
+        } else {
+            setFile(selectedFile);
+            setMessage(""); // clear old error
+        }
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -45,12 +58,7 @@ const SignUp = () => {
             setMessage("Signup successful!");
 
             //redirect or reset form
-            setFormData({
-                name: "",
-                email: "",
-                password: "",
-                role: "user",
-            });
+            setFormData(initialFormData);
             setFile(null);
 
         } catch (error) {
@@ -111,9 +119,20 @@ const SignUp = () => {
                 </div>
                 <div>
                     <label>Upload your profile picture</label>
-                    <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-                    {/* {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>} */}
+                    <input type="file" onChange={handleFileChange} />
+                    {/* <img src={user.profilePic?.url} alt="Profile" className="userimg"/> */}
                 </div>
+                {file && (
+                    <div style={{ marginTop: "10px" }}>
+                        <h3>Image preview:</h3>
+                        <img
+                        src={URL.createObjectURL(file)}
+                        alt="Preview"
+                        style={{ width: "100px", height: "100px", objectFit: "cover", borderRadius: "50%" }}
+                        />
+                    </div>
+                )}
+
                 <button type="submit" style={{ padding: "10px 20px" }}>
                     Sign Up
                 </button>

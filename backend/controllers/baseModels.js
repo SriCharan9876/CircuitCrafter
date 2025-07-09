@@ -92,13 +92,28 @@ export const updateModelStatus=async(req,res)=>{
 export const editModel = async (req, res) => {
     try {
         const { id } = req.params;
-        const updatedModel = req.body;
+        const updatedData = req.body;
 
-        const model = await BaseModel.findByIdAndUpdate(id, updatedModel, { new: true });
-
+        const model = await BaseModel.findById(id);
         if (!model) {
             return res.status(404).json({ updated: false, message: "Model not found." });
         }
+
+        // Update fields manually
+        model.modelName = updatedData.modelName;
+        model.typeName = updatedData.typeName;
+        model.description = updatedData.description;
+        model.fileUrl = updatedData.fileUrl;
+        model.designParameters = updatedData.designParameters;
+        model.calcParams = updatedData.calcParams;
+        model.relations = updatedData.relations;
+
+        // Conditionally update previewImg
+        if (updatedData.previewImg && updatedData.previewImg.url) {
+            model.previewImg = updatedData.previewImg;
+        }
+
+        await model.save();
 
         res.status(200).json({ updated: true, message: "Model updated successfully.", model });
     } catch (err) {
@@ -106,3 +121,4 @@ export const editModel = async (req, res) => {
         res.status(500).json({ updated: false, message: "Server error while updating model." });
     }
 };
+

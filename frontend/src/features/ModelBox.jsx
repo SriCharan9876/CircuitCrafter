@@ -47,6 +47,15 @@ const ModelBox=(({model, onDelete})=>{
             onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
             <h2>{model.modelName}</h2>
+            <img
+                src={model.previewImg?.url}
+                alt={model.modelName}
+                className="preview-image"
+                style={{
+                    width:"300px"
+                }}
+            />
+
             <p><strong>Type:</strong> {model.typeName}</p>
             <p><strong>Owned By:</strong> {model.createdBy.name}</p>
 

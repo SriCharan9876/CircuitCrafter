@@ -16,7 +16,7 @@ const CategoryBox=({category})=>{
                             marginBottom: "20px",
                             cursor:"pointer"
                         }}
-                        onClick={()=>handleNavigate()}
+                        onClick={(e)=>handleNavigate(e)}
         >
             <h4>{category.label}</h4>
             <p>{category.description}</p>

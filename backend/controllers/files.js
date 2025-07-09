@@ -4,12 +4,14 @@ import { v2 as cloudinary } from "cloudinary";
 
 export const uploadBaseFile=async(req, res) => {
   try {
+    console.log("REQ.FILE", req.file);
     if (!req.file || !req.file.path) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
     return res.status(200).json({ fileUrl: req.file.path }); // or req.file.url if that's what Cloudinary gives
   } catch (err) {
-    console.error('Upload error:', err);
+    console.error("Upload error:");
+    console.dir(err, { depth: null });
     return res.status(500).json({ error: 'Server error during upload' });
   }
 };
@@ -47,14 +49,12 @@ export const generateUserFile=async (req, res) => {
 
 export const uploadProfilePic = async (req, res) => {
     try {
-        console.log("Received file:", req.file); // DEBUG
         if (!req.file) {
             return res.status(400).json({ message: "No file uploaded" });
         }
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "profile_pics"
         });
-        console.log("Upload result:", result); // DEBUG
         return res.status(200).json({
             public_id: result.public_id,
             url: result.secure_url
@@ -62,6 +62,25 @@ export const uploadProfilePic = async (req, res) => {
 
     } catch (err) {
         console.error("Profile upload error:", err);
+        return res.status(500).json({ message: "Upload failed" });
+    }
+};
+
+export const uploadModelPreviewImg = async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).json({ message: "No file uploaded" });
+        }
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "model_pics"
+        });
+        return res.status(200).json({
+            public_id: result.public_id,
+            url: result.secure_url
+        });
+
+    } catch (err) {
+        console.error("Base model preview image upload error:", err);
         return res.status(500).json({ message: "Upload failed" });
     }
 };
