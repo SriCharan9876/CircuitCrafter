@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import {notify} from "../features/toastManager"
 import { useAuth } from "../contexts/authContext";
 
 const AddModel = () => {
@@ -123,9 +124,11 @@ const AddModel = () => {
             });
             if (modelRes.data.added) {
                 setMessage("Model submitted for approval!");
+                notify.success("Model submitted for approval!");
                 setTimeout(() => navigate("/models/mymodels"), 1000);
             } else {
                 setMessage("Failed to submit model. Please check input or try again.");
+                notify.error("Failed to submit");
             }
             // Reset form after success
             setFormData(initialFormData);
@@ -133,7 +136,7 @@ const AddModel = () => {
             setUploadedUrl("");
         } catch (err) {
             console.error("Error during submission:", err);
-            setMessage("Failed to upload or submit model.");
+            notify.error("Failed to upload or submit model.")
         }
     };
 

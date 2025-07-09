@@ -18,7 +18,9 @@ const baseModelSchema=new Schema({
     },
     previewImg: {
         public_id: { type: String },
-        url: { type: String }
+        url: { type: String,
+            default:"https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
+         },
     },
     createdBy: { 
         type: mongoose.Schema.Types.ObjectId,

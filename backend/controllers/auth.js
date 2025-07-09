@@ -1,6 +1,9 @@
 import User from "../models/user.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
+import { OAuth2Client } from "google-auth-library";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export const signup=async(req,res)=>{
     try {
@@ -75,3 +78,50 @@ export const getmydata = async (req, res) => {
         res.status(500).json({ fetched: false, message: "Error fetching profile" });
     }
 };
+
+const client = new OAuth2Client(process.env.VITE_GOOGLE_CLIENT_ID);
+export const googleLogin=async(req,res)=>{
+  try{
+    const { token } = req.body;
+    const ticket = await client.verifyIdToken({
+      idToken: token,
+      audience: process.env.VITE_GOOGLE_CLIENT_ID,
+    });
+    const payload = ticket.getPayload();
+    const { email, sub: googleId, name, picture } = payload;
+
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      // Generate a random dummy password (hashed)
+      const randomPassword = googleId + Date.now(); // or crypto.randomBytes()
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = new User({
+        name,
+        email,
+        password: hashedPassword,
+        profilePic: {
+          url: picture,
+          public_id: "google-oauth", // or leave blank
+        },
+        googleId:googleId
+      });
+      await user.save();
+    }
+    const token2 = jwt.sign(
+      {
+        userId: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.json({ token: token2});
+  }catch(err){
+    console.log(err);
+    return res.json({logged:false})
+  }
+}

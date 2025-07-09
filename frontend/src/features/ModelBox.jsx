@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../Styles/modelBox.css";
 import { useAuth } from "../contexts/authContext"; // use context
+import {notify} from "../features/toastManager"
+
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
@@ -35,6 +37,7 @@ const ModelBox=(({model, onDelete})=>{
             onDelete();
         }catch (err) {
             console.error("Error updating model status", err);
+            notify.error("Error updating model status")
         }
         
     }
@@ -47,6 +50,7 @@ const ModelBox=(({model, onDelete})=>{
             onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
             <h2>{model.modelName}</h2>
+            <hr />
             <img
                 src={model.previewImg?.url}
                 alt={model.modelName}

@@ -1,5 +1,5 @@
 import express from "express";
-import {signup, login,getmydata} from "../controllers/auth.js";
+import {signup, login,getmydata, googleLogin} from "../controllers/auth.js";
 const router=express.Router();
 import {auth} from '../middlewares/authenticate.js';
 
@@ -11,6 +11,10 @@ router
 router
     .route("/login")
     .post(login)
+
+router
+    .route("/google-login")
+    .post(googleLogin)
 
 router
     .route("/me")

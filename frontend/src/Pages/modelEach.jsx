@@ -5,6 +5,7 @@ import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import "../Styles/modelEach.css"
+import {notify} from "../features/toastManager"
 
 const EachModel=()=>{
     const {id}= useParams();
@@ -39,6 +40,8 @@ const EachModel=()=>{
             }
         } catch (err) {
             console.error("Error fetching model:", err);
+            notify.error("Error fetching model")
+
         }
     };
 

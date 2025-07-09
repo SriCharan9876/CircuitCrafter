@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ModelBox from "../features/ModelBox";
 import { useNavigate } from "react-router-dom";
+import {notify} from "../features/toastManager"
 import { useAuth } from "../contexts/authContext";
 
 const PendingModels = () => {
@@ -12,7 +13,7 @@ const PendingModels = () => {
     useEffect(() => {
         if (!user) return; // wait for auth to initialize
         if (user.role !== "admin") {
-        alert("Only admin can access this page");
+        notify.error("Only admin can access this page");
         navigate("/login");
         } else {
         getModels();
@@ -29,10 +30,11 @@ const PendingModels = () => {
             if (res.data.message === "Success") {
                 setAllModels(res.data.allModels);
             } else {
-                alert("Failed to fetch models");
+                notify.error("Failed to fetch models")
             }
         } catch (err) {
             console.error("Error fetching models:", err);
+            notify.error("Failed to fetch models");
         }
     };
 

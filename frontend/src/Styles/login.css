@@ -1,0 +1,102 @@
+/* login.css - matches the signup.css theme */
+
+.login-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #e3f2fd, #90caf9);
+  animation: fadeIn 1s ease-in-out;
+}
+
+.login-form {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+  animation: slideUp 0.8s ease-in-out;
+  transition: transform 0.3s ease;
+}
+
+.login-form:hover {
+  transform: translateY(-4px);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #1976d2;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.login-form label {
+  font-weight: 600;
+  margin-top: 14px;
+  display: block;
+  color: #333;
+}
+
+.login-form input {
+  width: 93%;
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 6px;
+  transition: border 0.3s ease;
+}
+
+.login-form input:focus {
+  border-color: #1976d2;
+  outline: none;
+}
+
+.submit-btn {
+  margin-top: 20px;
+  width: 100%;
+  padding: 12px;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  background-color: #0d47a1;
+}
+
+.form-message {
+  text-align: center;
+  margin-top: 18px;
+  color: #d32f2f;
+  font-weight: 600;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(60px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

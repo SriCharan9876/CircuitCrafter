@@ -40,7 +40,8 @@ const userSchema=new Schema({
     createdAt:{
         type:Date,
         default:Date.now
-    }
+    },
+    googleId:{type:String}
 });
 
 const User=mongoose.model("User",userSchema);

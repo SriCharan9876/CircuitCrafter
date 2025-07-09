@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
+import {notify} from "../features/toastManager"
 
 const AddCategory = () => {
     const navigate=useNavigate();
@@ -15,7 +16,7 @@ const AddCategory = () => {
 
     useEffect(() => {
         if (!user || user.role !== "admin") {
-            alert("Login as admin");
+            notify.error("Login as admin");
             navigate("/login");
         }
     }, [user]);

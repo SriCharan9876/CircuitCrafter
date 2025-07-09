@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/authContext";
+import {notify} from "../features/toastManager"
+
 
 const EditModel = () => {
   const { id } = useParams();
@@ -34,7 +36,7 @@ const EditModel = () => {
         setFormData(res.data.pmodel);
       } catch (err) {
         console.error("Failed to fetch model", err);
-        setMessage("Error loading model data.");
+        notify.error("Error loading model's data")
       }
     };
 

@@ -2,6 +2,7 @@ import { useState,useEffect } from "react";
 import CategoryBox from "../features/CategoryBox"
 import axios from 'axios';
 import "../Styles/categories.css"
+import {notify} from "../features/toastManager"
 
 const Categories=()=>{
     const [allCategories,setAllCategories]=useState([]);
@@ -13,6 +14,7 @@ const Categories=()=>{
         })
         .catch((err)=>{
             console.log("error in loading categories", err);
+            notify.error("Error in loading categories");
         })
     },[]);
 

@@ -5,6 +5,7 @@ import ModelBox from "../features/ModelBox";
 import { useNavigate } from "react-router-dom";
 import "../Styles/explore.css"
 import { useAuth } from "../contexts/authContext";
+import {notify} from "../features/toastManager"
 
 const Explore = () => {
     const { user, token } = useAuth(); // use context
@@ -28,11 +29,11 @@ const Explore = () => {
                 setAllModels(res.data.allModels);
                 console.log(res.data.allModels);
             } else {
-                alert("Failed to fetch models");
+                notify.error("Failed to fetch models");
             }
         } catch (err) {
             console.error("Error fetching models:", err);
-            alert("Error occurred while fetching models");
+            notify.error("Error occurred while fetching models")
         }
     };
 

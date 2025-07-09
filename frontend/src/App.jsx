@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import ToastManager from "./features/toastManager";
 import { AuthProvider } from "./contexts/authContext";
 import './App.css'
 import SignUp from "./Pages/signUp";
@@ -17,6 +18,7 @@ function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <ToastManager/>
         <Routes>
           <Route path="/signUp" element={<SignUp />} />
           <Route path="/login" element={<Login />} />
