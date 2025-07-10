@@ -76,7 +76,11 @@ const AddModel = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!file) {
-            setMessage("Please upload a file before submitting.");
+            setMessage("Please upload basemodel file before submitting.");
+            return;
+        }
+        if (!previewFile) {
+            setMessage("Please upload circuit preview image before submitting.");
             return;
         }
         try {
@@ -91,26 +95,22 @@ const AddModel = () => {
                     Authorization: `Bearer ${token}`
                 },
             });
-
             const uploadedUrl2 = uploadRes.data.fileUrl;
             setUploadedUrl(uploadedUrl2);
 
             // STEP 1b: Upload the preview image file
-            let previewImgData = null;
-            if(previewFile){
-                const imgFormData=new FormData();
-                imgFormData.append("file",previewFile);
-                const imageUploadRes=await axios.post(
-                    `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
-                    imgFormData,
-                    {headers:{
-                        'Content-Type': 'multipart/form-data',
-                        Authorization: `Bearer ${token}`
-                    }}
-                );
-                const {public_id,url}=imageUploadRes.data;
-                previewImgData={public_id,url};
-            };
+            const imgFormData=new FormData();
+            imgFormData.append("file",previewFile);
+            const imageUploadRes=await axios.post(
+                `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
+                imgFormData,
+                {headers:{
+                    'Content-Type': 'multipart/form-data',
+                    Authorization: `Bearer ${token}`
+                }}
+            );
+            const {public_id,url}=imageUploadRes.data;
+            let previewImgData={public_id,url};
 
             // STEP 2: Now submit the form with the uploaded URL
             const finalData = {

@@ -2,31 +2,28 @@ http://localhost:5173/models/asdf checking if model ID exists if no :id found di
 
 database:.............................
 check cloud uploading in edit model form
-storing, connecting images for categories, models, userprofilepic
-storing, connecting python, .asc files
-icons for categories
-labels for models
+storing, connecting images for categories
 
 backend:...............................
-auth:getmydata page,route (also his current downloaded file), nodemailer for real email implementation
-models: edit model, while creating/editing model, option to remove parameter inputs after clicking add another parameter button
-categories:
+auth: nodemailer for real email implementation
+models: likes, views, save models, while creating/editing model, option to remove parameter inputs after clicking add another parameter button
+categories: category images converting to icon style 
 
 view status line when user checks his own model
-model calculation, generation
 authentication, authorization error generation at all routes
 client side, server side validations
 full scale error handling
 alerts
 
 frontend:...............................
-button, .. as as ui components
+search, sort by in explore page (popular, recent,..)
+button, .. as ui components
 implementing hooks,apis folders
-navbar,footer,sidebar
+footer
 protected routes for few pages
 loader while loading pages,file generation,..
 react,css styling
-feature of sharing the  model
+feature of sharing the model
 
 minor changes, final changes...........................
 validating the input entered with the given upper and lower limit in model
@@ -40,6 +37,6 @@ extentions...............................
 person to person messaging, community
 sort by recent, popular, most generated
 dark mode
-Likes, ratings, comments, views
+ratings, comments
 edit profile, models
 delete own account with asking to deleting his models, messages, ....

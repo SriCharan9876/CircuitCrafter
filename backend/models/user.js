@@ -34,7 +34,7 @@ const userSchema=new Schema({
         },
         url: {
             type: String,
-            default: "https://res.cloudinary.com/demo/image/upload/v1710000000/default-avatar.png"
+            default: "https://res.cloudinary.com/du1tos77l/image/upload/v1751802026/profile_pics/bw7xgbtlukepm5gqleim.jpg"
         }
     },
     createdAt:{

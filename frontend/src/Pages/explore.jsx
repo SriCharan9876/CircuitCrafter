@@ -27,7 +27,6 @@ const Explore = () => {
 
             if (res.data.message === "Success") {
                 setAllModels(res.data.allModels);
-                console.log(res.data.allModels);
             } else {
                 notify.error("Failed to fetch models");
             }

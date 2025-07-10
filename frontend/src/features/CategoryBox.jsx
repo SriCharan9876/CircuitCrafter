@@ -1,4 +1,3 @@
-import "./CategoryBox.css";
 import { useNavigate } from "react-router-dom";
 import "../Styles/categoryBox.css"
 
@@ -16,9 +15,16 @@ const CategoryBox=({category})=>{
                             marginBottom: "20px",
                             cursor:"pointer"
                         }}
-                        onClick={(e)=>handleNavigate(e)}
+                        onClick={()=>handleNavigate()}
         >
             <h4>{category.label}</h4>
+            <img
+                src={category.visual.url}
+                alt={category.name}
+                style={{
+                    width:"200px"
+                }}
+            />
             <p>{category.description}</p>
         </div>
     )

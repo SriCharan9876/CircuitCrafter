@@ -16,7 +16,6 @@ export const createCategory=async (req,res)=>{
         const categoryData=req.body;
         const newCategory=new Category(categoryData);
         await newCategory.save();
-        console.log("New category created");
         return res.json({added:true,message:"Successfully added"});
     }catch(err){
         console.log(err);

@@ -12,6 +12,16 @@ const categorySchema=Schema({
         type:String,
         required:true
     },
+    visual:{
+        public_id:{
+            type:String,
+            default:"",
+        },
+        url:{
+            type:String,
+            default:"https://res.cloudinary.com/du1tos77l/image/upload/v1752154036/category_visual/rsnewyqsgh2jd9hwn8ej.jpg"
+        }
+    },
     description:String
 });
 

@@ -54,9 +54,8 @@ const ModelBox=(({model, onDelete})=>{
             <img
                 src={model.previewImg?.url}
                 alt={model.modelName}
-                className="preview-image"
                 style={{
-                    width:"300px"
+                    width:"200px",
                 }}
             />
 
@@ -67,7 +66,7 @@ const ModelBox=(({model, onDelete})=>{
                 {isAdmin && model.status === "pending" && (
                     <>
                     <button className="model-button" onClick={(e) => {updateStatus("approved")}}>Approve</button>
-                    <button className="model-button" onClick={(e) => {updateStatus("reject");}}>Reject</button>
+                    <button className="model-button" onClick={(e) => {updateStatus("rejected");}}>Reject</button>
                     </>
                 )}
                 {isAdmin && model.status == "approved" && (

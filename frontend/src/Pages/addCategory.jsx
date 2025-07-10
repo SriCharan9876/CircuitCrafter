@@ -7,12 +7,14 @@ import {notify} from "../features/toastManager"
 const AddCategory = () => {
     const navigate=useNavigate();
     const { user, token } = useAuth();
-    const [formData, setFormData] = useState({
+    const initialFormData={
         name: "",
         label: "",
         description: ""
-    });
+    }
+    const [formData, setFormData] = useState(initialFormData);
     const [message, setMessage] = useState("");
+    const [file, setFile] = useState(null);
 
     useEffect(() => {
         if (!user || user.role !== "admin") {
@@ -26,24 +28,51 @@ const AddCategory = () => {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
 
+    const handleFileChange = (e) => {
+        const selectedFile = e.target.files[0];
+        if (selectedFile && !selectedFile.type.startsWith("image/")) {
+            setMessage("Only image files are allowed for category thumbnail.");
+            setFile(null);
+        } else {
+            setFile(selectedFile);
+            setMessage("");
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories`, formData, {
-                withCredentials: true,
-                headers:{Authorization:`Bearer ${token}`}
-            });
+            let visual=null;
+            if(file){
+                const imageForm = new FormData();
+                imageForm.append("file", file);
+                const imageUploadRes = await axios.post(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/files/category`,
+                    imageForm,{
+                        headers: {
+                            "Content-Type": "multipart/form-data",
+                        }
+                    }
+                );
+
+                const { public_id, url } = imageUploadRes.data;
+                visual={ public_id, url }
+            }
+            
+            const categoryPayload = visual? { ...formData, visual }:formData;
+
+            const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/categories`,categoryPayload,{
+                    withCredentials: true,
+                    headers:{Authorization:`Bearer ${token}`}
+                }
+            );
             if(res.data.added){
                 setMessage("Category added successfully!");
             }else{
                 setMessage("Category failed to add!");
             }
-            setFormData({
-                name: "",
-                label: "",
-                description: ""
-            });
+            setFormData(initialFormData);
         } catch (error) {
             setMessage("Failed to add category.");
             console.error(error);
@@ -88,6 +117,16 @@ const AddCategory = () => {
                         style={{ width: "100%", padding: "8px" }}
                     />
                 </div>
+
+                <label>Upload the category thumbnail image</label>
+                <input type="file" onChange={handleFileChange} />
+                <br /><br />
+
+                {file && (
+                <div >
+                    <img src={URL.createObjectURL(file)} alt="Preview" style={{width:"450px"}} />
+                </div>
+                )}
 
                 <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }} disabled={!formData.name || !formData.label}>
                     Submit

@@ -3,11 +3,8 @@ import dotenv from 'dotenv';
     dotenv.config();
 //}
 
-import Category from "./models/category.js";
-import User from "./models/user.js";
 import cors from "cors";
 import session from 'express-session';
-import BaseModel from './models/baseModel.js';
 
 import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';
@@ -51,7 +48,6 @@ app.use(cors({
 }))
 app.use(session(sessionOptions));
 const port=5000;
-const JWT_SECRET=process.env.JWT_SECRET;
 import connectDB from './config/db.js';
 connectDB();
 

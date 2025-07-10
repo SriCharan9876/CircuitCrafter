@@ -4,7 +4,6 @@ import { v2 as cloudinary } from "cloudinary";
 
 export const uploadBaseFile=async(req, res) => {
   try {
-    console.log("REQ.FILE", req.file);
     if (!req.file || !req.file.path) {
       return res.status(400).json({ error: 'No file uploaded' });
     }
@@ -49,9 +48,6 @@ export const generateUserFile=async (req, res) => {
 
 export const uploadProfilePic = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
-        }
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "profile_pics"
         });
@@ -68,9 +64,6 @@ export const uploadProfilePic = async (req, res) => {
 
 export const uploadModelPreviewImg = async (req, res) => {
     try {
-        if (!req.file) {
-            return res.status(400).json({ message: "No file uploaded" });
-        }
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "model_pics"
         });
@@ -84,3 +77,19 @@ export const uploadModelPreviewImg = async (req, res) => {
         return res.status(500).json({ message: "Upload failed" });
     }
 };
+
+export const uploadCategoryImage=async(req,res)=>{
+    try {
+        const result = await cloudinary.uploader.upload(req.file.path, {
+            folder: "category_visual"
+        });
+        return res.status(200).json({
+            public_id: result.public_id,
+            url: result.secure_url
+        });
+
+    } catch (err) {
+        console.error("Category thumbnail upload error:", err);
+        return res.status(500).json({ message: "Upload failed" });
+    }
+}

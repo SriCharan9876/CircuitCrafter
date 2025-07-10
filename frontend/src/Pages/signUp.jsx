@@ -34,37 +34,41 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!file) {
-      setMessage("Please upload an image for profile picture before submitting.");
-      return;
-    }
     try {
-      const imageForm = new FormData();
-      imageForm.append("file", file);
-      const imageUploadRes = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/files/profile`,
-        imageForm,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      let profilePic=null;
+        if(form){
+          const imageForm = new FormData();
+          imageForm.append("file", file);
+          const imageUploadRes = await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/api/files/profile`,
+            imageForm,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+        );
 
-      const { public_id, url } = imageUploadRes.data;
-      const response = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`,
-        {
-          ...formData,
-          profilePic: { public_id, url },
-        },
+        const { public_id, url } = imageUploadRes.data;
+        profilePic={public_id,url};
+      }
+
+      const userPayLoad = profilePic? { ...formData, profilePic }:formData;
+      
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`,userPayLoad,
         {
           withCredentials: true,
         }
       );
+      if(res.data.added){
+        setMessage("Signed up successfully");
+        notify.success("Signup Successful!!");
+      }else{
+        setMessage("User signup failed!");
+        notify.error("Signup failed!!");
+      }
 
-      notify.success("Signup Successful!!");
-      setMessage("Signup successful!");
       setFormData(initialFormData);
       setFile(null);
     } catch (error) {
@@ -105,11 +109,14 @@ const SignUp = () => {
         <button type="submit" className="submit-btn">
           Sign Up
         </button>
+
         <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
           <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
           <p style={{ margin: '0 10px', textAlign: 'center' }}>OR</p>
           <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
         </div>
+
+        {message && <p style={{ marginTop: "20px" }}>{message}</p>}
 
         <GoogleLoginButton/>
       </form>
