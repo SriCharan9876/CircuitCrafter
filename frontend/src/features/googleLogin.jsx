@@ -5,7 +5,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function GoogleLoginButton() {
-  const { login } = useAuth(); // ✅ your context method
+  const { login } = useAuth(); // your context method
   const navigate=useNavigate();
   const handleGoogleSuccess = async (credentialResponse) => {
     try {

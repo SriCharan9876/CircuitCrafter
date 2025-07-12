@@ -122,3 +122,24 @@ export const editModel = async (req, res) => {
     }
 };
 
+export const toggleLike=async (req,res)=>{
+    const {id}=req.params;
+    const userId = req.user.userId; 
+    const model=await BaseModel.findById(id);
+    if(!model){
+        return res.status(404).json({message:"Model not found!"})
+    }
+    const hasLiked=model.likes.includes(userId);
+    if(hasLiked){
+        model.likes.pull(userId);
+    }else{
+        model.likes.push(userId);
+    }
+
+    await model.save();
+    
+    return res.status(200).json({
+        message:hasLiked?"Unliked":"Liked",
+        likesCount:model.likes.length
+    })
+}

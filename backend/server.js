@@ -78,6 +78,29 @@ app.use("/api/files",filesRouter);
 //     // res.status(statusCode).render("error.ejs",{message});
 // });
 
+// Add this near your other imports
+import BaseModel from './models/baseModel.js'; // adjust path as needed
+
+app.get('/dev/add-likes-to-models', async (req, res) => {
+  try {
+    const models = await BaseModel.find();
+
+    const updates = models.map(async (model) => {
+      if (!Array.isArray(model.likes)) {
+        model.likes = [model.createdBy]; // add owner as initial liker
+        await model.save();
+      }
+    });
+
+    await Promise.all(updates);
+
+    res.status(200).send("Likes field added to all models successfully.");
+  } catch (err) {
+    console.error("Error adding likes:", err);
+    res.status(500).send("Error updating models.");
+  }
+});
+
 //Root directory................................................................
 app.get("/",(req,res)=>{
     res.send("Root directory");

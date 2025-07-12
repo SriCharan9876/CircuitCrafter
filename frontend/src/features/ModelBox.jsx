@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import "../Styles/modelBox.css";
 import { useAuth } from "../contexts/authContext"; // use context
 import {notify} from "../features/toastManager"
-
+import LikeButton from "./engagement/LikeButton";
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
@@ -12,6 +12,7 @@ const ModelBox=(({model, onDelete})=>{
 
     const isAdmin=user?.role==="admin";
     const isOwner = model?.createdBy?._id === user?._id;
+    const currUserId=user?._id;
 
     const deleteModel = async (modelId) => {
         try {
@@ -28,7 +29,8 @@ const ModelBox=(({model, onDelete})=>{
         }
     };
 
-    const updateStatus=async(newStatus)=>{
+    const updateStatus=async(e,newStatus)=>{
+        e.stopPropagation();
         try{
             const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status:newStatus},{
                 headers:{Authorization:`Bearer ${token}`},
@@ -65,16 +67,16 @@ const ModelBox=(({model, onDelete})=>{
             <div onClick={(e)=>e.stopPropagation()} className="modelBoxButtons">
                 {isAdmin && model.status === "pending" && (
                     <>
-                    <button className="model-button" onClick={(e) => {updateStatus("approved")}}>Approve</button>
-                    <button className="model-button" onClick={(e) => {updateStatus("rejected");}}>Reject</button>
+                    <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
+                    <button className="model-button" onClick={(e) => {updateStatus(e,"rejected");}}>Reject</button>
                     </>
                 )}
                 {isAdmin && model.status == "approved" && (
-                    <button className="model-button" onClick={(e) => {updateStatus("pending")}}>UnApprove</button>
+                    <button className="model-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
                 )}
                 {isOwner && model.status == "rejected" && (<>
                     <p>Model is rejected</p>
-                    <button className="model-button"onClick={(e) => {updateStatus("pending")}}>Send for re-verification</button></>
+                    <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
                 )}
                             
                 {/* Owner or Admin buttons */}
@@ -84,6 +86,10 @@ const ModelBox=(({model, onDelete})=>{
                     <button className="model-button" onClick={(e) => {deleteModel(model._id);}}>Delete</button>
                     </>
                 )}
+
+                <div onClick={(e) => e.stopPropagation()}>
+                    <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
+                </div>
             </div>
             
         </div>

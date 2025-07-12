@@ -1,5 +1,5 @@
 import express from "express";
-import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel} from "../controllers/baseModels.js";
+import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel, toggleLike} from "../controllers/baseModels.js";
 import {auth} from '../middlewares/authenticate.js';
 import {isAdmin,isOwnerOrAdmin} from '../middlewares/authorize.js';
 import multer from 'multer';
@@ -30,5 +30,9 @@ router
 router
     .route("/:id/status")
     .put(auth,isAdmin,updateModelStatus)//access to admin only
+
+router
+    .route("/:id/like")
+    .put(auth,toggleLike)
 
 export default router;
