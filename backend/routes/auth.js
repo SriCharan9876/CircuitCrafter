@@ -1,5 +1,5 @@
 import express from "express";
-import {signup, login,getmydata, googleLogin} from "../controllers/auth.js";
+import {signup, login,getmydata, googleLogin,getFavModels, saveModel} from "../controllers/auth.js";
 const router=express.Router();
 import {auth} from '../middlewares/authenticate.js';
 
@@ -19,5 +19,13 @@ router
 router
     .route("/me")
     .get(auth,getmydata)
+
+router
+    .route("/favModels")
+    .get(auth,getFavModels)
+
+router
+    .route("/save")
+    .put(auth,saveModel)
 
 export default router;

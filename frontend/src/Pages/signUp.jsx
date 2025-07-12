@@ -36,7 +36,9 @@ const SignUp = () => {
     e.preventDefault();
     try {
       let profilePic=null;
-        if(form){
+        if(file){
+      console.log("hi")
+
           const imageForm = new FormData();
           imageForm.append("file", file);
           const imageUploadRes = await axios.post(
@@ -54,7 +56,7 @@ const SignUp = () => {
       }
 
       const userPayLoad = profilePic? { ...formData, profilePic }:formData;
-      
+      console.log(userPayLoad)
       const res = await axios.post(
         `${import.meta.env.VITE_API_BASE_URL}/api/auth/signup`,userPayLoad,
         {

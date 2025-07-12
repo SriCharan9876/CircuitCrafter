@@ -5,7 +5,7 @@ import "../Styles/modelBox.css";
 import { useAuth } from "../contexts/authContext"; // use context
 import {notify} from "../features/toastManager"
 import LikeButton from "./engagement/LikeButton";
-
+import SaveButton from "./engagement/saveModel"
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
     const { user, token } = useAuth(); //get current user and token
@@ -89,6 +89,9 @@ const ModelBox=(({model, onDelete})=>{
 
                 <div onClick={(e) => e.stopPropagation()}>
                     <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
+                </div>
+                <div onClick={(e) => e.stopPropagation()}>
+                    <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token}/>
                 </div>
             </div>
             

@@ -4,6 +4,7 @@ import "../Styles/sideBar.css";
 import CloseIcon from "@mui/icons-material/Close";
 import AutoAwesomeMotionIcon from "@mui/icons-material/AutoAwesomeMotion"; // Models
 import AddBoxIcon from "@mui/icons-material/AddBox"; // New Model
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 import CategoryIcon from "@mui/icons-material/Category"; // Categories
 import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"; // New Category
 import InventoryIcon from "@mui/icons-material/Inventory"; // My Models
@@ -23,7 +24,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { to: "/models/create", label: "New Model", icon: <AddBoxIcon /> },
     { to: "/categories", label: "Categories", icon: <CategoryIcon /> },
     { to: "/models/mymodels", label: "My Models", icon: <InventoryIcon /> },
-    { to: "/", label: "Favorite Models", icon: <FavoriteIcon /> },
+    { to: "/favorities", label: "Saved Models", icon: <BookmarkIcon /> },
     { to: "/contact", label: "Contact", icon: <ContactPageIcon /> },
   ];
 
