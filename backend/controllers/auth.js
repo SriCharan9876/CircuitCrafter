@@ -132,13 +132,11 @@ export const getFavModels = async (req, res) => {
   try {
     const userId = req.user.userId;
 
-    // 🔍 Fetch user from DB
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // 📦 Fetch all models whose _id is in savedModels
     const favModels = await BaseModel.find({
       _id: { $in: user.savedModels },
     });

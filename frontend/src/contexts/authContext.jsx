@@ -12,9 +12,6 @@ export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!token) return;
-
     const initializeUser = async () => {
       try {
         // Optional: Validate token expiration (based on jwtDecode)
@@ -43,7 +40,8 @@ export const AuthProvider = ({ children }) => {
         logout();
       }
     };
-
+  useEffect(() => {
+    if (!token) return;
     initializeUser();
   }, [token]);
 
@@ -74,7 +72,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, setUser,login, logout }}>
+    <AuthContext.Provider value={{ user, token, setUser,login, logout,initializeUser }}>
       {children}
     </AuthContext.Provider>
   );

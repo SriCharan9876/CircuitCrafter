@@ -4,15 +4,19 @@ import { useState } from 'react';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import { notify } from '../toastManager';
 import axios from 'axios';
-
-const SaveButton = ({ modelId, savedModels, token }) => {
+import { useAuth } from '../../contexts/authContext';
+const SaveButton = ({ modelId, savedModels, token ,refreshFavorites}) => {
+  const {setUser,user} =useAuth();
   const [saved, setSaved] = useState(savedModels.includes(modelId));
   const [isLoading, setIsLoading] = useState(false);
 
   const toggleSave = async () => {
     if (isLoading) return;
     setIsLoading(true);
+
     try {
+      const newSavedStatus = !saved;
+
       await axios.put(
         `${import.meta.env.VITE_API_BASE_URL}/api/auth/save`,
         { modelId },
@@ -21,9 +25,16 @@ const SaveButton = ({ modelId, savedModels, token }) => {
           withCredentials: true,
         }
       );
-    
-      const newSavedStatus = !saved;
+
       setSaved(newSavedStatus);
+
+      setUser((prevUser) => ({
+        ...prevUser,
+        savedModels: newSavedStatus
+          ? [...prevUser.savedModels, modelId]
+          : prevUser.savedModels.filter((id) => id !== modelId),
+      }));
+      if (refreshFavorites) refreshFavorites();
       notify.success(newSavedStatus ? 'Model saved!' : 'Model removed from saved list');
     } catch (err) {
       console.error("Error toggling saved model:", err);
@@ -32,6 +43,7 @@ const SaveButton = ({ modelId, savedModels, token }) => {
       setIsLoading(false);
     }
   };
+
 
 
   return (

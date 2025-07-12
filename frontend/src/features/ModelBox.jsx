@@ -99,7 +99,7 @@ const ModelBox=(({model, onDelete})=>{
                     <ViewsSection viewCount={model.views.length}/>
                 </div>
                 <div onClick={(e) => e.stopPropagation()}>
-                    <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token}/>
+                    <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
                 </div>
             </div>
             
