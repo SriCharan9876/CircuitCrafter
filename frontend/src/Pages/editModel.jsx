@@ -34,6 +34,16 @@ const EditModel = () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`);
         setFormData(res.data.pmodel);
+        
+        try{
+            await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}/view`,{},{
+                headers:{Authorization:`Bearer ${token}`},
+                withCredentials:true
+            });
+        }catch(err){
+            console.error("Error updating views", err);
+            notify.error("Error updating views of model");
+        }
       } catch (err) {
         console.error("Failed to fetch model", err);
         notify.error("Error loading model's data")

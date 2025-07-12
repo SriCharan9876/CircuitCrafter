@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { IconButton, Tooltip, Typography } from '@mui/material';
 import { notify } from '../toastManager';
 import axios from 'axios';
-import './saveModel.css';
 
 const SaveButton = ({ modelId, savedModels, token }) => {
   const [saved, setSaved] = useState(savedModels.includes(modelId));
@@ -36,7 +35,7 @@ const SaveButton = ({ modelId, savedModels, token }) => {
 
 
   return (
-    <div className="save-section">
+    <div className="save-section" style={{display:"flex",alignItems:"center", gap:"4px"}}>
       <Tooltip title={saved ? 'Unsave Model' : 'Save Model'}>
         <IconButton onClick={toggleSave} disabled={isLoading} color={saved ? 'primary' : 'default'}>
           {saved ? <BookmarkIcon /> : <BookmarkBorderIcon />}

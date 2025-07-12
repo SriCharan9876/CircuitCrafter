@@ -31,7 +31,6 @@ const EachModel=()=>{
 
             if (res.data.found) {
                 const model = res.data.pmodel;
-                console.log(model.views);
                 setmodel(model);
                 setgot(true);
 

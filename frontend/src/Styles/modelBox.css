@@ -48,7 +48,7 @@
 .engagement-section{
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: end;
   align-items: center;
-  gap: 4rem;
+  gap: 1rem;
 }
