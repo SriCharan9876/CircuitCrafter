@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import "../Styles/modelEach.css"
 import {notify} from "../features/toastManager"
+import { model } from "mongoose";
 
 const EachModel=()=>{
     const {id}= useParams();
@@ -29,14 +30,24 @@ const EachModel=()=>{
             });
 
             if (res.data.found) {
-            const model = res.data.pmodel;
-            setmodel(model);
-            setgot(true);
+                const model = res.data.pmodel;
+                console.log(model.views);
+                setmodel(model);
+                setgot(true);
 
-            // Decode and set permissions
-            setIsAdmin(user?.role === "admin");
-            setIsOwner(model.createdBy._id === user?._id);
+                try{
+                    await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}/view`,{},{
+                        headers:{Authorization:`Bearer ${token}`},
+                        withCredentials:true
+                    });
+                }catch(err){
+                    console.error("Error updating views", err);
+                    notify.error("Error updating views of model");
+                }
 
+                // Decode and set permissions
+                setIsAdmin(user?.role === "admin");
+                setIsOwner(model.createdBy._id === user?._id);
             }
         } catch (err) {
             console.error("Error fetching model:", err);
@@ -87,31 +98,19 @@ const EachModel=()=>{
         }
     };
 
-    const unApproveModel=async()=>{
-        const status="pending";
-        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
-            headers:{Authorization:`Bearer ${token}`},
-            withCredentials:true
-        });
-        getThisModel();
-    }
-    const ApproveModel=async()=>{
-        const status="approved";
-        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
-            headers:{Authorization:`Bearer ${token}`},
-            withCredentials:true
-        });
-        getThisModel();
-    }
-
-    const rejectModel=async()=>{
-        const status="rejected";
-        const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${pmodel._id}/status`,{status},{
-            headers:{Authorization:`Bearer ${token}`},
-            withCredentials:true
-        });
-        getThisModel();
-
+    const updateStatus=async(e,newStatus)=>{
+        e.stopPropagation();
+        try{
+            const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status:newStatus},{
+                headers:{Authorization:`Bearer ${token}`},
+                withCredentials:true
+            });
+            onDelete();
+        }catch (err) {
+            console.error("Error updating model status", err);
+            notify.error("Error updating model status")
+        }
+        
     }
 
     useEffect(()=>{
@@ -149,60 +148,29 @@ const EachModel=()=>{
                     </div>
                     <br />
 
-                    {isAdmin && pmodel.status === "pending" && (
+                    <div onClick={(e)=>e.stopPropagation()} className="modelBoxButtons">
+                    {isAdmin && model.status === "pending" && (
                         <>
-                        <button
-                            className="model-button2"
-                            onClick={(e) => {
-                            e.stopPropagation();
-                            ApproveModel();
-                            }}>Approve
-                        </button>
-                        <button
-                            className="model-button2"
-                            onClick={(e) => {
-                            e.stopPropagation();
-                            rejectModel();
-                            }}>Reject
-                        </button>
+                        <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
+                        <button className="model-button" onClick={(e) => {updateStatus(e,"rejected");}}>Reject</button>
                         </>
                     )}
-                    {isAdmin && pmodel.status == "approved" && (
-                        <button
-                            className="model-button2"
-                            onClick={(e) => {
-                            e.stopPropagation();
-                            unApproveModel();
-                            }}>UnApprove
-                        </button>
+                    {isAdmin && model.status == "approved" && (
+                        <button className="model-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
                     )}
-                    {isOwner && pmodel.status == "rejected" && (<>
+                    {isOwner && model.status == "rejected" && (<>
                         <p>Model is rejected</p>
-                        <button
-                            className="model-button2"
-                            onClick={(e) => {
-                            e.stopPropagation();
-                            unApproveModel();
-                            }}>Send for re-verification
-                        </button></>
+                        <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
                     )}
-                    
+                                
                     {/* Owner or Admin buttons */}
                     {(isOwner || isAdmin) && (
                         <>
-                        <button 
-                            className="model-button2" 
-                            onClick={(e)=>{navigate(`/models/${id}/edit`)}}
-                            >Edit</button>
-                        <button
-                            className="model-button2"
-                            onClick={(e) => {
-                            e.stopPropagation();
-                            deleteModel(pmodel._id);
-                            }}>Delete
-                        </button>
+                        <button className="model-button" onClick={(e)=>{navigate(`/models/${model._id}/edit`);}}>Edit</button>
+                        <button className="model-button" onClick={(e) => {deleteModel(model._id);}}>Delete</button>
                         </>
                     )}
+                    </div>
 
                     <div className="customization">
                         {!clicked && <button onClick={clickedbut}>Customize this model</button>}

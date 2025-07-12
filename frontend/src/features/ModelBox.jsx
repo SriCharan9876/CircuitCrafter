@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import "../Styles/modelBox.css";
 import { useAuth } from "../contexts/authContext"; // use context
 import {notify} from "../features/toastManager"
-import LikeButton from "./engagement/LikeButton";
 import SaveButton from "./engagement/saveModel"
+import LikeButton from "./engagement/LikeSection";
+import ViewsSection from "./engagement/viewsSection"
+
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
     const { user, token } = useAuth(); //get current user and token
@@ -87,11 +89,15 @@ const ModelBox=(({model, onDelete})=>{
                     </>
                 )}
 
+            </div>
+
+            <div className="engagement-section">
                 <div onClick={(e) => e.stopPropagation()}>
                     <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
                 </div>
                 <div onClick={(e) => e.stopPropagation()}>
                     <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token}/>
+                    <ViewsSection viewCount={model.views.length}/>
                 </div>
             </div>
             

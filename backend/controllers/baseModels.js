@@ -35,6 +35,19 @@ export const getModel=async(req,res)=>{
     try{
         const {id}=req.params;
         const pmodel=await BaseModel.findById(id).populate("createdBy");
+
+        if (!pmodel) {
+            return res.status(404).json({ found: false, message: "Model not found" });
+        }
+
+        console.log(req.user);
+        const currUser=req.user?.userId;
+        if(currUser&&!pmodel.views.includes(currUser)){
+            console.log(currUser);
+            pmodel.views.push(currUser);
+            await pmodel.save();
+            console.log(pmodel.views);
+        }
         return res.json({found:true,pmodel:pmodel});
     }catch(err){
         console.log(err);
@@ -127,7 +140,7 @@ export const toggleLike=async (req,res)=>{
     const userId = req.user.userId; 
     const model=await BaseModel.findById(id);
     if(!model){
-        return res.status(404).json({message:"Model not found!"})
+        return res.status(404).json({message:"Model not found!"});
     }
     const hasLiked=model.likes.includes(userId);
     if(hasLiked){
@@ -142,4 +155,18 @@ export const toggleLike=async (req,res)=>{
         message:hasLiked?"Unliked":"Liked",
         likesCount:model.likes.length
     })
+}
+
+export const updateViews=async(req,res)=>{
+    const {id}=req.params;
+    const userId=req.user.userId;
+    const model=await BaseModel.findById(id);
+    if(!model){
+        return res.status(404).json({message:"Model not found!"});
+    }
+    const hasViewed=model.views.includes(userId);
+    if(!hasViewed){
+        model.views.push(userId);
+        await model.save();
+    }
 }

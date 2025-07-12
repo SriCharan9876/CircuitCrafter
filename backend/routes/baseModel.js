@@ -1,5 +1,5 @@
 import express from "express";
-import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel, toggleLike} from "../controllers/baseModels.js";
+import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel, toggleLike, updateViews} from "../controllers/baseModels.js";
 import {auth} from '../middlewares/authenticate.js';
 import {isAdmin,isOwnerOrAdmin} from '../middlewares/authorize.js';
 import multer from 'multer';
@@ -34,5 +34,9 @@ router
 router
     .route("/:id/like")
     .put(auth,toggleLike)
+
+router
+    .route("/:id/view")
+    .put(auth,updateViews)
 
 export default router;

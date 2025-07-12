@@ -81,13 +81,13 @@ app.use("/api/files",filesRouter);
 // Add this near your other imports
 import BaseModel from './models/baseModel.js'; // adjust path as needed
 
-app.get('/dev/add-likes-to-models', async (req, res) => {
+app.get('/dev/addviews', async (req, res) => {
   try {
     const models = await BaseModel.find();
 
     const updates = models.map(async (model) => {
-      if (!Array.isArray(model.likes)) {
-        model.likes = [model.createdBy]; // add owner as initial liker
+      if (!Array.isArray(model.views)) {
+        model.views = [model.createdBy]; // add owner as initial liker
         await model.save();
       }
     });
