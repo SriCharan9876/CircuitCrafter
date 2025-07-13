@@ -4,3 +4,154 @@
   gap: 1rem;
   padding: 1rem;
 }
+
+/* Hero-Headings */
+
+.explore-hero{
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  justify-content: space-between;
+  padding: 2rem 4rem;
+  font-family: 'Inter', sans-serif;
+  height: 65vh;
+  /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); */
+  /* background: linear-gradient(135deg, #e0f7ff, #ffffff); */
+  /* border: 1px solid black; */
+}
+
+.explore-hero-content-container {
+  width: 100%;
+  margin-top: 4rem;
+  margin-right: 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  /* border:1px solid black */
+}
+
+.explore-hero-heading {
+  line-height: 1.2;
+  font-size: 3.5rem;
+  font-weight: 750;
+  color: #111827;
+}
+
+.highlight{
+  color: #1e40af;
+}
+
+.explore-hero-subheading {
+  font-size: 1.5rem;
+  color: #4b5563;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Hero-search */
+
+.model-search-section{
+  display: flex;
+  flex-direction: column;
+}
+
+.model-searchbox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  margin:3rem 0 0 0;
+  max-width: 45rem;
+  border-radius: 2.5rem;
+  overflow: hidden;
+  border: 1px solid #d1d5db;
+  background-color: #fff;
+  box-shadow: 0 2px 5px rgba(18, 30, 194, 0.04);
+  background-color: #f0f0f1;
+}
+
+.model-searchbox:hover{
+  background-color: white;
+}
+
+.model-searchbar{
+  flex: 1;
+  padding: 1.5rem;
+  font-size: 1.25rem;
+  border:none;
+  outline: none;
+  background-color: transparent;
+}
+
+.model-search-btn{
+  margin: 0 0.5rem 0 0;
+  background-color: #2563eb;
+  border: none;
+  padding: 1rem;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 1.75rem;
+}
+
+.model-search-btn:hover{
+  background-color: #1e3a8a;
+}
+
+.model-search-suggestion-list{
+  position: absolute;
+  background: white;
+  /* border: 1px solid #ccc; */
+  border-radius:1rem;
+  width: 100%;
+  max-width: 45rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: 20rem;
+  overflow-y: auto;
+  z-index: 99;
+}
+
+.model-search-suggestion-list li {
+  padding: 1.1rem 1rem 1rem 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  font-size: 1.2rem;
+  gap:1rem;
+}
+
+.model-search-suggestion-list li:hover {
+  background-color: #f3f4f6;
+}
+
+.model-search-clrbtn{
+  border: none;
+  border-radius: 2rem;
+  background-color: transparent;
+  padding-right: 1rem;
+  color: grey;
+}
+
+.model-search-clrbtn:hover{
+  color: black;
+}
+
+/* Hero-Animation */
+
+.explore-hero-animation-container{
+  flex-shrink: 0;
+}
+
+.explore-hero-animation{
+  height: 35rem;
+  width: 50rem;
+  background-color: black;
+  border-radius: 3rem;
+  object-fit: cover;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}

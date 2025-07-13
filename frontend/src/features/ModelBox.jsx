@@ -25,7 +25,7 @@ const ModelBox=(({model, onDelete})=>{
                 }
             });
             onDelete();
-            console.log(`${model.modelName} model delted successfully`);
+            console.log(`${model.modelName} model deleted successfully`);
         } catch (error) {
             console.error("Delete error:", error.response?.data || error.message);
         }
