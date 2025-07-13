@@ -47,7 +47,7 @@ const SaveButton = ({ modelId, savedModels, token ,refreshFavorites}) => {
 
 
   return (
-    <div className="save-section" style={{display:"flex",alignItems:"center", gap:"4px"}}>
+    <div className="save-section" style={{display:"flex",alignItems:"center", margin:"0",padding:"0", height:"2.5rem"}}>
       <Tooltip title={saved ? 'Unsave Model' : 'Save Model'}>
         <IconButton onClick={toggleSave} disabled={isLoading} color={saved ? 'primary' : 'default'}>
           {saved ? <BookmarkIcon /> : <BookmarkBorderIcon />}

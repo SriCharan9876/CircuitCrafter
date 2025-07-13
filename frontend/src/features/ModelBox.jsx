@@ -53,20 +53,50 @@ const ModelBox=(({model, onDelete})=>{
             onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
             onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}
             >
-            <h2>{model.modelName}</h2>
-            <hr />
-            <img
-                src={model.previewImg?.url}
-                alt={model.modelName}
-                style={{
-                    width:"200px",
-                }}
-            />
+            <div className="modelbox-preview">
+                <img
+                    className="modelbox-preview-img"
+                    src={model.previewImg?.url}
+                    alt={model.modelName}
+                />
+            </div>
 
-            <p><strong>Type:</strong> {model.typeName}</p>
-            <p><strong>Owned By:</strong> {model.createdBy.name}</p>
+            <div className="modelbox-content">
+                <div className="modelbox-owner">
+                    <img src={model.createdBy.profilePic.url} alt="dp" className="modelbox-owner-preview"/>
+                </div>
 
-            <div onClick={(e)=>e.stopPropagation()} className="modelBoxButtons">
+                <div className="modelbox-description">
+                    <h3>{model.modelName}</h3>
+                    <p>{model.typeName}</p>
+                </div>    
+
+                <div className="modelbox-engagement">
+
+                    {user&&
+                        <div onClick={(e) => e.stopPropagation()} className="savebtn">
+                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
+                        </div>
+                    }
+
+                    <div className="modelbox-engagement-allaccess">
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
+                        </div>
+                        <div onClick={(e) => e.stopPropagation()}>
+                            <ViewsSection viewCount={model.views.length}/>
+                        </div>
+                    </div>
+                    {/* <div className="modelbox-engagement-useraccess">
+
+                    </div> */}
+
+                    
+                    
+                </div>  
+            </div>
+
+            <div onClick={(e)=>e.stopPropagation()} className="modelbox-contols">
                 {isAdmin && model.status === "pending" && (
                     <>
                     <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
@@ -91,17 +121,7 @@ const ModelBox=(({model, onDelete})=>{
 
             </div>
 
-            <div className="engagement-section">
-                <div onClick={(e) => e.stopPropagation()}>
-                    <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
-                </div>
-                <div onClick={(e) => e.stopPropagation()}>
-                    <ViewsSection viewCount={model.views.length}/>
-                </div>
-                <div onClick={(e) => e.stopPropagation()}>
-                    <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
-                </div>
-            </div>
+            
             
         </div>
     )

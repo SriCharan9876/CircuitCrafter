@@ -87,7 +87,7 @@ const Explore = () => {
                     <h2 className="explore-hero-subheading">
                         From community-made circuits to custom designs <br /> Build exactly what you need, faster than ever.
                     </h2>
-                    <div className="model-search-section" style={{position:"relative"}} ref={searchRef}>
+                    <div className="model-search-section" ref={searchRef}>
                         <div className="model-searchbox">
                             <input type="text" 
                                     placeholder="What kind of model are you looking for?" 

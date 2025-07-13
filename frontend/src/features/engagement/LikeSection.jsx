@@ -31,10 +31,10 @@ const LikeButton=(({modelId,userId,initialLikes,token})=>{
         }finally{
             setIsLoading(false);
         }
-    }
+    }   
 
     return (
-        <div className='like-section' style={{display:"flex",alignItems:"center", gap:"4px"}}>
+        <div className='like-section' style={{display:"flex",flexDirection:"row",alignItems:"center", margin:"0",padding:"0",height:"2rem"}}>
             <Tooltip title={hasLiked ? "Unlike" : "Like"}>
                 <IconButton onClick={togglelike} disabled={isLoading} color={hasLiked ? 'error' : 'default'}>
                 {hasLiked ? <FavoriteIcon /> : <FavoriteBorderIcon />}

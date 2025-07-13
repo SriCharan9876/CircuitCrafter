@@ -1,11 +1,85 @@
 .modelBox{
   border: 1px solid #ccc;
-  border-radius: 10px;
-  padding: 16px;
+  border-radius: 1.25rem;
+  padding: 1rem;
   background-color: #fff;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  transition: transform 0.2s;
+  /* transition: transform 5s; */
   cursor: pointer;
+  display: flex;
+  flex-direction: column;
+}
+
+.modelbox-preview{
+  background-color: rgba(0,0,0,0.1);
+  height: 18rem;
+  overflow: hidden;
+}
+
+.modelbox-preview-img{
+  height: 100%;
+  width: 100%;
+  object-fit: fill;
+}
+
+.modelbox-content{
+  display: flex;
+  flex-direction: row;
+}
+.modelbox-owner{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0rem;
+  width: 2rem;
+  margin: 0;
+}
+.modelbox-owner-preview{
+  height: 2rem;
+  width: 2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.modelbox-description {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding-left: 0.5rem;
+  gap:0rem;
+  overflow-wrap:break-word;
+}
+
+.modelbox-description>h3{
+  margin: 0 0 0.5rem 0;
+  padding: 0 0.4rem;
+  font-size: 1.3rem;
+}
+.modelbox-description>p{
+  margin: 0;
+  padding: 0.1rem 0.5rem ;
+  font-size: 1rem;
+}
+.modelbox-engagement{
+  width: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: end;
+  gap: 0rem;
+  padding: 0.5rem 0;
+}
+
+.modelbox-engagement-allaccess{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: end;
+  gap: 1rem;
 }
 
 .model-button {
@@ -27,28 +101,4 @@
 
 .model-button:active {
   transform: scale(0.97);
-}
-
-.model-button.danger {
-  background-color: #dc3545;
-}
-
-.model-button.danger:hover {
-  background-color: #a71d2a;
-}
-
-.model-button.secondary {
-  background-color: #6c757d;
-}
-
-.model-button.secondary:hover {
-  background-color: #4e5357;
-}
-
-.engagement-section{
-  display: flex;
-  flex-direction: row;
-  justify-content: end;
-  align-items: center;
-  gap: 1rem;
 }

@@ -40,7 +40,6 @@ export const getModel=async(req,res)=>{
             return res.status(404).json({ found: false, message: "Model not found" });
         }
 
-        console.log(req.user);
         const currUser=req.user?.userId;
         if(currUser&&!pmodel.views.includes(currUser)){
             console.log(currUser);

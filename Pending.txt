@@ -1,12 +1,13 @@
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 database:.............................
+description for models, showing it in modeleach.jsx
 check cloud uploading in edit model form
 storing, connecting images for categories
 
 backend:...............................
 auth: nodemailer for real email implementation
-models: likes, views, save models, while creating/editing model, option to remove parameter inputs after clicking add another parameter button
+models: while creating/editing model, option to remove parameter inputs after clicking add another parameter button
 categories: category images converting to icon style 
 
 view status line when user checks his own model
@@ -16,7 +17,11 @@ full scale error handling
 alerts
 
 frontend:...............................
-search, sort by in explore page (popular, recent,..)
+instructions in edit, create pages including images aspect ratio, background color,..
+validating the input entered with the given upper and lower limit in model
+validate in edit/create model page that name should not contain _, long names with_ disrupts modelbox, names with spaces can be overlapped
+icons, fonts, colors, backgrounds
+sort by in explore page (most viewd, most liked, recent, most generated, ...)
 button, .. as ui components
 implementing hooks,apis folders
 footer
@@ -26,7 +31,6 @@ react,css styling
 feature of sharing the model
 
 minor changes, final changes...........................
-validating the input entered with the given upper and lower limit in model
 show models/view a model after checking approved:true
 favourites, notifications,contact,resources,about, userslist for admin
 explore page
@@ -35,7 +39,6 @@ http://localhost:5173/models/asdf checking if model ID exists if no :id found di
 
 extentions...............................
 person to person messaging, community
-sort by recent, popular, most generated
 dark mode
 ratings, comments
 edit profile, models
