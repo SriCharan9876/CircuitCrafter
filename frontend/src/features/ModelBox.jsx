@@ -62,24 +62,24 @@ const ModelBox=(({model, onDelete})=>{
             </div>
 
             <div className="modelbox-content">
-                <div className="modelbox-owner">
-                    <img src={model.createdBy.profilePic.url} alt="dp" className="modelbox-owner-preview"/>
+                <div className="modelDes">
+                    <div className="modelbox-owner">
+                        <img src={model.createdBy.profilePic.url} alt="dp" className="modelbox-owner-preview"/>
+                    </div>
+                    <div className="modelbox-description">
+                        <h4>{model.modelName}</h4>
+                        <p>{model.typeName}</p>
+                    </div>  
                 </div>
-
-                <div className="modelbox-description">
-                    <h3>{model.modelName}</h3>
-                    <p>{model.typeName}</p>
-                </div>    
+                  
 
                 <div className="modelbox-engagement">
-
-                    {user&&
-                        <div onClick={(e) => e.stopPropagation()} className="savebtn">
-                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
-                        </div>
-                    }
-
                     <div className="modelbox-engagement-allaccess">
+                        {user&&
+                            <div onClick={(e) => e.stopPropagation()} className="savebtn">
+                                <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
+                            </div>
+                        }
                         <div onClick={(e) => e.stopPropagation()}>
                             <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
                         </div>

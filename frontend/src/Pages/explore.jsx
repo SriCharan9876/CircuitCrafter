@@ -108,7 +108,7 @@ const Explore = () => {
                                     }}/>
 
                             {searchTerm && (
-                                <button className="model-search-clrbtn" onClick={() => setSearchTerm("")}><CloseIcon/></button>
+                                <button className="model-search-clrbtn" onClick={() => setSearchTerm("")}><CloseIcon style={{cursor:"pointer"}}/></button>
                             )}
 
                             <button className="model-search-btn" onClick={()=>filterModels()}>
