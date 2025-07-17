@@ -12,7 +12,7 @@
   flex-direction: row;
   align-items: start;
   justify-content: space-between;
-  padding: 2rem 4rem;
+  padding: 1rem 1rem;
   font-family: 'Inter', sans-serif;
   /* height: 70vh; */
   /* box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05); */
@@ -22,7 +22,7 @@
 
 .explore-hero-content-container {
   width: 100%;
-  margin-top: 4rem;
+  /* margin-top: 2rem; */
   margin-right: 4rem;
   display: flex;
   flex-direction: column;
@@ -60,7 +60,7 @@
   flex-direction: row;
   align-items: center;
   width: 100%;
-  margin:3rem 0 0 0;
+  margin:1rem 0 0 0;
   max-width: 45rem;
   border-radius: 2.5rem;
   overflow: hidden;

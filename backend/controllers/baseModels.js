@@ -47,6 +47,7 @@ export const getModel=async(req,res)=>{
             await pmodel.save();
             console.log(pmodel.views);
         }
+        console.log("pmodel: ",pmodel);
         return res.json({found:true,pmodel:pmodel});
     }catch(err){
         console.log(err);

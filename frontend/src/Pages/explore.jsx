@@ -7,6 +7,7 @@ import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
+import Footer from "../features/footer";
 
 const Explore = () => {
     const { token } = useAuth(); // use context
@@ -165,6 +166,7 @@ const Explore = () => {
                 ))}
               </div>
             )}
+
         </div>
     );
 };

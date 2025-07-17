@@ -6,13 +6,14 @@ import { useState } from "react";
 import "./App.css";
 
 export default function Layout() {
-  const [close,Setclose]=useState(false);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const toggleSidebar = () => setSidebarOpen((prev) => !prev);
+
   return (
     <div className="layout">
-      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar}/>
-      <NavBar toggleSidebar={toggleSidebar}/>
+      <Sidebar isOpen={sidebarOpen} toggleSidebar={toggleSidebar} />
+      <NavBar toggleSidebar={toggleSidebar} />
+      
       <div className="main-content">
         <Outlet />
       </div>

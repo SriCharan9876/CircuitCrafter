@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../Styles/modelBox.css";
@@ -7,10 +7,12 @@ import {notify} from "../features/toastManager"
 import SaveButton from "./engagement/saveModel"
 import LikeButton from "./engagement/LikeSection";
 import ViewsSection from "./engagement/viewsSection"
-
+import ShareIcon from '@mui/icons-material/Share';
+import { size } from "lodash";
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
     const { user, token } = useAuth(); //get current user and token
+    const [pmodel,setModel]=useState({});
 
     const isAdmin=user?.role==="admin";
     const isOwner = model?.createdBy?._id === user?._id;
@@ -45,6 +47,46 @@ const ModelBox=(({model, onDelete})=>{
         }
         
     }
+    const getData=async()=>{
+        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}`,{
+            headers:{Authorization:`Bearer ${token}`},
+            withCredentials:true
+        });
+        if(res.data.found){
+            setModel(res.data.pmodel);
+        }
+    }
+    useEffect(()=>{
+        getData();
+    },[]);
+    const handleShare = async (e, model) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        const modelUrl = `${window.location.origin}/models/${model._id}`;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: model.modelName,
+                    text: "Check out this model on our platform!",
+                    url: modelUrl,
+                });
+            } catch (err) {
+                console.error("Sharing failed:", err);
+            }
+        } else {
+            // Fallback: copy link to clipboard
+            try {
+                await navigator.clipboard.writeText(modelUrl);
+                notify.success("Link copied to clipboard!");
+            } catch (err) {
+                console.error("Clipboard write failed:", err);
+                notify.error("Could not copy link");
+            }
+        }
+    };
+
 
     return(
         <div className="modelBox"
@@ -64,7 +106,7 @@ const ModelBox=(({model, onDelete})=>{
             <div className="modelbox-content">
                 <div className="modelDes">
                     <div className="modelbox-owner">
-                        <img src={model.createdBy.profilePic.url} alt="dp" className="modelbox-owner-preview"/>
+                        <img src={pmodel?.createdBy?.profilePic?.url} alt="dp" className="modelbox-owner-preview"/>
                     </div>
                     <div className="modelbox-description">
                         <h4>{model.modelName}</h4>
@@ -85,6 +127,9 @@ const ModelBox=(({model, onDelete})=>{
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
                             <ViewsSection viewCount={model.views.length}/>
+                        </div>
+                        <div onClick={(e) => {handleShare(e, model)}} className="modelbox-icon-btn">
+                            <ShareIcon style={{color:"grey",fontSize:"22"}}/>
                         </div>
                     </div>
                     {/* <div className="modelbox-engagement-useraccess">

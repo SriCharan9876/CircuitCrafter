@@ -10,3 +10,25 @@
     gap: 2rem;
     overflow-y: auto;
 }
+/* App.css */
+
+/* ------------------ Layout ------------------ */
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+
