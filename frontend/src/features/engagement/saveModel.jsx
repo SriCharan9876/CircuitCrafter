@@ -5,10 +5,12 @@ import { IconButton, Tooltip, Typography } from '@mui/material';
 import { notify } from '../toastManager';
 import axios from 'axios';
 import { useAuth } from '../../contexts/authContext';
-const SaveButton = ({ modelId, savedModels, token ,refreshFavorites}) => {
+
+const SaveButton = ({ modelId, savedModels, token ,refreshFavorites,size}) => {
   const {setUser,user} =useAuth();
   const [saved, setSaved] = useState(savedModels.includes(modelId));
   const [isLoading, setIsLoading] = useState(false);
+  const iconSize= size ==="small"?22:32;
 
   const toggleSave = async () => {
     if (isLoading) return;
@@ -50,7 +52,7 @@ const SaveButton = ({ modelId, savedModels, token ,refreshFavorites}) => {
     <div className="save-section" style={{display:"flex",alignItems:"center", margin:"0",padding:"0", height:"2.5rem"}}>
       <Tooltip title={saved ? 'Unsave Model' : 'Save Model'}>
         <IconButton onClick={toggleSave} disabled={isLoading} color={saved ? 'primary' : 'default'}>
-          {saved ? <BookmarkIcon /> : <BookmarkBorderIcon />}
+          {saved ? <BookmarkIcon sx={{ fontSize: iconSize }}/> : <BookmarkBorderIcon sx={{ fontSize: iconSize }}/>}
         </IconButton>
       </Tooltip>
     </div>

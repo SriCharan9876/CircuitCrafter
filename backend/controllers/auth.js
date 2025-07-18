@@ -195,7 +195,7 @@ export const getFavModels = async (req, res) => {
 
     const favModels = await BaseModel.find({
       _id: { $in: user.savedModels },
-    });
+    }).populate("createdBy");
 
     return res.json({ favModels, success: true });
   } catch (err) {

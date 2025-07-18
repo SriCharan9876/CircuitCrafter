@@ -1,24 +1,75 @@
-/* modelEach.css */
+.model-view-page{
+  padding: 2rem 6rem;
+}
 
-.allPages {
-  padding: 2rem;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f9f9f9;
-  color: #333;
+.model-header-container{
+  display: flex;
+  flex-direction: row;
+  /* background-color: #0056b3; */
+  justify-content: space-between;
 }
-.model-details-grid {
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  row-gap: 12px;
-  column-gap: 16px;
-  font-size: 1rem;
-  padding: 1rem;
+
+.model-titlebox{
+  padding: 0 2rem;
 }
-/* .allPages h1 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
-  color: #007bff;
-} */
+
+.model-title{
+  font-size: 4rem;
+  margin: 2rem 0 1rem 0 ;
+}
+
+.model-owner{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+  font-size: 1.5rem;
+}
+
+.model-owner-preview{
+  height: 3.2rem;
+  width:3.2rem;
+  border-radius: 50%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.model-owner-details p{
+  padding: 0;
+  margin: 0;
+}
+
+.model-details{
+  /* background-color: #0056b3; */
+  display: flex;
+  flex-direction: row;
+  padding: 4rem 0;
+}
+
+.model-preview-img{
+  width: 48rem;
+  height: 40rem;
+  border: 1px solid grey;
+}
+
+.model-description{
+  /* background-color: #0056b3; */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 5rem;
+  font-size: 1.8rem;
+}
+
+.model-engagement{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.model-engagement div{
+  justify-content: center;
+}
 
 .button-group {
   margin: 1rem 0;
@@ -44,21 +95,6 @@
   transform: scale(1.02);
 }
 
-.model-button2.danger {
-  background-color: #dc3545;
-}
-
-.model-button2.danger:hover {
-  background-color: #a71d2a;
-}
-
-.model-button2.secondary {
-  background-color: #6c757d;
-}
-
-.model-button2.secondary:hover {
-  background-color: #4e5357;
-}
 
 .customization {
   margin-top: 2rem;

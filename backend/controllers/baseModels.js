@@ -34,21 +34,20 @@ export const createModel=async(req,res)=>{
 export const getModel=async(req,res)=>{
     try{
         const {id}=req.params;
-        const pmodel=await BaseModel.findById(id).populate("createdBy");
+        const model=await BaseModel.findById(id).populate("createdBy");
 
-        if (!pmodel) {
+        if (!model) {
             return res.status(404).json({ found: false, message: "Model not found" });
         }
 
         const currUser=req.user?.userId;
-        if(currUser&&!pmodel.views.includes(currUser)){
+        if(currUser&&!model.views.includes(currUser)){
             console.log(currUser);
-            pmodel.views.push(currUser);
-            await pmodel.save();
-            console.log(pmodel.views);
+            model.views.push(currUser);
+            await model.save();
+            console.log(model.views);
         }
-        console.log("pmodel: ",pmodel);
-        return res.json({found:true,pmodel:pmodel});
+        return res.json({found:true,model:model});
     }catch(err){
         console.log(err);
         return res.json({found:false});

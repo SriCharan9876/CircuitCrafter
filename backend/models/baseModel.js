@@ -72,6 +72,10 @@ const baseModelSchema=new Schema({
     createdAt:{
         type:Date,
         default:Date.now
+    },
+    designCount:{
+        type:Number,
+        default:0
     }
 });
 

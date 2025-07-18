@@ -1,6 +1,7 @@
 import modifyLtspiceFileFromCloud from '../modelfiles/generalised.js';
 import User from "../models/user.js";
 import { v2 as cloudinary } from "cloudinary";
+import BaseModel from "../models/baseModel.js";
 
 export const uploadBaseFile=async(req, res) => {
   try {
@@ -16,8 +17,8 @@ export const uploadBaseFile=async(req, res) => {
 };
 
 export const generateUserFile=async (req, res) => {
-    const { pmodel,inputValues,calc2,relations } = req.body;
-    const inputFile = pmodel.fileUrl;
+    const { model,inputValues,calc2,relations } = req.body;
+    const inputFile = model.fileUrl;
 
     //Deleting current userspicefile if exists
     const user = await User.findById(req.user.userId);
@@ -36,9 +37,15 @@ export const generateUserFile=async (req, res) => {
         user.generatedFile = {
             public_id,
             url: cloudinaryUrl,
-            baseModelId: pmodel._id
+            baseModelId: model._id
         };
         await user.save();
+
+        const id=model._id;
+        console.log(model);
+        const newmodel=await BaseModel.findById(id);
+        newmodel.designCount=newmodel.designCount+1;
+        await newmodel.save();
         res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl,values});
     } catch (err) {
         console.error(err);

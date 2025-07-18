@@ -80,6 +80,8 @@ const Explore = () => {
 
     return (
         <div className="allPages">
+        <div className="models-view-page">
+    
             <div className="explore-hero">
                 <div className="explore-hero-content-container">
                     <h1 className="explore-hero-heading">
@@ -152,21 +154,26 @@ const Explore = () => {
                     </video>
                 </aside>
             </div>
-            <div className="subnavbar">
+            
+            <div className="explore-subnavbar">
                 Filters
             </div>
-            {allModels.length === 0 ? (
-                <p>Loading models....</p>
-            ) : displayModels.length==0?(
-                <p style={{ padding: "1rem", color: "gray" }}>No models found</p>
-            ) : (
-              <div className="model-grid">
-                {displayModels.map((model) => (
-                  <ModelBox model={model} key={model._id} onDelete={getModels} />
-                ))}
-              </div>
-            )}
 
+            <div className="explore-models">
+                {allModels.length === 0 ? (
+                    <p>Loading models....</p>
+                ) : displayModels.length==0?(
+                    <p style={{ padding: "1rem", color: "gray" }}>No models found</p>
+                ) : (
+                <div className="model-grid">
+                    {displayModels.map((model) => (
+                    <ModelBox model={model} key={model._id} onDelete={getModels} />
+                    ))}
+                </div>
+                )}
+            </div>
+            
+        </div>
         </div>
     );
 };

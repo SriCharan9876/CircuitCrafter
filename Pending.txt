@@ -21,6 +21,7 @@ instructions in edit, create pages including images aspect ratio, background col
 validating the input entered with the given upper and lower limit in model
 validate in edit/create model page that name should not contain _, long names with_ disrupts modelbox, names with spaces can be overlapped
 icons, fonts, colors, backgrounds
+animations like downlads,.. numbers increase from 0, ...
 sort by in explore page (most viewd, most liked, recent, most generated, ...)
 button, .. as ui components
 implementing hooks,apis folders

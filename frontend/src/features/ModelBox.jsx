@@ -14,7 +14,7 @@ const ModelBox=(({model, onDelete})=>{
     const { user, token } = useAuth(); //get current user and token
     const [pmodel,setModel]=useState({});
 
-    const isAdmin=user?.role==="admin";
+    const isAdmin= user?.role==="admin";
     const isOwner = model?.createdBy?._id === user?._id;
     const currUserId=user?._id;
 
@@ -53,7 +53,7 @@ const ModelBox=(({model, onDelete})=>{
             withCredentials:true
         });
         if(res.data.found){
-            setModel(res.data.pmodel);
+            setModel(res.data.model);
         }
     }
     useEffect(()=>{
@@ -123,21 +123,16 @@ const ModelBox=(({model, onDelete})=>{
                             </div>
                         }
                         <div onClick={(e) => e.stopPropagation()}>
-                            <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token}/>
+                            <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token} size={"small"}/>
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <ViewsSection viewCount={model.views.length}/>
+                            <ViewsSection viewCount={model.views.length} size={"small"}/>
                         </div>
                         <div onClick={(e) => {handleShare(e, model)}} className="modelbox-icon-btn">
                             <ShareIcon style={{color:"grey",fontSize:"22"}}/>
                         </div>
                     </div>
-                    {/* <div className="modelbox-engagement-useraccess">
 
-                    </div> */}
-
-                    
-                    
                 </div>  
             </div>
 

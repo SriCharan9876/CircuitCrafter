@@ -33,7 +33,7 @@ const EditModel = () => {
     const fetchModel = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`);
-        setFormData(res.data.pmodel);
+        setFormData(res.data.model);
         
         try{
             await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}/view`,{},{
