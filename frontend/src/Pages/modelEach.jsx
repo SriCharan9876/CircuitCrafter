@@ -41,7 +41,6 @@ const EachModel=()=>{
                     });
                 }catch(err){
                     console.error("Error updating views", err);
-                    notify.error("Error updating views of model");
                 }
 
                 // Decode and set permissions

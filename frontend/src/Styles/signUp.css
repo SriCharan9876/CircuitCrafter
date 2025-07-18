@@ -69,11 +69,25 @@ body{
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
-
+.optSec{
+  margin-top: 20px;
+  width: 30%;
+  padding: 0.5rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 12px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
 .submit-btn:hover {
   background-color: #0d47a1;
 }
-
+.optSec:hover{
+  background-color: #0d47a1;
+}
 .image-preview {
   margin-top: 16px;
   text-align: center;

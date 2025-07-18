@@ -42,7 +42,6 @@ const EditModel = () => {
             });
         }catch(err){
             console.error("Error updating views", err);
-            notify.error("Error updating views of model");
         }
       } catch (err) {
         console.error("Failed to fetch model", err);
