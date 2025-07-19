@@ -16,6 +16,8 @@ import MyProfile from "./Pages/myProfile";
 import Layout from "./layout";
 import Favorities from "./Pages/favorities";
 import Contact from "./Pages/contact";
+import Community from "./Pages/community";
+import CreatePost from "./Pages/createPost";
 function App() {
   return (
     <BrowserRouter>
@@ -36,6 +38,8 @@ function App() {
             <Route path="categories" element={<Categories />} />
             <Route path="categories/create" element={<AddCategory />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/community" element={<Community />} />
+            <Route path="/community/createPost" element={<CreatePost />} />
           </Route>  
         </Routes>
       </AuthProvider>

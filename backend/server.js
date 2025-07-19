@@ -10,6 +10,7 @@ import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';
 import authenticationRouter from './routes/auth.js';
 import filesRouter from './routes/files.js';
+import communityRouter from "./routes/community.js";
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
 
@@ -66,6 +67,7 @@ app.use("/api/models",baseModelRouter);
 	
 //File handling routes (for client usage of models)
 app.use("/api/files",filesRouter);
+app.use("/community",communityRouter);
 
 
 // app.use((req, res, next) => {

@@ -1,0 +1,86 @@
+.create-post {
+  position: fixed;
+  left: 47px;
+  top: 9vh;
+  right: 0;
+  bottom: 0;
+  background-color: #ffffff;
+  padding: 20px 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.title-input {
+  flex: 1;
+  padding: 12px 16px;
+  font-size: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+
+.cancel, .post {
+  padding: 10px 18px;
+  font-size: 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cancel {
+  background-color: #f44336;
+  color: white;
+}
+
+.post {
+  background-color: #2196f3;
+  color: white;
+}
+
+.topic-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.topic-input {
+  padding: 10px 14px;
+  font-size: 16px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+  outline: none;
+}
+
+.topic-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.topic-tag {
+  background-color: #e0e0e0;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 14px;
+}
+
+.editor .content-area {
+  width: 100%;
+  min-height: 300px;
+  padding: 16px;
+  font-size: 16px;
+  resize: vertical;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+}
