@@ -18,6 +18,12 @@
   margin: 2rem 0 1rem 0 ;
 }
 
+.model-titlediv{
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
 .model-owner{
   display: flex;
   flex-direction: row;
@@ -39,6 +45,39 @@
   margin: 0;
 }
 
+.model-interactbox{
+  /* background-color: skyblue; */
+  display: flex;
+  flex-direction: row;
+  justify-content: end;
+  align-items: center;
+  padding-right: 2rem;
+  gap: 2rem;
+  font-size: 1.2rem;
+}
+
+.model-customize-scrollerbtn{
+  border: none;
+  border-radius: 1.5rem;
+  background-color: #28a745;
+  cursor: pointer;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  padding: 1rem 2rem;
+}
+.model-customize-scrollerbtn:hover {
+  background-color: #1e7e34;
+}
+
+.model-content-container{
+  display: flex;
+  flex-direction: column;
+  align-items:center;
+}
+
 .model-details{
   /* background-color: #0056b3; */
   display: flex;
@@ -49,11 +88,13 @@
 .model-preview-img{
   width: 48rem;
   height: 40rem;
-  border: 1px solid grey;
+  border: 2px solid #ccc;
+  border-radius: 2rem;
 }
 
 .model-description{
   /* background-color: #0056b3; */
+  width: 40rem;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -61,87 +102,205 @@
   font-size: 1.8rem;
 }
 
-.model-engagement{
+.model-description-head{
   display: flex;
-  flex-direction: row;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  align-items: center;
+  /* background-color: red; */
 }
 
-.model-engagement div{
-  justify-content: center;
-}
-
-.button-group {
-  margin: 1rem 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.model-button2 {
+.model-originalfile-btn{
   background-color: #007bff;
-  color: white;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  margin-right: 1rem;
-  font-size: 0.9rem;
-  transition: background-color 0.2s ease, transform 0.1s ease;
-}
-
-.model-button2:hover {
-  background-color: #0056b3;
-  transform: scale(1.02);
-}
-
-
-.customization {
-  margin-top: 2rem;
-  background-color: white;
   padding: 0.8rem;
-  width: 50vw;
-  border-radius: 10px;
+  border: none;
+  border-radius: 1rem;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  font-size: 1.1rem;
 }
 
-.customization button {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
+.model-originalfile-btn:hover{
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+.model-description-body {
+  /* background-color:#1e7e34; */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.model-engagement{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  /* background-color: red; */
+}
+.model-engagement div{
+  justify-content: center;
+}
+
+.customization-toggler {
+  margin: 3rem auto 1rem auto;
+  display: block;
   background-color: #28a745;
   color: white;
-  padding: 8px 14px;
+  padding: 1rem 2rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 2rem;
+  font-size: 1.2rem;
   cursor: pointer;
-  transition: 0.2s ease;
+  transition: background 0.2s ease;
 }
 
-.customization button:hover {
+.customization-toggler:hover {
   background-color: #1e7e34;
 }
 
-.fields {
-  margin-top: 1rem;
+.model-customization-accordion {
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition:opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
+  padding: 0 2rem;
 }
 
-.options label {
+.model-customization-accordion.open {
+  max-height: 50rem;
+  opacity: 1;
+  min-width: 30rem;
+  padding: 3rem;
+  /* background-color: red; */
+  border-radius: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-top: 3rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.customization-header p{
+  font-size: 1.5rem;
+  margin:0
+}
+
+.customization-input-section{
+  /* background-color: #0056b3; */
+  padding: 2rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+}
+
+.customization-input-fields{
+  width: 100%;
+}
+
+.customization-input-field{
+  /* background-color: aqua; */
+  padding: 0.5rem 3rem;
+  font-size: 1.3rem;
   font-weight: 600;
-  margin-bottom: 0.3rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
 }
 
-.options input {
-  padding: 6px;
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+.customization-input-field input {
+  font-size: 1.2rem;
+  padding: 0.5rem 0;
+  width: 50%;
+  border: none;
+  border-bottom: 2px solid gray;
+  background: transparent;
+  outline: none;
+}
+.customization-input-field input:focus {
+  border-bottom-color: blue;
 }
 
+.customization-generate-btn{
+  background-color: #28a745;
+  color: white;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 1.5rem;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.customization-generate-btn:hover{
+  background-color: #1e7e34;
+  transform: scale(1.02);
+}
+
+.customization-buttons{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap:2rem
+}
+
+.model-download-btn{
+  background-color: #007bff;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.1rem;
+}
+
+.model-download-btn:hover{
+  background-color: #0056b3;
+  transform: scale(1.02);
+}
+
+/* To Prevent all anchor decorations, caret line (vertical blinking line on divs, p's) */
 a {
-  color: #007bff;
-  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  color: white;
+}
+
+/* Hide caret for common display elements */
+div, p, a, span, label, strong, em, h1, h2, h3, h4, h5, h6 {
+  caret-color: transparent;
+}
+
+/* Do NOT hide caret in form inputs or editable areas */
+input, textarea, [contenteditable="true"] {
+  caret-color: auto;
+}
+
+/*File generation spinner */
+.spinner {
+  width: 1.5rem;
+  height: 1.5rem;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

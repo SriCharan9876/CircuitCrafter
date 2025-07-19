@@ -42,7 +42,6 @@ export const generateUserFile=async (req, res) => {
         await user.save();
 
         const id=model._id;
-        console.log(model);
         const newmodel=await BaseModel.findById(id);
         newmodel.designCount=newmodel.designCount+1;
         await newmodel.save();

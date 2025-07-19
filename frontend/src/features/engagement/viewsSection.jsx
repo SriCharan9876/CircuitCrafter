@@ -1,11 +1,13 @@
-import { Typography } from "@mui/material";
+import { Typography, Tooltip } from "@mui/material";
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const ViewsSection = ({ viewCount,size }) => {
   const iconSize= size ==="small"?16:32;
   return(
     <div className="views-section" style={{display:"flex",alignItems:"center", gap:"0.5rem",margin:"0",padding:"0", height:"2rem"}}>
-      <VisibilityIcon sx={{ fontSize: iconSize }} style={{padding:"8px",color:"grey"}}/>
+      <Tooltip title="Views">
+        <VisibilityIcon sx={{ fontSize: iconSize }} style={{padding:"8px",color:"grey"}}/>
+      </Tooltip>
       <Typography variant="body2">{viewCount}</Typography>
     </div>
   )

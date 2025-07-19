@@ -1,8 +1,6 @@
-import React from "react";
-import { useState,useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useParams } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import "../Styles/modelEach.css";
 import {notify} from "../features/toastManager";
@@ -10,20 +8,31 @@ import SaveButton from "../features/engagement/saveModel";
 import LikeButton from "../features/engagement/LikeSection";
 import ViewsSection from "../features/engagement/viewsSection";
 import DownloadSection from "../features/engagement/downloadSection";
+import ShareIcon from '@mui/icons-material/Share';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const EachModel=()=>{
     const {id}= useParams();
     const { user,token } = useAuth();
     const navigate=useNavigate();
+    const customizationRef = useRef(null); 
     const [model,setModel]=useState({});
     const [got,setGot]=useState(false);
     const [viewCustomization,setViewCustomization]=useState(false);
     const [inputValues,setInputValues]=useState({});
     const [cloudinaryUrl,setCloudinary]=useState("");
     const [fileGenerated,setFileGenerated]=useState(false);
+    const [generating, setGenerating] = useState(false);
+
 
     const [isAdmin, setIsAdmin] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
+    const isApproved = model.status === "approved";
+    const isPending = model.status === "pending";
+    const isRejected = model.status === "rejected";
+    const allFilled = model.designParameters?.every(param => inputValues[param.parameter]);
 
     const getThisModel = async () => {
         try {
@@ -52,7 +61,7 @@ const EachModel=()=>{
             }
         } catch (err) {
             console.error("Error fetching model:", err);
-            notify.error("Error fetching model ")
+            notify.error(err.response?.data?.message || "Something went wrong");
         }
     };
 
@@ -70,24 +79,31 @@ const EachModel=()=>{
     }
 
     const generateModel=async()=>{
-        const calc2=[];
-        for(const each of model.calcParams){
-            calc2.push(each.compName);
-        }
-        const relations=model.relations;
+        setGenerating(true);
+        try{
+            const calc2 = model.calcParams.map(each => each.compName);
+            const relations=model.relations;
 
-        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/userfile`,{model,inputValues,calc2,relations},{
-            withCredentials:true,
-            headers:{ Authorization: `Bearer ${token}` }
-        })
-        if(res.data.success){
-            setFileGenerated(true);
-            setCloudinary(res.data.cloudinaryUrl);
-            setModel((prevmodel)=>({
-                ...prevmodel,
-                designCount:(prevmodel.designCount||0)+1
-            }));
+            const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/userfile`,{model,inputValues,calc2,relations},{
+                withCredentials:true,
+                headers:{ Authorization: `Bearer ${token}` }
+            })
+            if(res.data.success){
+                setFileGenerated(true);
+                setCloudinary(res.data.cloudinaryUrl);
+                setModel((prevmodel)=>({
+                    ...prevmodel,
+                    designCount:(prevmodel.designCount||0)+1
+                }));
+                notify.success("File generated successfully");
+            }
+        } catch (err) {
+            notify.error("Failed to generate file");
+            console.error(err);
+        } finally {
+            setGenerating(false);
         }
+
     }
 
     const deleteModel = async (modelId) => {
@@ -98,7 +114,7 @@ const EachModel=()=>{
                     Authorization: `Bearer ${token}`
                 }
             });
-            console.log(`${model.modelName} model delted successfully`);
+            notify.success(`${model.modelName} deleted successfully`);
             navigate("/models");
         } catch (error) {
             console.error("Delete error:", error.response?.data || error.message);
@@ -120,9 +136,44 @@ const EachModel=()=>{
         
     }
 
+    const handleShare = async (e, model) => {
+        e.stopPropagation();
+        e.preventDefault();
+        
+        const modelUrl = `${window.location.origin}/models/${model._id}`;
+        
+        if (navigator.share) {
+            try {
+                await navigator.share({
+                    title: model.modelName,
+                    text: "Check out this model on our platform!",
+                    url: modelUrl,
+                });
+            } catch (err) {
+                console.error("Sharing failed:", err);
+            }
+        } else {
+            // Fallback: copy link to clipboard
+            try {
+                await navigator.clipboard.writeText(modelUrl);
+                notify.success("Link copied to clipboard!");
+            } catch (err) {
+                console.error("Clipboard write failed:", err);
+                notify.error("Could not copy link");
+            }
+        }
+    };
+
+    const scrollToCustomization = () => {
+        if (customizationRef.current) {
+            customizationRef.current.scrollIntoView({ behavior: "smooth" });
+            setViewCustomization(true);
+        }
+    };
+
     useEffect(() => {
-            getThisModel();
-    }, [user, token]);
+        getThisModel();
+    }, [id]);
 
 
     return(
@@ -136,8 +187,16 @@ const EachModel=()=>{
 
             <div className="model-header-container">
                 <div className="model-titlebox">
-                    <h1 className="model-title">{model.modelName}</h1>
-                    
+                    <div className="model-titlediv">
+                        <h1 className="model-title">{model.modelName}</h1>
+                        {!isApproved?
+                        <span><p>{model.status}</p></span>:
+                        <div onClick={(e) => e.stopPropagation()} className="savebtn" style={{padding:"1.5rem 0 0 0"}}>
+                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel}/>
+                        </div>
+                        }
+                    </div>
+
                     <div className="model-owner">
                         <img src={model.createdBy.profilePic.url} alt="dp" className="model-owner-preview" />
                         <div className="model-owner-details">
@@ -149,22 +208,21 @@ const EachModel=()=>{
 
                 <div className="model-interactbox">
                     {/* Save model button with icon, customize model down point, tags*/}
-                        <div onClick={(e) => e.stopPropagation()} className="savebtn">
-                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel}/>
-                            Save model
-                        </div>
-                    <button>
+
+                    {new Date(model.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) && (
+                    <span style={{ color: "green", marginLeft: "10px", fontWeight: "bold" }}>
+                        <p style={{userSelect:"none"}}>Recently Added</p>
+                    </span>
+                    )}
+
+                    <div onClick={(e) => {handleShare(e, model)}} style={{cursor:"pointer"}}>
+                        <ShareIcon style={{color:"grey",fontSize:"32"}}/>
+                    </div>
+                    
+                    <button onClick={scrollToCustomization} className="model-customize-scrollerbtn">
                         Customize model
                     </button>
-                    {model.status!=="approved"&&
-                    <p>{model.status}</p>
-                    }<br/>
-                    {new Date(model.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) && (
-                        <span style={{ color: "green", marginLeft: "10px", fontWeight: "bold" }}>
-                        Recently Added,<br />
-                        {new Date(model.createdAt).toLocaleString()}
-                        </span>
-                    )}
+
                 </div>
             </div>
 
@@ -179,17 +237,20 @@ const EachModel=()=>{
                     </div>
 
                     <div className="model-description">
-                        
 
-                        <div>{model.typeName}</div>
+                        <div className="model-description-head">
+                            <div className="model-categoryname"><p><strong>Category:</strong>&nbsp;&nbsp;{model.typeName}</p></div>
 
-                        {(isAdmin||isOwner)&&
-                        <div>
-                            <a href={model.fileUrl} target="_blank" rel="noreferrer">Download original file</a>
+                            {(isAdmin||isOwner)&&
+                                <button className="model-originalfile-btn">
+                                    <a href={model.fileUrl} target="_blank" rel="noreferrer">Download original file</a>
+                                </button>
+                            }
                         </div>
-                        }
 
-                        <div><strong>Description: </strong>{model.description || "N/A"}</div>
+                        <div className="model-description-body">
+                            <p className="model-about">{model.description || "No description available for this model"}</p>
+                        </div>
 
                         <div className="model-engagement">
                             <div onClick={(e) => e.stopPropagation()}>
@@ -210,49 +271,77 @@ const EachModel=()=>{
                     
                 </div>
 
-                <div className="model-customization">
-                    
-                    <div className="customization">
-                        {!viewCustomization && <button onClick={handleCustomizationButton}>Customize this model</button>}
-                        {viewCustomization && <button onClick={handleCustomizationButton}>Back</button>}
-                        <div className="fields">
-                            {viewCustomization && 
-                                <>  
-                                    {model.designParameters.length>0 &&
-                                        <div className="options" style={{display:"flex",flexDirection:"column",width:"15rem"}}>
-                                            {
-                                                model.designParameters.map((value,index)=>(<React.Fragment key={index}>
-                                                    <label>{value.parameter}</label>
-                                                    <input type="number" name={value.parameter} value={inputValues[value.parameter] || ""} onChange={handleInputValueChange} key={index} min={value.lowerLimit} max={value.upperLimit}/></React.Fragment>
-                                                ))
-                                            }
-                                        </div>
-                                    }
-                                </>
-                            }
-                        </div>
+                <button onClick={handleCustomizationButton} className="customization-toggler">
+                    {viewCustomization?"Hide Customization":"Customize model"}
+                </button>
 
-                        {viewCustomization && <button onClick={()=>generateModel()}>Generate Customized model</button>}
-                        {fileGenerated && <a href={cloudinaryUrl}>Download File</a>}
+                <div className={`model-customization-accordion ${viewCustomization ? "open" : ""}`}
+                        ref={customizationRef}>
+
+                    <div className="customization-header">
+                        <p>Design your model</p>
                     </div>
-                </div>
+                    
+                    <div className="customization-input-section" >
+                        {viewCustomization && model.designParameters.length>0 &&
+                            <div className="customization-input-fields">
+                                {model.designParameters.map((value,index)=>(
+                                <div key={index} className="customization-input-field">
+                                    <label>
+                                        {value.parameter? value.parameter.charAt(0).toUpperCase() + value.parameter.slice(1): ''}
+                                    </label>
+                                    <input type="number" 
+                                        name={value.parameter} 
+                                        value={inputValues[value.parameter] || ""} 
+                                        onChange={handleInputValueChange} 
+                                        min={value.lowerLimit} 
+                                        max={value.upperLimit}/>
+                                </div>))
+                                }
+                            </div>
+                        }
+                    </div>
 
+                    <div className="customization-buttons">
+                        {viewCustomization && 
+                            <button onClick={()=>generateModel()}  className="customization-generate-btn" disabled={!allFilled}>
+                                {generating ? (
+                                    <>
+                                    Generating...<CircularProgress size={20} color="inherit" />
+                                    </>
+                                ) : fileGenerated?(
+                                    <>
+                                    Regenerate<CheckCircleIcon style={{ color: "white" }} />
+                                    </>
+                                ):(
+                                    <>
+                                    Generate<AutoAwesomeIcon></AutoAwesomeIcon>
+                                    </>
+                                )}
+                            </button>}
+                        {fileGenerated && 
+                            <button className="model-download-btn">
+                                <a href={cloudinaryUrl}>
+                                Download File
+                            </a></button>}
+                    </div>
+                    
+                </div>
             </div>
 
             <div className="model-footer-container">
                 <div className="model-controls">
                     <div onClick={(e)=>e.stopPropagation()} className="modelBoxButtons">
-                    {isAdmin && model.status === "pending" && (
+                    {isAdmin && isPending && (
                         <>
                         <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
                         <button className="model-button" onClick={(e) => {updateStatus(e,"rejected");}}>Reject</button>
                         </>
                     )}
-                    {isAdmin && model.status == "approved" && (
+                    {isAdmin && isApproved && (
                         <button className="model-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
                     )}
-                    {isOwner && model.status == "rejected" && (<>
-                        <p>Model is rejected</p>
+                    {isOwner && isRejected && (<>
                         <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
                     )}
                                 

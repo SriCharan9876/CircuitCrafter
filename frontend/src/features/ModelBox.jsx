@@ -8,7 +8,7 @@ import SaveButton from "./engagement/saveModel"
 import LikeButton from "./engagement/LikeSection";
 import ViewsSection from "./engagement/viewsSection"
 import ShareIcon from '@mui/icons-material/Share';
-import { size } from "lodash";
+
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
     const { user, token } = useAuth(); //get current user and token
@@ -59,6 +59,7 @@ const ModelBox=(({model, onDelete})=>{
     useEffect(()=>{
         getData();
     },[]);
+    
     const handleShare = async (e, model) => {
         e.stopPropagation();
         e.preventDefault();
@@ -119,7 +120,7 @@ const ModelBox=(({model, onDelete})=>{
                     <div className="modelbox-engagement-allaccess">
                         {user&&
                             <div onClick={(e) => e.stopPropagation()} className="savebtn">
-                                <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete}/>
+                                <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete} size={"small"}/>
                             </div>
                         }
                         <div onClick={(e) => e.stopPropagation()}>
@@ -128,7 +129,7 @@ const ModelBox=(({model, onDelete})=>{
                         <div onClick={(e) => e.stopPropagation()}>
                             <ViewsSection viewCount={model.views.length} size={"small"}/>
                         </div>
-                        <div onClick={(e) => {handleShare(e, model)}} className="modelbox-icon-btn">
+                        <div onClick={(e) => {handleShare(e, model)}}>
                             <ShareIcon style={{color:"grey",fontSize:"22"}}/>
                         </div>
                     </div>
