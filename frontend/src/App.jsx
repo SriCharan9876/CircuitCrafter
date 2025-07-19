@@ -15,6 +15,7 @@ import EditModel from "./Pages/editModel";
 import MyProfile from "./Pages/myProfile";
 import Layout from "./layout";
 import Favorities from "./Pages/favorities";
+import Contact from "./Pages/contact";
 function App() {
   return (
     <BrowserRouter>
@@ -34,6 +35,7 @@ function App() {
             <Route path="/favorities" element={<Favorities />} />
             <Route path="categories" element={<Categories />} />
             <Route path="categories/create" element={<AddCategory />} />
+            <Route path="/contact" element={<Contact />} />
           </Route>  
         </Routes>
       </AuthProvider>

@@ -1,0 +1,38 @@
+.contact-container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  min-height: 100vh;
+}
+
+.contact-title {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.card-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.contact-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  transition: transform 0.3s ease;
+}
+
+.contact-card:hover {
+  transform: translateY(-5px);
+}
+
+.email-link {
+  color: #0072b1;
+  cursor: pointer;
+  text-decoration: underline;
+}

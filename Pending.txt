@@ -6,7 +6,6 @@ check cloud uploading in edit model form
 storing, connecting images for categories
 
 backend:...............................
-auth: nodemailer for real email implementation
 models: while creating/editing model, option to remove parameter inputs after clicking add another parameter button
 categories: category images converting to icon style 
 
@@ -14,7 +13,6 @@ view status line when user checks his own model
 authentication, authorization error generation at all routes
 client side, server side validations
 full scale error handling
-alerts
 
 frontend:...............................
 instructions in edit, create pages including images aspect ratio, background color,..
