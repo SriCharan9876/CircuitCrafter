@@ -18,6 +18,7 @@ import Favorities from "./Pages/favorities";
 import Contact from "./Pages/contact";
 import Community from "./Pages/community";
 import CreatePost from "./Pages/createPost";
+import PostDetail from "./Pages/eachPost";
 function App() {
   return (
     <BrowserRouter>
@@ -40,6 +41,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
             <Route path="/community" element={<Community />} />
             <Route path="/community/createPost" element={<CreatePost />} />
+            <Route path="/community/:id" element={<PostDetail />} />
           </Route>  
         </Routes>
       </AuthProvider>

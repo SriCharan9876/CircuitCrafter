@@ -13,6 +13,7 @@ import ContactPageIcon from "@mui/icons-material/ContactPage"; // Contact
 import FavoriteIcon from '@mui/icons-material/Favorite';        // filled heart
 import { useNavigate } from "react-router-dom";
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
+import ForumIcon from '@mui/icons-material/Forum';
 
 import { useAuth } from "../contexts/authContext"; // 👈 get from context
 
@@ -26,6 +27,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { to: "/models/mymodels", label: "My Models", icon: <InventoryIcon /> },
     { to: "/favorities", label: "Saved Models", icon: <BookmarkIcon /> },
     { to: "/contact", label: "Contact", icon: <ContactPageIcon /> },
+    { to: "/community", label: "Community", icon: <ForumIcon /> },
   ];
 
   const adminLinks = [
