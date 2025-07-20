@@ -3,8 +3,8 @@ import axios from "axios";
 import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager";
 import GoogleLoginButton from "../features/googleLogin";
-import "../Styles/login.css"
 import { useNavigate } from "react-router-dom";
+import "../Styles/signUp.css";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -37,14 +37,15 @@ const Login = () => {
 
 
     return (
-      <div className="login-wrapper">
-        <form className="login-form" onSubmit={handleSubmit}>
-          <h2 className="form-title">Login</h2>
+      <div className="auth-wrapper">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <h2 className="auth-form-title">Login</h2>
 
           <label>Email:</label>
           <input
             type="email"
             value={email}
+            placeholder="Enter your email id"
             onChange={(e) => setEmail(e.target.value)}
             required
           />
@@ -53,17 +54,35 @@ const Login = () => {
           <input
             type="password"
             value={password}
+            placeholder="Enter your password"
             onChange={(e) => setPassword(e.target.value)}
             id="loginpass"
             required
           />
-          <button type="submit" className="submit-btn">Login</button>
+          <button type="submit" className="auth-submit-btn">Login</button>
           <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
             <p style={{ margin: '0 10px', textAlign: 'center' }}>OR</p>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
           </div>
           <GoogleLoginButton/>
+
+          <p className="auth-footer-link">
+            Don't have an account? <a href="/signup">Sign Up</a>
+          </p>
+
+          <div className="auth-guest-access">
+            <p style={{ textAlign: "center", marginTop: "1rem" }}>
+              <button
+                type="button"
+                onClick={() => navigate("/models")}
+                className="auth-guest-btn"
+              >
+                👀 Continue as Guest
+              </button>
+            </p>
+          </div>
+
         </form>
       </div>
     );

@@ -41,6 +41,7 @@ const AddModel = () => {
 
     useEffect(()=>{
         if (!user) {
+            notify.info("You shoul login for adding a model")
             navigate("/login");
         }
     },[user])

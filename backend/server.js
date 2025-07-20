@@ -80,30 +80,11 @@ app.use("/community",communityRouter);
 //     // res.status(statusCode).render("error.ejs",{message});
 // });
 
-// Add this near your other imports
-import BaseModel from './models/baseModel.js'; // adjust path as needed
-
-app.get('/dev/addviews', async (req, res) => {
-  try {
-    const models = await BaseModel.find();
-
-    const updates = models.map(async (model) => {
-      if (!Array.isArray(model.views)) {
-        model.views = [model.createdBy]; // add owner as initial liker
-        await model.save();
-      }
-    });
-
-    await Promise.all(updates);
-
-    res.status(200).send("Likes field added to all models successfully.");
-  } catch (err) {
-    console.error("Error adding likes:", err);
-    res.status(500).send("Error updating models.");
-  }
-});
+app.use("/",(req,res)=>{
+  res.send("Page not found");
+})
 
 //Root directory................................................................
 app.get("/",(req,res)=>{
-    res.send("Root directory");
+  res.send("Root directory");
 });
