@@ -1,3 +1,8 @@
+.models-view-page{
+  padding: 3rem;
+  height: 100%;
+}
+
 .model-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

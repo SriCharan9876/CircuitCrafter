@@ -1,0 +1,197 @@
+.addmodel-page{
+    display: flex;
+    flex-direction: row;
+    padding: 2rem;
+    height: 100vh;
+}
+
+.addmodel-sidebar{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 25%;
+    /* display: none; for less than 820 mpx width*/ 
+    /* background-color: aliceblue; */
+}
+.addmodel-progressbox {
+  position: sticky;
+  /* top: 20px; */
+}
+
+.addmodel-data{
+    /* background-color: aqua; */
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding-left: 10%;
+}
+
+.addmodel-data h2 {
+  text-align: center;
+  margin-bottom: 0px;
+  margin-left:10%;
+  color: #1976d2;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+.addmodel-form{
+    /* background-color: red; */
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 90%;/* For lesser screen width */
+    max-width: 40rem;
+    padding: 3rem 3rem;
+    margin: 0;
+    min-height: 60vh;
+}
+
+.addmodel-form div label {
+  font-weight: 600;
+  font-size: 1.3rem;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.addmodel-form input:hover,
+.addmodel-form textarea:hover,
+.addmodel-form select:hover {
+  border-color: #90caf9;
+}
+
+.addmodel-form div input,select,textarea{
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  margin: 0.5rem 0 1rem 0;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  transition: border 0.3s ease;
+  box-sizing:border-box;
+}
+.addmodel-form div input:focus,select:focus,textarea:focus{
+    border-color: #1976d2;
+    outline: none;
+}
+
+.addmodel-nav-btns{
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.addmodel-navigate-btn{
+  width: 30%;
+  padding: 0.7rem;
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: bold;
+  font-size: 1.3rem;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap:0.5rem
+}
+.addmodel-navigate-btn:hover {
+  background-color: #0d47a1;
+}
+
+.addmodel-upload-section div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.addmodel-inputs{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    align-items: center;
+}
+
+.addmodel-inputs div{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap:3%;
+    width: 100%;
+}
+
+.addmodel-inputs div div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.addmodel-inputs>label>button{
+    padding: 0.2rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 0.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.addmodel-deletebtn{
+    background-color: transparent;
+    border: none;
+    color: #1976d2;
+    cursor: pointer;
+}
+
+.addmodel-submit-btn{
+    width: 30%;
+    padding: 0.7rem;
+    background-color: #1976d2;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    font-size: 1.3rem;
+    transition: background-color 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap:0.5rem
+}
+
+@media (max-width: 820px) {
+  .addmodel-page {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  .addmodel-sidebar {
+    width: 100%;
+    /* display: none; or display as horizontal progress indicator */
+  }
+
+  .addmodel-data {
+    padding-left: 0;
+    align-items: center;
+  }
+
+  .addmodel-data h2{
+    margin-left: 0;
+  }
+}

@@ -181,6 +181,7 @@ const EditModel = () => {
 
   return (
     <div style={{ maxWidth: "600px", margin: "auto", marginTop: "50px" }} className="allPages">
+      <div className="model-view-page">
       <h2>Edit Model</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -326,6 +327,7 @@ const EditModel = () => {
       </form>
 
       {message && <p style={{ marginTop: "20px" }}>{message}</p>}
+    </div>
     </div>
   );
 };

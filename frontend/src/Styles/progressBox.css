@@ -1,0 +1,162 @@
+.progress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  color: #333;
+  min-width: 130px; /*Adjustible............................ */
+}
+
+/* Step container */
+.progress-step {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
+  transition: all 0.5s ease-in-out;
+}
+
+/* Vertical line between steps */
+.progress-step::before {
+  content: "";
+  position: absolute;
+  top: 28px;
+  left: 15px;
+  width: 2.5px;
+  height: calc(100% + 2.5rem);
+  background-color: #1d75e5;
+  transition: height 0.6s ease-in-out, background-color 0.4s ease-in-out;
+}
+
+.progress-step:last-child::before {
+  display: none;
+}
+
+/* Step circle - default */
+.progress-step-index {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  border: 2.5px solid #1d75e5;
+  margin-right: 18px;
+  position: relative;
+  flex-shrink: 0;
+  font-size: 1rem;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.4s ease, border-color 0.4s ease, color 0.4s ease;
+}
+
+/* Completed step */
+.progress-step-index.completed {
+  background-color: #1d75e5;
+  border-color: #1d75e5;
+}
+
+/* Active step */
+.progress-step-index.active {
+  background-color: #ffffff;
+  border-color: #1d75e5;
+  color: transparent;
+}
+
+/* White dot animation for active step */
+.progress-step-index.active::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background-color: #1d75e5;
+  border-radius: 50%;
+  display: block;
+  animation: fadeInDot 0.4s ease-in-out;
+}
+
+/* Text Styling */
+.progress-step-info h4 {
+  margin: 0;
+  font-weight: 600;
+  font-size: 1.15rem;
+  color: #333;
+  transition: color 0.4s ease;
+}
+
+.progress-step-info p {
+  margin: 6px 0 0 0;
+  font-size: 1rem;
+  color: #666;
+  transition: color 0.4s ease;
+}
+
+/* Completed text */
+.progress-step-index.completed + .progress-step-info h4 {
+  color: #1d75e5;
+}
+.progress-step-index.completed + .progress-step-info p {
+  color: #555;
+}
+
+
+
+/* White dot fade-in animation */
+@keyframes fadeInDot {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+/* Horizontal layout for small screens */
+@media (max-width: 820px) {
+  .progress-steps {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 2rem;
+    padding: 1.2rem 0.5rem;
+    overflow-x: auto;
+    background-color: transparent;
+  }
+
+  .progress-step {
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    text-align: center;
+  }
+
+  .progress-step::before {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 70%;
+    width: 5rem;
+    height: 2.5px;
+    background-color: #1d75e5;
+    transition: width 0.6s ease-in-out, background-color 0.4s ease-in-out;
+  }
+
+  .progress-step:last-child::before {
+    display: none; 
+  }
+
+  .progress-step-index {
+    margin: 0 0 0.5rem 0;
+  }
+
+  .progress-step-info h4 {
+    font-size: 0.95rem;
+  }
+
+  .progress-step-info p {
+    font-size: 0.8rem;
+    display: none; /* Optional: hide subtext on mobile */
+  }
+}

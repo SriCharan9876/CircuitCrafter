@@ -3,10 +3,24 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {notify} from "../features/toastManager"
 import { useAuth } from "../contexts/authContext";
+import ProgressBox from "../features/progressbox";
+import ImageUploadBox from "../features/ImageUploadBox";
+import "../styles/addModel.css"; 
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
+import AscFileUploadBox from "../features/AscFileUpload";
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
+import CircularProgress from "@mui/material/CircularProgress";
 
 const AddModel = () => {
     const navigate=useNavigate();
     const { user, token } = useAuth();
+
+    const [currentStep, setCurrentStep] = useState(1);
+    const stepNames = ["Model details","Upload files","Parameters","Submit"];
+    const stepInfos=["Fill model name", "Upload files", "Add params", "Finish"];
+
     const initialFormData ={
         modelName: "",
         typeName: "",
@@ -32,19 +46,10 @@ const AddModel = () => {
         relations: [""],
     };
     const [formData, setFormData] = useState(initialFormData);
-    const [message, setMessage] = useState("");
     const [categories, setCategories] = useState([]);
     const [file, setFile] = useState(null);
-    const [uploadedUrl, setUploadedUrl] = useState("");
     const [previewFile, setPreviewFile] = useState(null);
-
-
-    useEffect(()=>{
-        if (!user) {
-            notify.info("You shoul login for adding a model")
-            navigate("/login");
-        }
-    },[user])
+    const [submitting,setSubmitting]=useState(false);
     
     useEffect(() => {
         const fetchCategories = async () => {
@@ -60,30 +65,59 @@ const AddModel = () => {
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormData(prev => ({ ...prev, [name]: value.trimStart() }));
     };
 
-    const handlePreviewFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile && !selectedFile.type.startsWith("image/")) {
-            setMessage("Only image files are allowed for profile picture.");
-            setFile(null);
-        } else {
-            setPreviewFile(selectedFile);
-            setMessage(""); // clear old error
+    const handleNext = () => {
+        if (currentStep === 1) {
+            if (!formData.modelName || !formData.typeName) {
+                notify.error("Please fill all required fields");
+                return;
+            }
+        }else if(currentStep===2){
+            if(!file){
+                notify.error("Please upload a circuit file");
+                return;
+            }
+        }else{
+            const hasInvalidDesignParams = formData.designParameters?.some(para => para.parameter.trim().length === 0);
+            const hasInvalidCalcParams = formData.calcParams?.some(para => para.compName.trim().length === 0);
+            const hasInvalidRelations=formData.relations?.some(rel => rel.trim().length === 0);
+
+            if (hasInvalidDesignParams || hasInvalidCalcParams || hasInvalidRelations) {
+                notify.error("Please delete invalid parameters or relations");
+                return;
+            }
+            if(formData.designParameters.length>0 && formData.calcParams.length===0){
+                notify.error("atleast one calculation parameter is required for designing model");
+                return;
+            }
+            if(formData.relations.length<formData.calcParams.length){
+                notify.error("Atleast one relation should be defined for each calculation parameter");
+                return;
+            }
         }
+        setCurrentStep((prevstep) => prevstep + 1);
+    };
+
+
+    const handleBack = () => {
+        if (currentStep > 1) setCurrentStep((prevstep)=>(prevstep-1));
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (currentStep !== stepNames.length) {
+            notify.error("Please complete all steps before submitting");
+            return;
+        }
+
         if (!file) {
-            setMessage("Please upload basemodel file before submitting.");
+            notify.error("Please upload circuit file before submitting")
             return;
         }
-        if (!previewFile) {
-            setMessage("Please upload circuit preview image before submitting.");
-            return;
-        }
+
+        setSubmitting(true);
         try {
 
             // STEP 1a: Upload the .asc file
@@ -97,21 +131,25 @@ const AddModel = () => {
                 },
             });
             const uploadedUrl2 = uploadRes.data.fileUrl;
-            setUploadedUrl(uploadedUrl2);
 
             // STEP 1b: Upload the preview image file
-            const imgFormData=new FormData();
-            imgFormData.append("file",previewFile);
-            const imageUploadRes=await axios.post(
-                `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
-                imgFormData,
-                {headers:{
-                    'Content-Type': 'multipart/form-data',
-                    Authorization: `Bearer ${token}`
-                }}
-            );
-            const {public_id,url}=imageUploadRes.data;
-            let previewImgData={public_id,url};
+            let previewImgData = { public_id: "", url: "" };
+            if (previewFile) {
+                const imgFormData = new FormData();
+                imgFormData.append("file", previewFile);
+                const imageUploadRes = await axios.post(
+                    `${import.meta.env.VITE_API_BASE_URL}/api/files/baseimg`,
+                    imgFormData,
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            Authorization: `Bearer ${token}`
+                        }
+                    }
+                );
+                const { public_id, url } = imageUploadRes.data;
+                previewImgData = { public_id, url };
+            }
 
             // STEP 2: Now submit the form with the uploaded URL
             const finalData = {
@@ -124,20 +162,22 @@ const AddModel = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (modelRes.data.added) {
-                setMessage("Model submitted for approval!");
                 notify.success("Model submitted for approval!");
                 setTimeout(() => navigate("/models/mymodels"), 1000);
+                // Reset form after success
+                setFormData(initialFormData);
+                setFile(null);
+                setPreviewFile(null);
             } else {
-                setMessage("Failed to submit model. Please check input or try again.");
-                notify.error("Failed to submit");
+                notify.error(modelRes.data.message || "Failed to submit model.");
             }
-            // Reset form after success
-            setFormData(initialFormData);
-            setFile(null);
-            setUploadedUrl("");
+            
         } catch (err) {
-            console.error("Error during submission:", err);
-            notify.error("Failed to upload or submit model.")
+            console.log("Error during submission:", err);
+            const backendMsg = err.response?.data?.message;
+            notify.error(backendMsg || "Failed to upload or submit model.");
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -199,12 +239,26 @@ const AddModel = () => {
             designParameters: prev.designParameters.filter((_, i) => i !== index),
         }));
     };
+    
+    const removeCalcParam = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            calcParams: prev.calcParams.filter((_, i) => i !== index),
+        }));
+    };
 
+    const removeRelation = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            relations: prev.relations.filter((_, i) => i !== index),
+        }));
+    };
 
-    return (
-        <div style={{ maxWidth: "600px", margin: "auto" }} className="allPages">
-            <h2>Add New Model</h2>
-            <form onSubmit={handleSubmit}>
+    const renderStepContent = () => {
+        switch (currentStep) {
+            case 1:
+                return (
+                <>
                 <div>
                     <label>Model Name:</label><br />
                     <input
@@ -213,18 +267,16 @@ const AddModel = () => {
                         value={formData.modelName}
                         onChange={handleChange}
                         required
-                        style={{ width: "100%", padding: "8px" }}
                     />
                 </div>
 
                 <div>
-                    <label>Type (Category):</label><br />
+                    <label>Type Category:</label><br />
                     <select
                         name="typeName"
                         value={formData.typeName}
                         onChange={handleChange}
                         required
-                        style={{ width: "100%", padding: "8px" }}
                     >
                         <option value="">Select Type</option>
                         {categories.map((cat) => (
@@ -241,123 +293,168 @@ const AddModel = () => {
                         name="description"
                         value={formData.description}
                         onChange={handleChange}
-                        rows={4}
-                        style={{ width: "100%", padding: "8px" }}
+                        rows={14}
+                        style={{ width: "100%", padding: "8px"}}
                     />
                 </div>
-
-                <div>
-                    <label>Upload your circuit file (.asc): </label>
-                  <input type="file" onChange={(e) => setFile(e.target.files[0])} />
-                  {uploadedUrl && <a href={uploadedUrl} target="_blank" rel="noreferrer">View Uploaded File</a>}
-                </div>
-
-                <div>
-                    <label>Upload your circuit preview image (optional):</label>
-                    <input type="file"  onChange={handlePreviewFileChange} />
-                    <button type="button" onClick={() => setPreviewFile(null)}>remove image</button>
-                </div>
-
-                {previewFile && (
-                    <div style={{ marginTop: "10px" }}>
-                        <h3>Circuit image preview:</h3>
-                        <img
-                        src={URL.createObjectURL(previewFile)}
-                        alt="Preview"
-                        style={{ width: "600px", marginTop: "10px", borderRadius: "6px" }}
-                        />
+                </>
+                );
+            case 2:
+                return (
+                <div className="addmodel-upload-section">
+                   <div >
+                        <label >Upload your circuit file (.asc): </label>
+                        <AscFileUploadBox file={file} setFile={setFile} />
                     </div>
-                )}
 
-                <div className="inputs">
-                    <label>Design Parameters:</label>
+                    <div >
+                        <label>Upload your circuit preview image (optional):</label>
+                        <ImageUploadBox initialPreview={previewFile ? URL.createObjectURL(previewFile) : null} setPreviewFile={setPreviewFile} boxSize={200} />
+                    </div>
+                </div>
+                );
+            case 3:
+                return (
+                <div className="addmodel-inputs">
+                    <label>Design Parameters<button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
+                        <AddIcon/>
+                    </button></label><br />
+
+                    {formData.designParameters.length>0&&
+                    <div style={{justifyContent:"space-around",marginRight:"10%", gap:"0%"}}>
+                        <label>Parameter name</label>
+                        <label>Upper limit</label>
+                        <label>Lower limit</label>
+                    </div>
+                    }
+                    
                     {formData.designParameters && formData.designParameters.map((param, index) => (
-                        <div key={index} style={{ marginBottom: "12px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px", maxWidth:"100%"}}>
-                            <input
-                                type="text"
-                                value={param.parameter}
-                                onChange={(e) => handleDesignParamChange(index, "parameter", e.target.value)}
-                                placeholder={`Parameter ${index + 1} name`}
-                                style={{ width: "30%", padding: "8px", marginLeft: "1%", marginRight: "1%" }}
-                                id="parameter"
-                            />
-                            <label htmlFor="upperLimit">Upper limit:</label>
-                            <input
-                                type="number"
-                                value={param.upperLimit}
-                                onChange={(e) => handleDesignParamChange(index, "upperLimit", parseFloat(e.target.value))}
-                                placeholder="Upper Limit"
-                                style={{ width: "10%", padding: "8px", marginLeft: "1%", marginRight: "1%"  }}
-                                id="upperLimit"
-                            />
-                            <label htmlFor="lowerLimit">Lower limit:</label>
-                            <input
-                                type="number"
-                                value={param.lowerLimit}
-                                onChange={(e) => handleDesignParamChange(index, "lowerLimit", parseFloat(e.target.value))}
-                                placeholder="Lower Limit"
-                                style={{ width: "10%", padding: "8px", marginLeft: "1%", marginRight: "1%"  }}
-                                id="lowerLimit"
-                            />
-                            <button onClick={() => removeDesignParam(index)}>Remove</button>
+                        <div key={index} className="addmodel-designparam-box">
+                            <div>
+                                <input
+                                    type="text"
+                                    value={param.parameter}
+                                    onChange={(e) => handleDesignParamChange(index, "parameter", e.target.value)}
+                                    placeholder={`name Parameter`}
+                                />
+                            </div>
+                            <div>
+                                
+                                <input
+                                    type="number"
+                                    value={param.upperLimit}
+                                    onChange={(e) => handleDesignParamChange(index, "upperLimit", parseFloat(e.target.value)||0)}
+                                    placeholder="Upper Limit"
+                                />
+                            </div>
+                            <div>
+                                
+                                <input
+                                    type="number"
+                                    value={param.lowerLimit}
+                                    onChange={(e) => handleDesignParamChange(index, "lowerLimit", parseFloat(e.target.value)||0)}
+                                    placeholder="Lower Limit"
+                                />
+                            </div>
+                            
+                            <button onClick={() => removeDesignParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>                            
+                        
                         </div>
                     ))}
-                    <button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
-                        Add another Parameter
-                    </button>
-                </div>
 
-                <div className="inputs" style={{ marginTop: "20px" }}>
-                    <label>Calculated Components:</label>
+                    <label>Create Components<button type="button" onClick={addCalcParam}>
+                        <AddIcon/>
+                    </button></label><br />
                     {formData.calcParams.map((param, index) => (
-                        <div key={index} style={{ marginBottom: "12px", border: "1px solid #ccc", padding: "10px", borderRadius: "5px" }}>
+                        <div key={index} >
                         <input
                             type="text"
                             value={param.compName}
                             onChange={(e) => handleCalcParamChange(index, "compName", e.target.value)}
-                            placeholder={`Component Name ${index + 1}`}
-                            style={{ width: "100%", padding: "8px", marginBottom: "6px" }}
+                            placeholder={`name component`}
                         />
                         <select
                             value={param.comp}
                             onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
-                            style={{ width: "100%", padding: "8px" }}
                         >
                             <option value="resistor">Resistor</option>
                             <option value="capacitor">Capacitor</option>
                             <option value="inductor">Inductor</option>
                             {/* Add more if needed */}
                         </select>
+                        <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>   
                         </div>
                     ))}
-                    <button type="button" onClick={addCalcParam} style={{ marginTop: "10px" }}>
-                        Add another component
-                    </button>
-                </div>
 
-                <div className="inputs" style={{ marginTop: "20px" }}>
-                    <label>Relations / Equations:</label>
+                    <label>Create relations<button type="button" onClick={addRelation}>
+                        <AddIcon sx={{fontSize:"1.6rem"}}/>
+                    </button></label><br />
+
                     {formData.relations.map((relation, index) => (
-                        <input
-                        key={index}
-                        type="text"
-                        value={relation}
-                        onChange={(e) => handleRelationChange(index, e.target.value)}
-                        placeholder={`Relation ${index + 1}`}
-                        style={{ width: "100%", padding: "8px", marginBottom: "10px" }}
-                        />
+                        <div key={index}>
+                            <input
+                            type="text"
+                            value={relation}
+                            onChange={(e) => handleRelationChange(index, e.target.value)}
+                            placeholder={`Give relation between parameters, components`}
+                            />
+                            <button onClick={() => removeRelation(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
+                        </div>
                     ))}
-                    <button type="button" onClick={addRelation}>
-                        Add another relation
-                    </button>
+                    
                 </div>
+                );
+            case 4:
+                return <div>
+                    Last step for adding instruction and  prerequisite files, if any
+                </div>
+            default:
+                return null;
+        }
+    };
 
-                <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }}>
-                    Submit
-                </button>
-            </form>
-
-            {message && <p style={{ marginTop: "20px" }}>{message}</p>}
+    return (
+        <div className="allPages">
+            <div className="addmodel-page">
+                <div className="addmodel-sidebar">
+                    <div className="addmodel-progressbox">
+                        <ProgressBox stepNames={stepNames} stepInfos={stepInfos} currentStep={currentStep} />
+                    </div>
+                </div>
+                <div className="addmodel-data">
+                    <h2>Add New Model — Step {currentStep} of {stepNames.length}</h2>
+                    <form onSubmit={handleSubmit} className="addmodel-form" >
+                        {renderStepContent()}
+                        <div className="addmodel-nav-btns">
+                            {currentStep > 1 && 
+                                <button type="button" 
+                                    className="addmodel-navigate-btn" 
+                                    onClick={handleBack}
+                                    ><NavigateBeforeIcon/>Back</button>}
+                            {currentStep < stepNames.length && 
+                                <button type="button" 
+                                    className="addmodel-navigate-btn" 
+                                    onClick={handleNext}
+                                    >Next <NavigateNextIcon/></button>}
+                            {currentStep === stepNames.length &&
+                                <button type="submit" 
+                                    className="addmodel-navigate-btn" 
+                                    style={{backgroundColor:"green"}}
+                                    disabled={submitting}>
+                                    {submitting ? (
+                                        <>
+                                        Submitting...
+                                        <CircularProgress size={20} color="inherit" />
+                                        </>
+                                    ) : (
+                                        "Submit"
+                                    )}
+                                    </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };

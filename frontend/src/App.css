@@ -1,13 +1,12 @@
 .allPages{
-    padding: 20px;
+    padding: 0;
     position: fixed;
-    left:47px;
+    left:59px;
     bottom: 0;
     top: 9vh;
     right: 0;
     display: flex;
     flex-direction: column;
-    gap: 2rem;
     overflow-y: auto;
 }
 /* App.css */

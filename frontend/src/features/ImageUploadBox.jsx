@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from "react";
-
+import { useState, useRef, useEffect } from "react";
+import { notify } from "./toastManager";
 /**
  * ImageUploadBox
  * Props:
@@ -9,12 +9,12 @@ import React, { useState, useRef, useEffect } from "react";
  * - label: string
  */
 const ImageUploadBox = ({
-  onImageSelect,
+  setPreviewFile,
   initialPreview = null,
   boxSize = 200,
   label = "Click to upload image",
 }) => {
-  const [preview, setPreview] = useState(initialPreview);
+  const [preview, setPreview] = useState(initialPreview || null);
   const inputRef = useRef();
 
   const handleFileChange = (e) => {
@@ -22,7 +22,7 @@ const ImageUploadBox = ({
     if (file && file.type.startsWith("image/")) {
       const objectUrl = URL.createObjectURL(file);
       setPreview(objectUrl);
-      onImageSelect?.(file);
+      setPreviewFile(file);
     } else {
       notify.error("Please select a valid image file");
     }
@@ -33,10 +33,21 @@ const ImageUploadBox = ({
   };
 
   useEffect(() => {
+    let objectUrl;
+
+    if (initialPreview instanceof File) {
+      objectUrl = URL.createObjectURL(initialPreview);
+      setPreview(objectUrl);
+    } else if (typeof initialPreview === 'string') {
+      setPreview(initialPreview);
+    }
+
     return () => {
-      if (preview && !initialPreview) URL.revokeObjectURL(preview);
+      if (objectUrl) {
+        URL.revokeObjectURL(objectUrl);
+      }
     };
-  }, [preview, initialPreview]);
+  }, [initialPreview]);
 
   return (
     <div>

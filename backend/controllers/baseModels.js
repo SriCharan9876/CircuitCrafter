@@ -15,6 +15,12 @@ export const index=async(req,res)=>{
 
 export const createModel=async(req,res)=>{
     try{
+        if (!req.body.previewImg?.url.trimStart()) {
+            req.body.previewImg = {
+                public_id: "",
+                url: "https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
+            };
+        }
         const finalData=req.body;
         const newmod={
             ... finalData,
@@ -27,7 +33,11 @@ export const createModel=async(req,res)=>{
         return res.json({added:true,message:"Successfully added"});
     }catch(err){
         console.log(err);
-        return res.json({added:false,message:"failed to add"});
+        if (err.name === 'ValidationError') {
+            const messages = Object.values(err.errors).map((val) => val.message);
+            return res.status(400).json({ message: messages.join(', ') });
+        }
+        return res.status(500).json({added:false,message:"server error"});
     }
 }//to Add Model
 
