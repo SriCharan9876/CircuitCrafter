@@ -19,18 +19,19 @@ export const getPosts=async(req,res)=>{
 }
 export const getPost=async(req,res)=>{
     try{
+      console.log("hi")
         const {id}=req.params;
-        // const posts=await Post.find({});
-        // const users=[];
-        // for(let post of posts){
-        //     const puser=post.author;
-        //     console.log("user:",puser);
-        //     const user=await User.find({_id:puser});
-        //     users.push(user);
-        // }
-        const posts = await Post.findOne({_id:id}).populate("author");
+        const puser=req.user?.userId;
+        const posts = await Post.findOne({_id:id}).populate("author").populate("comments.user");
+        if(puser){
+            if(posts.views?.indexOf(puser)==-1){
+                posts.views?.push(puser);
+                await posts.save();
+            }
+        }
         return res.json({fetched:true,posts});
     }catch(err){
+      console.log("Hi")
         console.log(err);
         return res.json({fetched:false,message:"Failed to fetch Posts"});
     }
@@ -70,3 +71,33 @@ export const likeToggle=async(req,res)=>{
         return res.json({ liked:false,message: "Failed to like/unlike Post" });
     }
 }
+export const addComment = async (req, res) => {
+  try {
+    const { id } = req.params; // Post ID
+    const { comment } = req.body;
+    const userId = req.user.userId;
+
+    if (!comment || comment.trim() === "") {
+      return res.json({ success: false, message: "Comment cannot be empty." });
+    }
+
+    const post = await Post.findById(id);
+    if (!post) {
+      return res.json({ success: false, message: "Post not found." });
+    }
+
+    const newComment = {
+      user: userId,
+      text: comment.trim(),
+      createdAt: new Date()
+    };
+
+    post.comments.unshift(newComment); // add newest at the top
+    await post.save();
+
+    return res.json({ success: true, message: "Comment added successfully." });
+  } catch (err) {
+    console.error(err);
+    return res.json({ success: false, message: "Failed to add comment." });
+  }
+};

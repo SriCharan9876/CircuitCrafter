@@ -17,6 +17,7 @@ const Community = () => {
     try {
       const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community`, {
         withCredentials: true,
+        headers:{Authorization:`Bearer ${token}`}
       });
       if (res.data.fetched) {
         setPosts(res.data.posts);
@@ -28,6 +29,7 @@ const Community = () => {
     }
   };
   const likeIt=async(id)=>{
+
     if(!isLogggedIn) navigate("/login");
     const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/${id}/like`,{} ,{
       withCredentials: true,
@@ -66,8 +68,8 @@ const Community = () => {
             {/* <p className="post-content">{post.content}</p> */}
           </div>
           <div className="post-footer">
-            <span onClick={()=>likeIt(post._id)}><ThumbUpIcon fontSize="small" /> {post.likes?.length || 0}</span>
-            <span><VisibilityIcon fontSize="small" /> {post.views || 0}</span>
+            <span onClick={(e) => {e.stopPropagation();  likeIt(post._id);}} style={{ color: token && post.likes?.includes(user?._id) ? "red" : "inherit" }}><ThumbUpIcon fontSize="small"/> {post.likes?.length || 0}</span>
+            <span><VisibilityIcon fontSize="small" /> {post.views?.length || 0}</span>
             <span><ChatBubbleOutlineIcon fontSize="small" /> {post.comments?.length || 0}</span>
           </div>
         </div>

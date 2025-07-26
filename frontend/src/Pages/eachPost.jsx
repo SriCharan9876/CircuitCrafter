@@ -8,19 +8,47 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ShareIcon from '@mui/icons-material/Share';
+import SendIcon from "@mui/icons-material/Send";
 const PostDetail = () => {
   const { id } = useParams();
   const [post, setPosts] = useState({});
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { user, token } = useAuth();
+  const [commentText, setCommentText] = useState("");
+
+  const handleCommentSubmit = async () => {
+    if (!isLoggedIn) return navigate("/login");
+    if (!commentText.trim()) return notify.error("Comment cannot be empty.");
+
+    try {
+      const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/${id}/addComment`,
+        { comment: commentText },
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+      if (res.data.success) {
+        notify.success("Comment added!");
+        setCommentText("");
+        getPost();
+      } else {
+        notify.error(res.data.message || "Failed to add comment.");
+      }
+    } catch (err) {
+      notify.error("Error adding comment.");
+    }
+  };
+
 
   const getPost = async () => {
     try {
-      console.log("Fetching post...");
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${id}`, {
-        withCredentials: true,
-      });
+      // console.log("token:",token)
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${id}`
+        // withCredentials: true,
+        // headers: token ? { Authorization: `Bearer ${token}` } : {}
+    );
       if (res.data.fetched) {
         setPosts(res.data.posts);
         console.log(res.data.posts);
@@ -89,19 +117,47 @@ const PostDetail = () => {
       </div>
 
       <div className="post-actions">
-        <button onClick={() => onLike(post._id)}>
+        <button onClick={() => onLike(post._id)} style={{ color: token && post.likes?.includes(user?._id) ? "red" : "inherit" }}>
           <ThumbUpIcon/> {post.likes?.length || 0}
         </button>
-        <button disabled>
-          <VisibilityIcon/> {post.views || 0}
+        <button>
+          <VisibilityIcon/> {post.views?.length || 0}
         </button>
-        <button disabled>
+        <button>
           <ChatBubbleOutlineIcon/> {post.comments?.length || 0}
         </button>
         <button onClick={handleShare}>
            <ShareIcon/>
         </button>
       </div>
+      <div className="comment-section">
+  <div className="comment-input-box">
+    <input
+      type="text"
+      placeholder="Add a comment..."
+      value={commentText}
+      onChange={(e) => setCommentText(e.target.value)}
+    />
+    <button onClick={handleCommentSubmit}>
+      <SendIcon />
+    </button>
+  </div>
+
+  <div className="comments-list">
+      {post.comments?.length > 0 ? (
+        post.comments.map((comment, index) => (
+          <div className="comment-card" key={index}>
+            <strong>{comment.user?.name || "Anonymous"}:</strong>
+            <p>{comment.text}</p>
+            <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
+          </div>
+        ))
+      ) : (
+        <p className="no-comments">No comments yet. Be the first!</p>
+      )}
+    </div>
+  </div>
+
     </div>
   );
 };

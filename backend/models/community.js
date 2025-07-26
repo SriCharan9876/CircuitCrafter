@@ -26,6 +26,12 @@ const postSchema = new mongoose.Schema({
       ref: "User"
     }
   ],
+  views: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User"
+    }
+  ],
   comments: [
     {
       user: {
