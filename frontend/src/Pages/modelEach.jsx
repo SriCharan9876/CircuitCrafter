@@ -25,8 +25,6 @@ const EachModel=()=>{
     const [cloudinaryUrl,setCloudinary]=useState("");
     const [fileGenerated,setFileGenerated]=useState(false);
     const [generating, setGenerating] = useState(false);
-
-
     const [isAdmin, setIsAdmin] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
     const isApproved = model.status === "approved";
@@ -173,8 +171,14 @@ const EachModel=()=>{
 
     useEffect(() => {
         getThisModel();
-    }, [id]);
+    }, [id,user]);
 
+    useEffect(()=>{
+        if (user && model?.createdBy) {
+            setIsAdmin(user.role === "admin");
+            setIsOwner(model.createdBy._id === user._id);
+        }
+    })
 
     return(
         <div style={{ padding: "20px" }} className="allPages">

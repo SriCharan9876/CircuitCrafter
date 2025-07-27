@@ -1,21 +1,21 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import {notify} from "../features/toastManager"
 import { useAuth } from "../contexts/authContext";
 import ProgressBox from "../features/progressbox";
 import ImageUploadBox from "../features/ImageUploadBox";
+import AscFileUploadBox from "../features/AscFileUpload";
 import "../styles/addModel.css"; 
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
-import AscFileUploadBox from "../features/AscFileUpload";
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from "@mui/material/CircularProgress";
 
 const AddModel = () => {
     const navigate=useNavigate();
-    const { user, token } = useAuth();
+    const { token } = useAuth();
 
     const [currentStep, setCurrentStep] = useState(1);
     const stepNames = ["Model details","Upload files","Parameters","Submit"];
@@ -26,23 +26,9 @@ const AddModel = () => {
         typeName: "",
         description: "",
         fileUrl: "",
-        previewImg:{
-            public_id:"",
-            url:""
-        },
-        designParameters: [
-            {
-            parameter: "",
-            upperLimit: 10,
-            lowerLimit: 0,
-            },
-        ],
-        calcParams: [
-            {
-            compName: "",
-            comp: "resistor",
-            },
-        ],
+        previewImg:{public_id:"",url:""},
+        designParameters: [{parameter: "",upperLimit: 10,lowerLimit: 0,},],
+        calcParams: [{compName: "",comp: "resistor",},],
         relations: [""],
     };
     const [formData, setFormData] = useState(initialFormData);
@@ -70,7 +56,7 @@ const AddModel = () => {
 
     const handleNext = () => {
         if (currentStep === 1) {
-            if (!formData.modelName || !formData.typeName) {
+            if (!formData.modelName?.trim() || !formData?.typeName?.trim()) {
                 notify.error("Please fill all required fields");
                 return;
             }
@@ -184,10 +170,7 @@ const AddModel = () => {
     const addinput = () => {
         setFormData((prev) => ({
             ...prev,
-            designParameters: [
-            ...prev.designParameters,
-            { parameter: "", upperLimit: 10, lowerLimit: 0 },
-            ],
+            designParameters: [...prev.designParameters,{ parameter: "", upperLimit: 10, lowerLimit: 0 },],
         }));
     };
 
@@ -260,7 +243,7 @@ const AddModel = () => {
                 return (
                 <>
                 <div>
-                    <label>Model Name:</label><br />
+                    <label>Model Name</label><br />
                     <input
                         type="text"
                         name="modelName"
@@ -271,7 +254,7 @@ const AddModel = () => {
                 </div>
 
                 <div>
-                    <label>Type Category:</label><br />
+                    <label>Category</label><br />
                     <select
                         name="typeName"
                         value={formData.typeName}
@@ -288,7 +271,7 @@ const AddModel = () => {
                 </div>
 
                 <div>
-                    <label>Description:</label><br />
+                    <label>Description</label><br />
                     <textarea
                         name="description"
                         value={formData.description}
@@ -316,7 +299,7 @@ const AddModel = () => {
             case 3:
                 return (
                 <div className="addmodel-inputs">
-                    <label>Design Parameters<button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
+                    <label>Add Design Parameters<button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
                         <AddIcon/>
                     </button></label><br />
 
@@ -362,7 +345,7 @@ const AddModel = () => {
                         </div>
                     ))}
 
-                    <label>Create Components<button type="button" onClick={addCalcParam}>
+                    <label>Add calculation Components<button type="button" onClick={addCalcParam}>
                         <AddIcon/>
                     </button></label><br />
                     {formData.calcParams.map((param, index) => (
@@ -386,7 +369,7 @@ const AddModel = () => {
                         </div>
                     ))}
 
-                    <label>Create relations<button type="button" onClick={addRelation}>
+                    <label>Create Relations<button type="button" onClick={addRelation}>
                         <AddIcon sx={{fontSize:"1.6rem"}}/>
                     </button></label><br />
 

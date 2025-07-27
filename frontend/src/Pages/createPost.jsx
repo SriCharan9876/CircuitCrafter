@@ -10,12 +10,12 @@ const CreatePost = () => {
   const [content, setContent] = useState("");
   const [topics, setTopics] = useState([]);
   const [newTopic, setNewTopic] = useState("");
-  const { user, token } = useAuth();
+  const {token } = useAuth();
   const navigate = useNavigate();
   useEffect(()=>{
     if(!token){
-        notify.error("Login for creating post")
-        navigate("/login")
+        notify.error("Login for creating post");
+        navigate("/login");
     }
   },[])
   const handleAddTopic = () => {

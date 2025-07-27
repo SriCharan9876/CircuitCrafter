@@ -1,5 +1,5 @@
 import Post from "../models/community.js";
-import User from "../models/user.js";
+
 export const getPosts=async(req,res)=>{
     try{
         // const posts=await Post.find({});
@@ -19,33 +19,26 @@ export const getPosts=async(req,res)=>{
 }
 export const getPost=async(req,res)=>{
     try{
-      console.log("hi")
         const {id}=req.params;
         const puser=req.user?.userId;
         const posts = await Post.findOne({_id:id}).populate("author").populate("comments.user");
-        if(puser){
-            if(posts.views?.indexOf(puser)==-1){
-                posts.views?.push(puser);
-                await posts.save();
-            }
+        if(puser&&!!posts.views.includes(puser)){
+          posts.views?.push(puser);
+          await posts.save();
         }
         return res.json({fetched:true,posts});
     }catch(err){
-      console.log("Hi")
         console.log(err);
         return res.json({fetched:false,message:"Failed to fetch Posts"});
     }
 }
 export const createPost=async(req,res)=>{
     try {
-      const { title, content, topics } = req.body;
+      const postData = req.body;
       const post = new Post({
-        title,
-        content,
-        topics,
+        ... postData,
         author: req.user.userId
       });
-    
       await post.save();
       return res.json({posted:true,message:"Successfully posted"});
     } catch (error) {

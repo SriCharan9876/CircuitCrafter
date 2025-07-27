@@ -2,7 +2,7 @@ import UploadFileIcon from '@mui/icons-material/UploadFile';
 import "../styles/ascFileUpload.css";
 import { notify } from './toastManager';
 
-const AscFileUploadBox = ({ file, setFile }) => {
+const AscFileUploadBox = ({ intialFile=null, file, setFile }) => {
 
     const handleFileChange = (e) => {
         const selectedFile = e.target.files[0];

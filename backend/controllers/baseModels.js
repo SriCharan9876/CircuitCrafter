@@ -22,14 +22,11 @@ export const createModel=async(req,res)=>{
             };
         }
         const finalData=req.body;
-        const newmod={
+        const newmodel=new BaseModel({
             ... finalData,
             createdBy:req.user.userId
-        }
-        console.log("New model added successfully:");
-        console.log(newmod);
-        const new_model=new BaseModel(newmod);
-        await new_model.save();
+        });
+        await newmodel.save();
         return res.json({added:true,message:"Successfully added"});
     }catch(err){
         console.log(err);
@@ -52,15 +49,13 @@ export const getModel=async(req,res)=>{
 
         const currUser=req.user?.userId;
         if(currUser&&!model.views.includes(currUser)){
-            console.log(currUser);
             model.views.push(currUser);
             await model.save();
-            console.log(model.views);
         }
         return res.json({found:true,model:model});
     }catch(err){
         console.log(err);
-        return res.json({found:false});
+        return res.json({found:false,message:"Failed to fetch model"});
     }
 }//To show a model
 
@@ -148,18 +143,13 @@ export const toggleLike=async (req,res)=>{
     const {id}=req.params;
     const userId = req.user.userId; 
     const model=await BaseModel.findById(id);
-    if(!model){
-        return res.status(404).json({message:"Model not found!"});
-    }
     const hasLiked=model.likes.includes(userId);
     if(hasLiked){
         model.likes.pull(userId);
     }else{
         model.likes.push(userId);
     }
-
-    await model.save();
-    
+    await model.save();    
     return res.status(200).json({
         message:hasLiked?"Unliked":"Liked",
         likesCount:model.likes.length
@@ -170,9 +160,6 @@ export const updateViews=async(req,res)=>{
     const {id}=req.params;
     const userId=req.user.userId;
     const model=await BaseModel.findById(id);
-    if(!model){
-        return res.status(404).json({message:"Model not found!"});
-    }
     const hasViewed=model.views.includes(userId);
     if(!hasViewed){
         model.views.push(userId);

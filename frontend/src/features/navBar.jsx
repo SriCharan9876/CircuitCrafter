@@ -29,7 +29,7 @@ export default function NavBar(){
               <Link to="/notifications" className="navLink">Notifications</Link>
             </div>
             <div className="navItem">
-              <Link to="/myprofile" className="navLink">My profile</Link>
+              <Link to="/myprofile" className="navLink"><img src={user.profilePic?.url} alt="dp" className="model-owner-preview" /></Link>
             </div>
             {/* <div className="navItem"> */}
               {/* <Link to="/logout" className="navLink">Logout</Link> */}

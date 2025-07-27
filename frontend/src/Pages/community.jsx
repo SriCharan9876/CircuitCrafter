@@ -30,7 +30,10 @@ const Community = () => {
   };
   const likeIt=async(id)=>{
 
-    if(!isLogggedIn) navigate("/login");
+    if(!isLogggedIn) {
+      notify.warning("Login to interact with posts");
+      navigate("/login");
+    }
     const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/${id}/like`,{} ,{
       withCredentials: true,
       headers:{Authorization:`Bearer ${token}`}
