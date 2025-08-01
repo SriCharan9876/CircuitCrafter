@@ -11,6 +11,7 @@ import { notify } from "./toastManager";
 const ImageUploadBox = ({
   setPreviewFile,
   initialPreview = null,
+  previewFile,
   boxSize = 200,
   label = "Click to upload image",
 }) => {
@@ -35,11 +36,13 @@ const ImageUploadBox = ({
   useEffect(() => {
     let objectUrl;
 
-    if (initialPreview instanceof File) {
-      objectUrl = URL.createObjectURL(initialPreview);
+    if (previewFile) {
+      objectUrl = URL.createObjectURL(previewFile);
       setPreview(objectUrl);
-    } else if (typeof initialPreview === 'string') {
+    } else if (initialPreview) {
       setPreview(initialPreview);
+    } else {
+      setPreview(null);
     }
 
     return () => {
@@ -47,7 +50,7 @@ const ImageUploadBox = ({
         URL.revokeObjectURL(objectUrl);
       }
     };
-  }, [initialPreview]);
+  }, [initialPreview, previewFile]);
 
   return (
     <div>

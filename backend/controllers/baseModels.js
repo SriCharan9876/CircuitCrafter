@@ -126,10 +126,13 @@ export const editModel = async (req, res) => {
         model.relations = updatedData.relations;
 
         // Conditionally update previewImg
-        if (updatedData.previewImg && updatedData.previewImg.url) {
-            model.previewImg = updatedData.previewImg;
+        if (updatedData.previewImg && typeof updatedData.previewImg === "object") {
+            model.previewImg = {
+                public_id: updatedData.previewImg.public_id || "",
+                url: updatedData.previewImg.url || "https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
+            };
         }
-
+        
         await model.save();
 
         res.status(200).json({ updated: true, message: "Model updated successfully.", model });

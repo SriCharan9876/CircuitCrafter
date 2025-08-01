@@ -4,10 +4,37 @@
 }
 
 .model-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
-  padding: 1rem;
+  /* padding: 1rem; */
+  justify-content: center;
+}
+
+.modelBox{
+  width: 100%; /* 1 card per row on mobiles */
+  max-width: 35rem;
+}
+
+@media (min-width: 700px) {
+  .modelBox {
+    width: 44%; /* 2 cards per row on tablets */
+  }
+  .model-grid{
+    justify-content: start;
+  }
+}
+
+@media (min-width: 1020px) {
+  .modelBox {
+    width: 29%; /* 3+ cards per row on large screens */
+  }
+}
+
+@media (min-width: 1300px) {
+  .modelBox {
+    width: 22%; /* 4 cards per row on large screens */
+  }
 }
 
 /* Hero-Headings */
@@ -31,7 +58,7 @@
   margin-right: 4rem;
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  text-align: start;
   /* border:1px solid black */
 }
 
@@ -58,9 +85,13 @@
 .model-search-section{
   display: flex;
   flex-direction: column;
+  width: 100%;
+  align-items: start;
+  position: relative;
 }
 
 .model-searchbox{
+  position: relative;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -68,9 +99,8 @@
   margin:1rem 0 0 0;
   max-width: 45rem;
   border-radius: 2.5rem;
-  overflow: hidden;
+  overflow: visible;
   border: 1px solid #d1d5db;
-  background-color: #fff;
   box-shadow: 0 2px 5px rgba(18, 30, 194, 0.04);
   background-color: #f0f0f1;
 }
@@ -107,17 +137,20 @@
 
 .model-search-suggestion-list{
   position: absolute;
+  top: calc(100% + 0.3rem); /* just below the searchbox */
+  left: 0;
+  right: 0;
   background: white;
   /* border: 1px solid #ccc; */
   border-radius:1rem;
   width: 100%;
-  max-width: 45rem;
   list-style: none;
   margin: 0;
   padding: 0;
   max-height: 20rem;
   overflow-y: auto;
   z-index: 99;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
 .model-search-suggestion-list li {
@@ -159,4 +192,45 @@
   border-radius: 3rem;
   object-fit: cover;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 1170px) {
+  .explore-hero-animation-container{
+    display: none; /* remove explore hero animation video */
+  }
+
+  .explore-hero-content-container{
+    text-align: center;
+  }
+
+  .model-search-section{
+    align-items: center;
+  }
+
+  .explore-hero-heading {
+    line-height: 1.2;
+    font-size: 3.5rem;
+    font-weight: 750;
+    color: #111827;
+  }
+
+  .explore-hero-subheading {
+    font-size: 1.5rem;
+    color: #4b5563;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+  }
+
+}
+
+@media (max-width:700px) {
+  .explore-hero-heading{
+    display: none;
+  }
+  .explore-hero-subheading{
+    display: none;
+  }
+  .explore-hero-content-container{
+    margin: 0;
+  }
 }

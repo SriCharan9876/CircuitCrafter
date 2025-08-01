@@ -61,7 +61,7 @@ const EditModel = () => {
 
     fetchModel();
     fetchCategories();
-  }, [id.token]);
+  }, [id,token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -75,7 +75,7 @@ const EditModel = () => {
         return;
       }
     }else if(currentStep===2){
-      if(!file){
+      if(!file && !formData.fileUrl){
         notify.error("Please upload a circuit file");
         return;
       }
@@ -140,8 +140,12 @@ const EditModel = () => {
       const updatedModel = {
         ...formData,
         fileUrl: fileUrl || formData.fileUrl,
-        ...(previewImgData && { previewImg: previewImgData }),
+        previewImg: previewImgData ?? formData.previewImg,
       };
+      // Force empty object if user deleted the image and didn't upload new one
+      if (!formData.previewImg.url && !previewFile) {
+        updatedModel.previewImg = { public_id: "", url: "" };
+      }
       console.log("Updated Model Payload:", updatedModel);
 
       const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${id}`,
@@ -280,18 +284,29 @@ const EditModel = () => {
         <div className="addmodel-upload-section">
             <div >
                 <label >Change circuit file (.asc)</label>
-                {formData.fileUrl && (
-                    <a href={formData.fileUrl} target="_blank" rel="noreferrer">
-                    View Uploaded File
-                    </a>
-                )}
-                <AscFileUploadBox file={file} setFile={setFile} />
+                {formData.fileUrl && 
+                  <a href={formData.fileUrl} style={{color:"black"}} target="_blank" rel="noreferrer">
+                  View Uploaded raw File
+                  </a>
+                }
+                <AscFileUploadBox file={file} setFile={setFile} initialFile={formData.fileUrl}/>
             </div>
 
             <div >
-                <label>{previewFile?"Change circuit preview image":"Add circuit preview image"}</label>
-                <ImageUploadBox initialPreview={previewFile ? URL.createObjectURL(previewFile) : null} setPreviewFile={setPreviewFile} boxSize={200} />
-                <button type="button" onClick={() => setPreviewFile(null)}>Remove Preview Image</button>
+                <label>
+                  {formData.previewImg?.url?"Change circuit preview image":"Add circuit preview image"}
+                  {(formData.previewImg?.url||previewFile) && (
+                    <button 
+                    type="button" 
+                    onClick={() => {
+                      setFormData((prev) => ({ ...prev, previewImg: { public_id: "", url: "" } }));
+                      setPreviewFile(null);
+                    }}
+                    style={{backgroundColor:"transparent", border:"none", cursor:"pointer"}}
+                    ><DeleteIcon/></button>
+                  )}
+                  </label>
+                <ImageUploadBox initialPreview={formData.previewImg.url} setPreviewFile={setPreviewFile} previewFile={previewFile} boxSize={200} />
             </div>
 
         </div>

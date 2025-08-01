@@ -1,7 +1,7 @@
 
 .custom-ascFile-uploadBox{
-    display: flex;
-    flex-direction: row;
+  display: flex;
+  flex-direction: row;
 }
 
 .custom-ascFile-upload{
@@ -20,4 +20,12 @@
 
 .custom-ascFile-upload:hover {
   border-color: #90caf9;
+}
+
+.ascfile-upload-filename{
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
 }

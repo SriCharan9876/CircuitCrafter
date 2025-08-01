@@ -117,31 +117,31 @@ const Explore = () => {
                             <button className="model-search-btn" onClick={()=>filterModels()}>
                                 <SearchIcon/>   
                             </button> 
+                        
+                            {suggestions.length>0&&(
+                            <div className="model-search-suggestions">
+                                <ul className="model-search-suggestion-list">
+                                    {suggestions.map((sugg,idx)=>(
+                                    <li
+                                        key={idx}
+                                        onMouseDown={(e) => {
+                                            e.stopPropagation();
+                                            setSuggestions([]);
+                                            const filtered = allModels.filter((model) =>
+                                                model.modelName.toLowerCase().includes(sugg.toLowerCase())
+                                            );
+                                            setSearchTerm(sugg);
+                                            setDisplaymodels(filtered);
+                                        }}>
+                                            <SearchIcon/> 
+                                        {sugg}
+                                    </li>))}
+                                </ul>
+                            </div>)
+                            }
+                            
                         </div>
                         <br />
-
-                        {suggestions.length>0&&(
-                        <div className="model-search-suggestions">
-                            <ul className="model-search-suggestion-list">
-                                {suggestions.map((sugg,idx)=>(
-                                <li
-                                    key={idx}
-                                    onMouseDown={(e) => {
-                                        e.stopPropagation();
-                                        setSuggestions([]);
-                                        const filtered = allModels.filter((model) =>
-                                            model.modelName.toLowerCase().includes(sugg.toLowerCase())
-                                        );
-                                        setSearchTerm(sugg);
-                                        setDisplaymodels(filtered);
-                                    }}>
-                                        <SearchIcon/> 
-                                    {sugg}
-                                </li>))}
-                            </ul>
-                        </div>)
-                        }
-
                     </div>
                     
                 </div>
