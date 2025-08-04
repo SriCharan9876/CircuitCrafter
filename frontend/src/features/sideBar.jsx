@@ -10,8 +10,6 @@ import CreateNewFolderIcon from "@mui/icons-material/CreateNewFolder"; // New Ca
 import InventoryIcon from "@mui/icons-material/Inventory"; // My Models
 import MenuIcon from "@mui/icons-material/Menu";
 import ContactPageIcon from "@mui/icons-material/ContactPage"; // Contact
-import FavoriteIcon from '@mui/icons-material/Favorite';        // filled heart
-import { useNavigate } from "react-router-dom";
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import ForumIcon from '@mui/icons-material/Forum';
 
@@ -25,7 +23,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { to: "/models/create", label: "New Model", icon: <AddBoxIcon /> },
     { to: "/categories", label: "Categories", icon: <CategoryIcon /> },
     { to: "/models/mymodels", label: "My Models", icon: <InventoryIcon /> },
-    { to: "/favorities", label: "Saved Models", icon: <BookmarkIcon /> },
+    { to: "/models/favourites", label: "Saved Models", icon: <BookmarkIcon /> },
     { to: "/contact", label: "Contact", icon: <ContactPageIcon /> },
     { to: "/community", label: "Community", icon: <ForumIcon /> },
   ];
@@ -40,21 +38,21 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     <div className={`sideBar ${isOpen ? "open" : "closed"}`}>
       <div className="inside">
 
-        <div className=" close-btn">
+        <div className="close-btn">
           {isOpen?( 
             <>
             {/*Logo object from navbar: */}
-            <div className="navItem" id="hom">
-              <Link to="/models" className="logo navLink" >Circuitcrafter</Link>
+            <div>
+              <Link to="/models"><img src="cc_logo2.png" alt="logo" width="120px" height="120px"/></Link>
             </div>
 
-            <button onClick={toggleSidebar} id="close-button">
-              <CloseIcon style={{ fontSize: "1.5rem", color: "white" }} />
+            <button onClick={toggleSidebar} id="close-button" title="close sidebar">
+              <CloseIcon style={{ fontSize: "2rem", color:"#3a6df0"}} />
             </button>
             </>
               ):(
-                <button onClick={toggleSidebar} id="close-button" className="close-btn-nav">
-                  <MenuIcon style={{ fontSize: "1.5rem", color: "white" }} />
+                <button onClick={toggleSidebar} id="close-button" title="open sidebar" >
+                  <MenuIcon style={{ fontSize: "2rem", color:"#3a6df0"}} />
                 </button>
               )
           }
@@ -70,6 +68,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
           </div>
         ))}
 
+        {isOpen &&<hr style={{width:"210px"}}/>}
+
         {/* Admin only access links: */}
 
         {user?.role === "admin" &&
@@ -83,7 +83,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
 
       </div>
 
-      {isOpen &&<hr style={{width:"12rem"}}/>}
     </div>
   );
 }

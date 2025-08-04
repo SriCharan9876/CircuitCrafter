@@ -1,11 +1,14 @@
-import React from "react";
 import { useAuth } from "../contexts/authContext";
 import { useNavigate } from "react-router-dom";
 import "../Styles/myProfile.css";
+import { useTheme } from "../contexts/themeContext";
+import DarkModeOutlinedIcon from '@mui/icons-material/DarkModeOutlined';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 
 const MyProfile = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <div className="profile-wrapper allPages">
@@ -25,6 +28,12 @@ const MyProfile = () => {
                 </a>
               </p>
             )}
+            <div className="preference"> Toggle theme:
+              <button onClick={toggleTheme} className="navLink" >
+                {theme === "dark-theme" ?  <WbSunnyOutlinedIcon sx={{fontSize:"30px"}}/>: <DarkModeOutlinedIcon sx={{fontSize:"30px"}}/>}
+              </button>
+            </div>
+            
             <button className="profile-btn" onClick={() => navigate(`/models/mymodels`)}>
               My Models 🚀
             </button>

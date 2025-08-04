@@ -1,9 +1,9 @@
 .modelBox{
-  border: 1px solid #ccc;
+  /* border: 1px solid rgb(58, 109, 240, 0.3); */
   border-radius: 1.25rem;
   padding: 1rem;
-  background-color: #fff;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background: var(--bg-secondary);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
   transition: transform 0.3s;
   cursor: pointer;
   display: flex;
@@ -12,6 +12,7 @@
 
 .modelbox-preview{
   background-color: rgba(0,0,0,0.1);
+  border-radius: 1rem;
   height: 18rem;
   overflow: hidden;
 }

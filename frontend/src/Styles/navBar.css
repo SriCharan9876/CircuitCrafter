@@ -6,11 +6,12 @@
   display: flex;
   justify-content: space-between;
   height: 9vh;
-  background-color: grey;
+  background: transparent;
   height: 9vh;
   align-items: center;
-  padding: 0;
+  padding: 0 1rem 0 2rem;
   margin: 0;
+  z-index: 999;
 }
 
 .navItem{
@@ -23,23 +24,45 @@
 }
 
 .navLink {
-  padding: 0.7rem;
+  padding: 0.5rem;
   border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
   display: flex;
   align-items: center;
   text-decoration: none;
-  color: white;
+  color: var(--text-primary);
   font-weight:bold;
+  font-size: 1.3rem;
   transition: background-color 0.4s ease;
+  cursor: pointer;
 }
 
 .navLink:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background:var(--bg-hover);
 }
 
+.navLink svg {
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+.navLink:hover svg {
+  transform: scale(1.1);
+  color: var(--primary-blue);
+}
 
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color:#109eff;
+.mobile-sidebar-toggle{
+  display: none;
+}
+
+@media (max-width:650px) {
+  .navBar{
+    left: 0px;
+    padding-left: 0rem;
+  }
+  .mobile-collapse{
+    display: none;
+  }
+  .mobile-sidebar-toggle{
+    display: block;
+  }
 }

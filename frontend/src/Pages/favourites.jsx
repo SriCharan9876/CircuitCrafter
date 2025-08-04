@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import { notify } from "../features/toastManager";
 import ModelBox from "../features/ModelBox";
-const Favorities=()=>{
+const favourites=()=>{
     const { user, token } = useAuth(); // use context
     const navigate=useNavigate();
     const [favModels, setfavModels] = useState([]);
@@ -46,4 +46,4 @@ const Favorities=()=>{
         </div>
     );
 }
-export default Favorities;
+export default favourites;

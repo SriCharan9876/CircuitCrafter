@@ -66,7 +66,7 @@
   line-height: 1.2;
   font-size: 3.5rem;
   font-weight: 750;
-  color: #111827;
+  color: var(--text-primary);
 }
 
 .highlight{
@@ -75,7 +75,7 @@
 
 .explore-hero-subheading {
   font-size: 1.5rem;
-  color: #4b5563;
+  color: var(--text-secondary);
   margin-top: 1rem;
   margin-bottom: 2rem;
 }
