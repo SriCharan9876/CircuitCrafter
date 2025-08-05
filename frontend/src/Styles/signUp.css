@@ -22,13 +22,22 @@
 .auth-form:hover {
   transform: translateY(-4px);
 }
-
+.auth-form label{
+  font-family: var(--font-subheading);
+}
+input::placeholder {
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  color: #888;      
+  opacity: 1;        
+}
 .auth-form-title {
   text-align: center;
   margin-bottom: 20px;
   color: #1976d2;
   font-size: 28px;
   font-weight: bold;
+  font-family: var(--font-heading);
 }
 
 .auth-form label {
@@ -58,14 +67,15 @@
 .auth-submit-btn {
   margin-top: 20px;
   width: 100%;
-  padding: 12px;
+  padding: 10px;
   background-color: #1976d2;
   color: white;
   border: none;
   border-radius: 6px;
   font-weight: bold;
-  font-size: 16px;
+  font-size: 20px;
   transition: background-color 0.3s ease;
+  font-family: var(--font-heading);
   cursor: pointer;
 }
 .auth-submit-btn:hover {

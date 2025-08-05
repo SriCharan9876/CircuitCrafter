@@ -47,11 +47,11 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             </div>
 
             <button onClick={toggleSidebar} id="close-button" title="close sidebar">
-              <CloseIcon style={{ fontSize: "2rem", color:"#3a6df0"}} />
+              <CloseIcon style={{ fontSize: "2rem", color:"#3a6df0",textAlign:"center"}} />
             </button>
             </>
               ):(
-                <button onClick={toggleSidebar} id="close-button" title="open sidebar" >
+                <button onClick={toggleSidebar} id="close-button" title="open sidebar" style={{marginBottom:"4.5rem"}}>
                   <MenuIcon style={{ fontSize: "2rem", color:"#3a6df0"}} />
                 </button>
               )
@@ -67,7 +67,6 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
             </Link>
           </div>
         ))}
-
         {isOpen &&<hr style={{width:"210px"}}/>}
 
         {/* Admin only access links: */}

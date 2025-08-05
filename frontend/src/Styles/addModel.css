@@ -32,7 +32,8 @@
 .addmodel-data h2 {
   text-align: center;
   margin-bottom: 0px;
-  margin-left:10%;
+  margin-left:15%;
+  font-family: var(--font-heading);
   color: #1976d2;
   font-size: 25px;
   font-weight: bold;
@@ -53,7 +54,8 @@
 .addmodel-form div label {
   font-weight: 600;
   font-size: 1.3rem;
-  color: #333;
+  color:var(--text-primary);
+  font-family: var(--font-heading);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -70,11 +72,26 @@
   padding: 0.6rem 0.8rem;
   margin: 0.5rem 0 1rem 0;
   font-size: 1.2rem;
-  border: 1px solid #ccc;
+  border: 1px solid rgb(63, 61, 61);
   border-radius: 6px;
   transition: border 0.3s ease;
   box-sizing:border-box;
+  background-color: rgba(255, 255, 255, 0.15);
+  color: var(--text-primary);
+
 }
+.lastStep{
+  color: var(--text-primary);
+
+}
+.options{
+  color: black;
+  font-family: var(--font-body);
+}
+input::placeholder, textarea::placeholder {
+  color: rgb(186, 185, 185);
+}
+
 .addmodel-form div input:focus,select:focus,textarea:focus{
     border-color: #1976d2;
     outline: none;
@@ -91,7 +108,8 @@
 .addmodel-navigate-btn{
   width: 30%;
   padding: 0.7rem;
-  background-color: #1976d2;
+  /* background-color: #1976d2; */
+  background: var(--secondary-blue);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -173,6 +191,9 @@
     align-items: center;
     justify-content: center;
     gap:0.5rem
+}
+.addLa{
+  margin-bottom:0.5rem;
 }
 
 @media (max-width: 820px) {

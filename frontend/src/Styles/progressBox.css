@@ -3,7 +3,12 @@
   flex-direction: column;
   gap: 4rem;
   padding: 2rem;
-  background-color: #ffffff;
+  /* background-color: #ffffff; */
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05); 
   border-radius: 1rem;
   color: #333;
   min-width: 130px; /*Adjustible............................ */
@@ -80,14 +85,17 @@
   margin: 0;
   font-weight: 600;
   font-size: 1.15rem;
-  color: #333;
+  color: var(--text-primary);
   transition: color 0.4s ease;
+  font-family: var(--font-heading);
 }
 
 .progress-step-info p {
   margin: 6px 0 0 0;
   font-size: 1rem;
-  color: #666;
+  color: var(--text-primary);
+  font-family: var(--font-subheading);
+  /* color: #666; */
   transition: color 0.4s ease;
 }
 
@@ -96,7 +104,9 @@
   color: #1d75e5;
 }
 .progress-step-index.completed + .progress-step-info p {
-  color: #555;
+  /* color: #555; */
+  color: var(--text-primary);
+
 }
 
 

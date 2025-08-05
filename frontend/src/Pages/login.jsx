@@ -62,17 +62,17 @@ const Login = () => {
           <button type="submit" className="auth-submit-btn">Login</button>
           <div style={{ display: 'flex', alignItems: 'center', margin: '20px 0' }}>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
-            <p style={{ margin: '0 10px', textAlign: 'center' }}>OR</p>
+            <p style={{ margin: '0 10px', textAlign: 'center',fontFamily:"'Poppins', sans-serif",fontSize:"large" }}>OR</p>
             <div style={{ flex: 1, height: '1px', backgroundColor: '#ccc' }}></div>
           </div>
           <GoogleLoginButton/>
 
-          <p className="auth-footer-link">
+          <p className="auth-footer-link" style={{fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem"}}>
             Don't have an account? <a href="/signup">Sign Up</a>
           </p>
 
           <div className="auth-guest-access">
-            <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            <p style={{ textAlign: "center", marginTop: "1rem",fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem" }}>
               <button
                 type="button"
                 onClick={() => navigate("/models")}

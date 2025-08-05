@@ -242,18 +242,19 @@ const AddModel = () => {
             case 1:
                 return (
                 <>
-                <div>
+                <div className="addLa">
                     <label>Model Name</label><br />
                     <input
                         type="text"
                         name="modelName"
                         value={formData.modelName}
                         onChange={handleChange}
+                        // style={{marginTop:"0"}}
                         required
                     />
                 </div>
 
-                <div>
+                <div className="addLa">
                     <label>Category</label><br />
                     <select
                         name="typeName"
@@ -263,14 +264,14 @@ const AddModel = () => {
                     >
                         <option value="">Select Type</option>
                         {categories.map((cat) => (
-                            <option key={cat._id} value={cat.name}>
+                            <option key={cat._id} value={cat.name} className="options">
                                 {cat.name}
                             </option>
                         ))}
                     </select>
                 </div>
 
-                <div>
+                <div className="addLa">
                     <label>Description</label><br />
                     <textarea
                         name="description"
@@ -388,7 +389,7 @@ const AddModel = () => {
                 </div>
                 );
             case 4:
-                return <div>
+                return <div className="lastStep">
                     Last step for adding instruction and  prerequisite files, if any
                 </div>
             default:

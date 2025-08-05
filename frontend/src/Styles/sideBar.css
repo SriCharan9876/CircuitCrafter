@@ -62,10 +62,13 @@
   background-color: transparent;
   border: none;
   border-radius: 1rem;
-  padding: 1rem 1.5rem;
+  padding:0.5rem;
   cursor: pointer;
 }
 
 #close-button:hover{
   background-color: var(--bg-hover);
+}
+.nav-item{
+  transition: all 0.3s ease;
 }
