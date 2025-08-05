@@ -8,8 +8,7 @@ const CategoryBox=({category})=>{
     }
     return(
         <div className="categoryBox col" style={{
-                            width: "98%",
-                            border: "1px solid #ccc",
+                            width: "90%",
                             borderRadius: "8px",
                             padding: "10px",
                             marginBottom: "20px",
@@ -17,15 +16,13 @@ const CategoryBox=({category})=>{
                         }}
                         onClick={()=>handleNavigate()}
         >
-            <h4>{category.label}</h4>
+            <h3 className="catlabel">{category.label}</h3>
             <img
                 src={category.visual.url}
                 alt={category.name}
-                style={{
-                    width:"200px"
-                }}
+                id="catImg"
             />
-            <p>{category.description}</p>
+            <p className="catDes"><b>Purpose: </b>{category.description}</p>
         </div>
     )
 }

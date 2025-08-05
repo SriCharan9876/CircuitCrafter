@@ -39,6 +39,9 @@
   font-size: 1.2rem;
   padding: 1.3rem 1.3rem;
   border-radius: 4px;
+  font-family: var(--font-heading);
+  font-size: medium;
+  font-weight: 200;
   transition: all 0.3s ease;
   height: 100%;
 }

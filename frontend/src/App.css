@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 .allPages{
   padding: 0;
   position: fixed;
@@ -54,6 +55,10 @@ html, body {
 
   --text-primary-light: #000000;                /* True black for main text */
   --text-secondary-light: #1e4ecc;              /* Blue for links/subtext/icons */
+  --font-heading: 'Poppins', sans-serif;
+  --font-subheading: 'Montserrat', sans-serif;
+  --font-body: 'Roboto', sans-serif;
+  --font-caption: 'Inter', sans-serif;
 }
 
 .light-theme {

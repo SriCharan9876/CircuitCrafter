@@ -20,7 +20,7 @@ const Categories=()=>{
 
     return(
         <div className="allPages">
-            <h2>All Categories</h2>
+            <h2 className="cathead">All Categories</h2>
             <div className="categoryList">
                 <div className="row">
                     {allCategories.length > 0 ? (

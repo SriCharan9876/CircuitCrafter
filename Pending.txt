@@ -1,41 +1,25 @@
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 database:.............................
-instructions for models, showing it in modeleach.jsx while customization
-check cloud uploading in edit model form
+instructions for models, showing it in modeleach.jsx, createmodel.jsx while customization
 storing, connecting images for categories
 
 backend:...............................
-auth: contribution count for user
-models: while creating/editing model, option to remove parameter inputs after clicking add another parameter button
-categories: category images converting to icon style 
-get in touch for contact, resources pages
-authentication, authorization error generation at all routes
-client side, server side validations
-full scale error handling
+resources page, components page (, show as prerequisites in modeleach.jsx)
+show message icon in model each to message in community with its owner tag
+authentication, authorization error generation at all routes, full scale error handling
+client side, server side validations (including verifying input in range in customization)
 
 frontend:...............................
-instructions in edit, create pages including images aspect ratio
-validating the input entered with the given upper and lower limit in model
-validate in edit/create model page that name should not contain _, long names with_ disrupts modelbox, names with spaces can be overlapped
-icons, fonts, colors, backgrounds
-sort by in explore page (most viewd, most liked, recent, most generated, ...)
-button, .. as ui components
-implementing hooks,apis folders
+frontend stylings for each page
 footer
-protected routes for few pages
-loader while loading pages,file generation,..
-react,css styling
-feature of sharing the model
+frontend handling for loading pages
 
 minor changes, final changes...........................
-show models/view a model after checking approved:true
-favourites, notifications,contact,resources,about, userslist for admin
+notifications,contact,resources, userslist for admin
 main page
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 extentions...............................
-dark mode
-comments
-edit profile, models
+edit profile
 delete own account with asking to deleting his models, messages, ....

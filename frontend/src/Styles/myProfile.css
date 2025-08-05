@@ -23,7 +23,7 @@
   flex-direction: column;
   align-items: center;
   gap: 1rem;
-  background: #ffffff;
+  background: var(--bg-secondary);
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   border-radius: 30px;
   padding: 2.5rem;
@@ -83,7 +83,12 @@
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
-
+.proSub{
+  font-family: var(--font-subheading);
+}
+.proHead{
+  font-family: var(--font-heading);
+}
 .profile-btn:hover {
   background: linear-gradient(135deg, #0056b3, #0077b6);
   transform: scale(1.05);
