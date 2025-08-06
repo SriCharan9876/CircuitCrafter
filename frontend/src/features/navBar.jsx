@@ -23,7 +23,7 @@ export default function NavBar({toggleSidebar}){
 
           <div className="navItem">
             <Link to="/models" >
-              <div className="logo-icon" title="CircuitCrafter"><img src="cc_logo_img.png" alt="logo" width="70px" height="70px"/></div>
+              <div className="logo-icon" title="CircuitCrafter"><img src="cc_logo_img.png" alt="logo" width="80px" height="70px"/></div>
             </Link>
           </div>
           <div className="navItem">

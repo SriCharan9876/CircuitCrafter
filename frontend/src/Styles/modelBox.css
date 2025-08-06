@@ -1,9 +1,9 @@
 .modelBox{
-  /* border: 1px solid rgb(58, 109, 240, 0.3); */
+  /* border: 1px solid var(--text-primary); */
   border-radius: 1.25rem;
   padding: 1rem;
   background: var(--bg-secondary);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  box-shadow: 1px 1px 4px  var(--text-primary);
   transition: transform 0.3s;
   cursor: pointer;
   display: flex;
@@ -15,6 +15,7 @@
   border-radius: 1rem;
   height: 18rem;
   overflow: hidden;
+  margin-bottom: 1rem;
 }
 
 .modelbox-preview-img{
@@ -26,6 +27,7 @@
 .modelbox-content{
   display: flex;
   flex-direction: column;
+  color: var(--text-primary);
 }
 .modelDes{
   display: flex;
@@ -41,9 +43,10 @@
   margin: 0;
 }
 .modelbox-owner-preview{
-  height: 2rem;
-  width: 2rem;
+  height: 2.2rem;
+  width: 2.2rem;
   border-radius: 50%;
+  border: 1px solid var(--primary-blue);
   object-fit: cover;
   object-position: center;
 }
@@ -57,20 +60,12 @@
   padding-left: 0.5rem;
   /* gap:0rem; */
   overflow-wrap:break-word;
+  font-size: 1.2rem;
 }
 .modelbox-description h4,.modelbox-description p{
   margin: 0;
 }
-/* .modelbox-description>h3{
-  margin: 0 0 0.5rem 0;
-  padding: 0 0.4rem;
-  font-size: 1.3rem;
-}
-.modelbox-description>p{
-  margin: 0;
-  padding: 0.1rem 0.5rem ;
-  font-size: 1rem;
-} */
+
 .modelbox-engagement{
   width: 100%;
   display: flex;
@@ -89,16 +84,32 @@
   gap: 1rem;
 }
 
+.modelbox-controls{
+  display: flex;
+  flex-direction: row;
+  justify-content:space-between;
+}
+
+.modelbox-controls>div{
+  display: flex;
+  flex-direction: row;
+}
+
 .model-button {
   background-color: #007bff;
   color: white;
-  padding: 6px 12px;
+  padding: 5px 7px;
   margin: 4px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 1rem;
   transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: end;
+  justify-content: center;
+  gap: 0.2rem;
 }
 
 .model-button:hover {

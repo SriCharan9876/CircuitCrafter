@@ -8,6 +8,9 @@ import SaveButton from "./engagement/saveModel"
 import LikeButton from "./engagement/LikeSection";
 import ViewsSection from "./engagement/viewsSection"
 import ShareIcon from '@mui/icons-material/Share';
+import { useTheme } from "../contexts/themeContext";
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
@@ -17,6 +20,8 @@ const ModelBox=(({model, onDelete})=>{
     const isAdmin= user?.role==="admin";
     const isOwner = model?.createdBy?._id === user?._id;
     const currUserId=user?._id;
+    const {theme}=useTheme();
+    const color = (theme==="dark-theme")?"white":"grey";
 
     const deleteModel = async (modelId) => {
         try {
@@ -106,8 +111,8 @@ const ModelBox=(({model, onDelete})=>{
 
             <div className="modelbox-content">
                 <div className="modelDes">
-                    <div className="modelbox-owner">
-                        <img src={pmodel?.createdBy?.profilePic?.url} alt="dp" className="modelbox-owner-preview"/>
+                    <div className="modelbox-owner" >
+                        <img src={pmodel?.createdBy?.profilePic?.url} alt="dp" className="modelbox-owner-preview" title={"owned by " + pmodel?.createdBy?.name}/>
                     </div>
                     <div className="modelbox-description">
                         <h4>{model.modelName}</h4>
@@ -120,24 +125,25 @@ const ModelBox=(({model, onDelete})=>{
                     <div className="modelbox-engagement-allaccess">
                         {user&&
                             <div onClick={(e) => e.stopPropagation()} className="savebtn">
-                                <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete} size={"small"}/>
+                                <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={onDelete} size={"small"} theme={theme}/>
                             </div>
                         }
                         <div onClick={(e) => e.stopPropagation()}>
-                            <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token} size={"small"}/>
+                            <LikeButton modelId={model._id} userId={currUserId} initialLikes={model.likes} token={token} size={"small"} theme={theme}/>
                         </div>
                         <div onClick={(e) => e.stopPropagation()}>
-                            <ViewsSection viewCount={model.views.length} size={"small"}/>
+                            <ViewsSection viewCount={model.views.length} size={"small"} theme={theme}/>
                         </div>
-                        <div onClick={(e) => {handleShare(e, model)}}>
-                            <ShareIcon style={{color:"grey",fontSize:"22"}}/>
+                        <div onClick={(e) => {handleShare(e, model)}} >
+                            <ShareIcon sx={{color:{color}}} style={{fontSize:"22"}}/>
                         </div>
                     </div>
 
                 </div>  
             </div>
 
-            <div onClick={(e)=>e.stopPropagation()} className="modelbox-contols">
+            <div onClick={(e)=>e.stopPropagation()} className="modelbox-controls">
+                <div>
                 {isAdmin && model.status === "pending" && (
                     <>
                     <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
@@ -151,19 +157,17 @@ const ModelBox=(({model, onDelete})=>{
                     <p>Model is rejected</p>
                     <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
                 )}
+                </div>
                             
                 {/* Owner or Admin buttons */}
                 {(isOwner || isAdmin) && (
-                    <>
-                    <button className="model-button" onClick={(e)=>{navigate(`/models/${model._id}/edit`);}}>Edit</button>
-                    <button className="model-button" onClick={(e) => {deleteModel(model._id);}}>Delete</button>
-                    </>
+                    <div>
+                    <button className="model-button" onClick={(e)=>{navigate(`/models/${model._id}/edit`);}}><EditIcon style={{fontSize:"16"}}/>Edit</button>
+                    <button className="model-button" onClick={(e) => {deleteModel(model._id);}}><DeleteIcon style={{fontSize:"16"}}/>Delete</button>
+                    </div>
                 )}
 
             </div>
-
-            
-            
         </div>
     )
 })

@@ -8,6 +8,13 @@ import {notify} from "../features/toastManager"
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import Footer from "../features/footer";
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
+import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import UpdateIcon from '@mui/icons-material/Update';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 
 const Explore = () => {
     const { token } = useAuth(); // use context
@@ -15,6 +22,8 @@ const Explore = () => {
     const [searchTerm,setSearchTerm]=useState("");
     const [suggestions, setSuggestions] = useState([]);
     const [displayModels,setDisplaymodels]=useState([]);
+    const [sortBy, setSortBy] = useState("alphabetical");
+    const [sortOrder, setSortOrder] = useState("asc");// or desc
 
     //Get category query if exists
     const location = useLocation(); // Get current URL info
@@ -53,10 +62,51 @@ const Explore = () => {
     }    
 
     const filterModels=()=>{
-        const filteredModels=allModels.filter((model)=>model.modelName.toLowerCase().includes(searchTerm.toLowerCase()))
-        setDisplaymodels(filteredModels);
+        const filteredModels=allModels.filter((model)=>model.modelName.toLowerCase().includes(searchTerm.toLowerCase()));
+        const sorted = sortModels(filteredModels, sortBy, sortOrder);
+        setDisplaymodels(sorted);
         setSuggestions([]);
     }
+
+    const sortModels = (models, criteria, order) => {
+        const sorted = [...models];
+
+        sorted.sort((a, b) => {
+            let aVal, bVal;
+
+            switch (criteria) {
+                case "alphabetical":
+                    aVal = a.modelName.toLowerCase();
+                    bVal = b.modelName.toLowerCase();
+                    break;
+                case "views":
+                    aVal = a.views.length;
+                    bVal = b.views.length;
+                    break;
+                case "likes":
+                    aVal = a.likes.length;
+                    bVal = b.likes.length;
+                    break;
+                case "recent":
+                    aVal = new Date(a.createdAt);
+                    bVal = new Date(b.createdAt);
+                    break;
+                case "designCount":
+                    aVal = a.designCount;
+                    bVal = b.designCount;
+                    break;
+                default:
+                    return 0;
+            }
+
+            if (aVal < bVal) return order === "asc" ? -1 : 1;
+            if (aVal > bVal) return order === "asc" ? 1 : -1;
+            return 0;
+        });
+
+        return sorted;
+    };
+
 
     useEffect(() => {
         getModels();
@@ -77,6 +127,11 @@ const Explore = () => {
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
+
+    useEffect(() => {
+        const sorted = sortModels(displayModels, sortBy, sortOrder);
+        setDisplaymodels(sorted);
+    }, [sortBy, sortOrder]);
 
     return (
         <div className="allPages">
@@ -156,7 +211,26 @@ const Explore = () => {
             </div>
             
             <div className="explore-subnavbar">
-                Filters
+                <div className="explore-sortby-types">
+                    <div className={`explore-sortby-type ${sortBy === "alphabetical" ? "active" : ""}`}
+                        onClick={() => setSortBy("alphabetical")}><SortByAlphaIcon/>Default</div>
+                    <div className={`explore-sortby-type ${sortBy === "views" ? "active" : ""}`}
+                        onClick={() => setSortBy("views")}><VisibilityOutlinedIcon/> Most viewed</div>
+                    <div className={`explore-sortby-type ${sortBy === "likes" ? "active" : ""}`}
+                        onClick={() => setSortBy("likes")}><FavoriteBorderIcon/> Most liked</div>
+                    <div className={`explore-sortby-type ${sortBy === "recent" ? "active" : ""}`}
+                        onClick={() => setSortBy("recent")}><UpdateIcon/> Recent</div>
+                    <div className={`explore-sortby-type ${sortBy === "designCount" ? "active" : ""}`}
+                        onClick={() => setSortBy("designCount")}><TrendingUpIcon/> Most designed</div>
+                </div>
+
+                <div className="explore-sortby-orders">
+                    <div className={`explore-sortby-order sortby-increasing ${sortOrder === "asc" ? "active" : ""}`}
+                        onClick={() => setSortOrder("asc")}><ArrowUpwardIcon/></div>
+                    <div className={`explore-sortby-order sortby-decreasing ${sortOrder === "desc" ? "active" : ""}`}
+                        onClick={() => setSortOrder("desc")}><ArrowDownwardIcon/></div>
+                </div>
+
             </div>
 
             <div className="explore-models">

@@ -40,25 +40,31 @@ html, body {
 
   /* Dark theme raw colors (unchanged) */
   --bg-primary-dark: linear-gradient(to bottom, #000000 0%, #1092f6 100%);
-  --bg-secondary-dark:  linear-gradient(-45deg, #E0F0FF 0%, #C0DCFF 100%); 
+  --bg-secondary-dark: linear-gradient(-45deg, #05050500 0%, #000407 100%);
 
   --bg-hover-dark:rgba(255, 255, 255, 0.25);
+  --bg-hover2-dark:rgba(255, 255, 255, 0.05);
 
-  --text-primary-dark: #ffffff;
+  --text-primary-dark: white;
   --text-secondary-dark: #b0b0ff;
+
+  --accent-dark:black;
 
   /*  Updated Light Theme Colors */
   --bg-primary-light: linear-gradient(to bottom, #ffffff 0%, #cfeaff 100%);
-  --bg-secondary-light: linear-gradient(-45deg, #E0F0FF 0%, #C0DCFF 100%);     /* sections/cards */
+  --bg-secondary-light: linear-gradient(-45deg, #E0F0FF 0%, #689fe6 100%);     /* sections/cards */
 
-  --bg-hover-light:rgba(58, 109, 240, 0.15); /* for icon button hovers */
+  --bg-hover-light:rgba(58, 109, 240, 0.15);
+  --bg-hover2-light:rgba(255, 255, 255, 0.75);
 
-  --text-primary-light: #000000;                /* True black for main text */
+  --text-primary-light: black;                /* True black for main text */
   --text-secondary-light: #1e4ecc;              /* Blue for links/subtext/icons */
   --font-heading: 'Poppins', sans-serif;
   --font-subheading: 'Montserrat', sans-serif;
   --font-body: 'Roboto', sans-serif;
   --font-caption: 'Inter', sans-serif;
+
+  --accent-light:white;
 }
 
 .light-theme {
@@ -68,6 +74,8 @@ html, body {
   --bg-secondary: var(--bg-secondary-light);
   --bg-navbar: var(--bg-navbar-light);
   --bg-hover:var(--bg-hover-light);
+  --bg-hover2:var(--bg-hover2-light);
+  --accent:var(--accent-light);
 }
 
 .dark-theme {
@@ -77,6 +85,8 @@ html, body {
   --bg-secondary: var(--bg-secondary-dark);
   --bg-navbar: var(--bg-navbar-dark);
   --bg-hover:var(--bg-hover-dark);
+  --bg-hover2:var(--bg-hover2-dark);
+  --accent:var(--accent-dark);
 }
 
 @media (max-width:650px) {
