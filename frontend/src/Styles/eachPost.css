@@ -14,17 +14,19 @@
 .post-detail {
   max-width: 850px;
   margin: 2rem auto;
-  background-color: #fff;
+  background: var(--bg-secondary);
   border-radius: 10px;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
   padding: 1.5rem;
-  font-family: Arial, sans-serif;
+  /* font-family: Arial, sans-serif; */
   height: auto;
 }
 
 .post-header {
   display: flex;
   align-items: center;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
   gap: 1rem;
   margin-bottom: 1.5rem;
 }
@@ -35,11 +37,11 @@
   border-radius: 50%;
   object-fit: cover;
   background-color: crimson;
-  color: white;
+  /* color: white; */
 }
 
 .date {
-  color: #888;
+  /* color: #888; */
   font-size: 0.85rem;
 }
 
@@ -67,7 +69,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #555;
+  color: var(--text-primary);
   transition: color 0.3s ease;
 }
 
@@ -85,7 +87,15 @@
   overflow-wrap: break-word;
   font-size: 16px;
   line-height: 1.5;
-  color: #333;
+  /* color: #333; */
+  color: var(--text-primary);
+  font-family: var(--font-body);
+
+}
+
+.post-content2 h2{
+  color: var(--text-primary);  
+  font-family: var(--font-body);
 }
 .comment-section {
   margin-top: 2rem;
@@ -101,7 +111,10 @@
   border: 1px solid #ddd;
   border-radius: 25px;
   padding: 0.4rem 1rem;
-  background-color: #fafafa;
+  /* background-color: #fafafa; */
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+
 }
 
 .comment-input-box input {
@@ -110,6 +123,7 @@
   outline: none;
   font-size: 1rem;
   background: transparent;
+  color: var(--text-primary);
 }
 
 .comment-input-box button {
@@ -133,21 +147,25 @@
 }
 
 .comment-card {
-  background-color: #f5f5f5;
+  /* background-color: #f5f5f5; */
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 0.8rem 1rem;
   border-radius: 10px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   position: relative;
+  font-family: var(--font-heading);
 }
 
 .comment-card p {
   margin: 0.2rem 0 0.4rem;
-  color: #333;
+  font-family: var(--font-body);
+  /* color: #333; */
 }
 
 .comment-card .comment-date {
   font-size: 0.75rem;
-  color: #777;
+  /* color: #777; */
 }
 
 .no-comments {

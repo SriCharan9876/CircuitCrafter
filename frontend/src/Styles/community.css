@@ -7,7 +7,8 @@
 }
 
 .post-card {
-  background: #fff;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
   border-radius: 12px;
   padding: 1rem;
   margin-bottom: 0;
@@ -26,6 +27,7 @@
   display: flex;
   align-items: center;
   margin-bottom: 1rem;
+  font-family: var(--font-heading);
 }
 
 .profile-img {
@@ -48,11 +50,11 @@
 .username {
   font-weight: bold;
   margin: 0;
-  color: #333;
+  /* color: #333; */
 }
 
 .time {
-  color: #777;
+  /* color: #777; */
   font-size: 0.8rem;
   margin: 0;
 }
@@ -61,16 +63,18 @@
   font-size: 1.2rem;
   font-weight: 600;
   margin: 0.5rem 0;
-  color: #111;
+  /* color: #111; */
 }
 
 .post-content {
-  color: #444;
+  /* color: #444; */
   font-size: 0.95rem;
   line-height: 1.5;
   max-height: 4.5rem;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-family: var(--font-body);
+
 }
 
 .post-footer {
@@ -78,7 +82,9 @@
   display: flex;
   gap: 1.5rem;
   font-size: 0.9rem;
-  color: #555;
+  font-family: var(--font-body);
+
+  /* color: #555; */
 }
 .post-footer span{
   display: flex;

@@ -31,6 +31,7 @@
   max-width: 600px;
   margin: auto;
   transition: transform 0.3s ease;
+  color: var(--text-primary);
 }
 
 .userimg {
@@ -51,7 +52,7 @@
 .profile-info p {
   font-size: 1.2rem;
   margin: 0.5rem 0;
-  color: #333;
+  /* color: #333; */
   transition: color 0.3s;
 }
 
