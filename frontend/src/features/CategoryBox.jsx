@@ -22,7 +22,7 @@ const CategoryBox=({category})=>{
                 alt={category.name}
                 id="catImg"
             />
-            <p className="catDes"><b>Purpose: </b>{category.description}</p>
+            <p className="catDes">{category.description}</p>
         </div>
     )
 }

@@ -261,10 +261,11 @@ const AddModel = () => {
                         value={formData.typeName}
                         onChange={handleChange}
                         required
+                        className="select-category"
                     >
-                        <option value="">Select Type</option>
+                        <option value="" className="category-options">Select Type</option>
                         {categories.map((cat) => (
-                            <option key={cat._id} value={cat.name} className="options">
+                            <option key={cat._id} value={cat.name} className="category-options">
                                 {cat.name}
                             </option>
                         ))}

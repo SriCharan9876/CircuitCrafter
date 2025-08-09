@@ -1,12 +1,5 @@
-.create-post {
-  position: fixed;
-  left: 47px;
-  top: 9vh;
-  right: 0;
-  bottom: 0;
-  background-color: #ffffff;
-  padding: 20px 40px;
-  overflow-y: auto;
+.create-post-page {
+  padding: 5rem 3rem;
   display: flex;
   flex-direction: column;
   gap: 20px;

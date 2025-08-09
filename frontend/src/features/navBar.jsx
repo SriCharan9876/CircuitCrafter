@@ -35,7 +35,7 @@ export default function NavBar({toggleSidebar}){
         </div>
 
         <div className="navRight">
-          <div className="navItem mobile-collapse">
+          <div >
             <button onClick={toggleTheme} className="navLink" >
               {theme === "dark-theme" ?  <WbSunnyOutlinedIcon sx={{fontSize:"30px"}}/>: <DarkModeOutlinedIcon sx={{fontSize:"30px"}}/>}
             </button>

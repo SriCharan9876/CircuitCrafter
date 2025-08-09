@@ -1,15 +1,15 @@
 .navBar {
   position: fixed;
   top: 0;
-  left: 47px;
+  left: 0px;
   right: 0;
+  /* width: 100%; */
   display: flex;
   justify-content: space-between;
   height: 9vh;
-  background: transparent;
-  height: 9vh;
+  background: var(--accent);
   align-items: center;
-  padding: 0 1rem 0 2rem;
+  padding: 0 1rem 0 6rem;
   margin: 0;
   z-index: 999;
 }
@@ -65,5 +65,7 @@
   }
   .mobile-sidebar-toggle{
     display: block;
+  }.navItem{
+    margin: 0 0rem 0 0rem;
   }
 }

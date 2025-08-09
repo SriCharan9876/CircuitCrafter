@@ -9,39 +9,47 @@ const AuthContext = createContext();
 // Provider component
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null); // Full user object
+  const [loadingUser, setLoadingUser] = useState(true); // NEW
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-    const initializeUser = async () => {
-      try {
-        // Optional: Validate token expiration (based on jwtDecode)
-        const decoded = jwtDecode(token);
-        if (Date.now() >= decoded.exp * 1000) {
-          // Token expired
-          logout();
-          return;
-        }
+  const initializeUser = async () => {
+    setLoadingUser(true);
+    try {
+      // Optional: Validate token expiration (based on jwtDecode)
+      const decoded = jwtDecode(token);
+      if (Date.now() >= decoded.exp * 1000) {
+        // Token expired
+        logout();
+        return;
+      }
 
-        // Fetch full user profile from backend
-        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          withCredentials: true,
-        });
+      // Fetch full user profile from backend
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/me`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        withCredentials: true,
+      });
 
-        if (res.data.fetched) {
-          setUser(res.data.me); // Store full DB user
-        } else {
-          logout();
-        }
-      } catch (err) {
-        console.error("Auth initialization error:", err);
+      if (res.data.fetched) {
+        setUser(res.data.me); // Store full DB user
+      } else {
         logout();
       }
-    };
+    } catch (err) {
+      console.error("Auth initialization error:", err);
+      logout();
+    }finally{
+      setLoadingUser(false);
+    }
+  };
+
   useEffect(() => {
-    if (!token) return;
+    if (!token){
+      setLoadingUser(false);
+      return;
+    }
     initializeUser();
   }, [token]);
 
@@ -72,7 +80,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, setUser,login, logout,initializeUser }}>
+    <AuthContext.Provider value={{ user, token, loadingUser, setUser,login, logout,initializeUser }}>
       {children}
     </AuthContext.Provider>
   );

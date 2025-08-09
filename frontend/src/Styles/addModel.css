@@ -82,14 +82,22 @@
 }
 .lastStep{
   color: var(--text-primary);
+}
 
-}
-.options{
-  color: black;
+.category-options {
+  background-color: var(--accent);  /* default white background */
+  color: var(--text-primary);             /* readable dark text */
   font-family: var(--font-body);
+  padding: 8px;               /* works in some browsers */
+  border: none;
 }
+
+.category-options:checked {
+  color: var(--primary-blue);
+}
+
 input::placeholder, textarea::placeholder {
-  color: rgb(186, 185, 185);
+  color: var(--text-primary);
 }
 
 .addmodel-form div input:focus,select:focus,textarea:focus{

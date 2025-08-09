@@ -13,23 +13,25 @@ const Categories=()=>{
             setAllCategories(res.data.allCategories);
         })
         .catch((err)=>{
-            console.log("error in loading categories", err);
+            console.err("error in loading categories", err);
             notify.error("Error in loading categories");
         })
     },[]);
 
     return(
         <div className="allPages">
-            <h2 className="cathead">All Categories</h2>
-            <div className="categoryList">
-                <div className="row">
-                    {allCategories.length > 0 ? (
-                        allCategories.map((category)=>(
-                            <CategoryBox category={category} key={category._id}/>
-                        ))
-                    ) : (
-                        <p>Loading categories...</p>
-                    )}
+            <div className="categories-view-page">
+                <h2 className="cathead">Explore Models by Category</h2>
+                <div className="categoryList">
+                    <div className="row">
+                        {allCategories.length > 0 ? (
+                            allCategories.map((category)=>(
+                                <CategoryBox category={category} key={category._id}/>
+                            ))
+                        ) : (
+                            <h1 style={{color:"var(--text-primary)"}}>Loading Categories.....</h1>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>

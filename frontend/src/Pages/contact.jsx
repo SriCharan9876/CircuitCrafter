@@ -22,29 +22,31 @@ const Contact = () => {
 
   return (
     <div className="allPages">
-      <h1 className="contact-title">Contact Us</h1>
-      <div className="card-container">
-        {members.map((member, index) => (
-          <div key={index} className="contact-card">
-            <h2>{member.name}</h2>
-            <p><strong>Phone:</strong> {member.phone}</p>
-            <p>
-              <strong>Email:</strong>{" "}
-              <span
-                className="email-link"
-                onClick={() => openGmailWithEmail(member.email)}
-              >
-                {member.email}
-              </span>
-            </p>
-            <p>
-              <strong>LinkedIn:</strong>{" "}
-              <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
-                View Profile
-              </a>
-            </p>
-          </div>
-        ))}
+      <div className="contact-page">
+        <h1 className="contact-title" style={{color:"var(--text-primary)"}}>Contact Us</h1>
+        <div className="card-container">
+          {members.map((member, index) => (
+            <div key={index} className="contact-card">
+              <h2>{member.name}</h2>
+              <p><strong>Phone:</strong> {member.phone}</p>
+              <p>
+                <strong>Email:</strong>{" "}
+                <span
+                  className="email-link"
+                  onClick={() => openGmailWithEmail(member.email)}
+                >
+                  {member.email}
+                </span>
+              </p>
+              <p>
+                <strong>LinkedIn:</strong>{" "}
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer">
+                  View Profile
+                </a>
+              </p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -12,6 +12,12 @@ import ShareIcon from '@mui/icons-material/Share';
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
 import CircularProgress from "@mui/material/CircularProgress";
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useTheme } from "../contexts/themeContext";
+import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
+import DrawIcon from '@mui/icons-material/Draw';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const EachModel=()=>{
     const {id}= useParams();
@@ -28,9 +34,8 @@ const EachModel=()=>{
     const [isAdmin, setIsAdmin] = useState(false);
     const [isOwner, setIsOwner] = useState(false);
     const isApproved = model.status === "approved";
-    const isPending = model.status === "pending";
-    const isRejected = model.status === "rejected";
     const allFilled = model.designParameters?.every(param => inputValues[param.parameter]);
+    const {theme}=useTheme();
 
     const getThisModel = async () => {
         try {
@@ -185,7 +190,7 @@ const EachModel=()=>{
         <div className="model-view-page">
             
         {!got ? (
-            <p>Loading model.....</p>
+            <h1 style={{color:"var(--text-primary)"}}>Loading Model details.....</h1>
         ) : (
             <>
 
@@ -196,7 +201,7 @@ const EachModel=()=>{
                         {!isApproved?
                         <span><p>{model.status}</p></span>:
                         <div onClick={(e) => e.stopPropagation()} className="savebtn" style={{padding:"1.5rem 0 0 0"}}>
-                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel}/>
+                            <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel} theme={theme}/>
                         </div>
                         }
                     </div>
@@ -207,6 +212,7 @@ const EachModel=()=>{
                             <p className="model-owner-name" style={{fontSize:"1.8rem"}}>{model.createdBy.name}</p>
                             <p className="model-owner-contributions" style={{fontSize:"1.2rem"}}>4 contributions</p>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -214,7 +220,7 @@ const EachModel=()=>{
                     {/* Save model button with icon, customize model down point, tags*/}
 
                     {new Date(model.createdAt) > new Date(Date.now() - 30 * 24 * 60 * 60 * 1000) && (
-                    <span style={{ color: "green", marginLeft: "10px", fontWeight: "bold" }}>
+                    <span style={{ color: "var(--secondary-blue)", marginLeft: "10px", fontWeight: "bold" }}>
                         <p style={{userSelect:"none"}}>Recently Added</p>
                     </span>
                     )}
@@ -224,7 +230,7 @@ const EachModel=()=>{
                     </div>
                     
                     <button onClick={scrollToCustomization} className="model-customize-scrollerbtn">
-                        Customize model
+                       Design model &nbsp; <DrawIcon style={{fontSize:"24"}}/>
                     </button>
 
                 </div>
@@ -247,9 +253,35 @@ const EachModel=()=>{
 
                             {(isAdmin||isOwner)&&
                                 <button className="model-originalfile-btn">
-                                    <a href={model.fileUrl} target="_blank" rel="noreferrer">Download original file</a>
+                                    <a href={model.fileUrl} target="_blank" rel="noreferrer">Original File <CloudDownloadIcon style={{fontSize:"30"}}/></a>
                                 </button>
                             }
+                        </div>
+
+                        <div onClick={(e)=>e.stopPropagation()} className="modelEach-controls">
+                            <div>
+                            {isAdmin && model.status === "pending" && (
+                                <>
+                                <button className="modelEach-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
+                                <button className="modelEach-button" onClick={(e) => {updateStatus(e,"rejected");}}>Reject</button>
+                                </>
+                            )}
+                            {isAdmin && model.status == "approved" && (
+                                <button className="modelEach-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
+                            )}
+                            {isOwner && model.status == "rejected" && (<>
+                                <button className="modelEach-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
+                            )}
+                            </div>
+                                        
+                            {/* Owner or Admin buttons */}
+                            {(isOwner || isAdmin) && (
+                                <div>
+                                <button className="modelEach-button" onClick={(e)=>{navigate(`/models/${model._id}/edit`);}}><EditIcon style={{fontSize:"23"}}/>Edit</button>
+                                <button className="modelEach-button" style={{backgroundColor:"black"}} onClick={(e) => {deleteModel(model._id);}}><DeleteIcon style={{fontSize:"25"}}/>Delete</button>
+                                </div>
+                            )}
+
                         </div>
 
                         <div className="model-description-body">
@@ -259,15 +291,15 @@ const EachModel=()=>{
                         <div className="model-engagement">
                             <div onClick={(e) => e.stopPropagation()}>
                                 <p>Downloads</p>
-                                <DownloadSection designCount={model.designCount}/>
+                                <DownloadSection designCount={model.designCount} theme={theme}/>
                             </div>
                             <div onClick={(e) => e.stopPropagation()}>
                                 <p>Likes</p>
-                                <LikeButton modelId={model._id} userId={user?._id} initialLikes={model.likes} token={token} size={"large"}/>
+                                <LikeButton modelId={model._id} userId={user?._id} initialLikes={model.likes} token={token} size={"large"} theme={theme}/>
                             </div>
                             <div onClick={(e) => e.stopPropagation()}>
                                 <p>Views</p>
-                                <ViewsSection viewCount={model.views.length}/>
+                                <ViewsSection viewCount={model.views.length} theme={theme}/>
                             </div>
                         </div>
 
@@ -276,10 +308,11 @@ const EachModel=()=>{
                 </div>
 
                 <button onClick={handleCustomizationButton} className="customization-toggler">
-                    {viewCustomization?"Hide Customization":"Customize model"}
+                    {viewCustomization?"Hide Customization":"Design model" }
+                    &nbsp;&nbsp; <DrawIcon style={{fontSize:"24"}}/>
                 </button>
 
-                <div className={`model-customization-accordion ${viewCustomization ? "open" : ""}`}
+                <div className={`model-customization-accordion ${viewCustomization ? "open" : ""}` }
                         ref={customizationRef}>
 
                     <div className="customization-header">
@@ -327,37 +360,14 @@ const EachModel=()=>{
                             <button className="model-download-btn">
                                 <a href={cloudinaryUrl}>
                                 Download File
-                            </a></button>}
+                            </a><DownloadIcon style={{fontSize:"25"}}/></button>}
                     </div>
                     
                 </div>
             </div>
 
             <div className="model-footer-container">
-                <div className="model-controls">
-                    <div onClick={(e)=>e.stopPropagation()} className="modelBoxButtons">
-                    {isAdmin && isPending && (
-                        <>
-                        <button className="model-button" onClick={(e) => {updateStatus(e,"approved")}}>Approve</button>
-                        <button className="model-button" onClick={(e) => {updateStatus(e,"rejected");}}>Reject</button>
-                        </>
-                    )}
-                    {isAdmin && isApproved && (
-                        <button className="model-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
-                    )}
-                    {isOwner && isRejected && (<>
-                        <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
-                    )}
-                                
-                    {/* Owner or Admin buttons */}
-                    {(isOwner || isAdmin) && (
-                        <>
-                        <button className="model-button" onClick={(e)=>{navigate(`/models/${model._id}/edit`);}}>Edit</button>
-                        <button className="model-button" onClick={(e) => {deleteModel(model._id);}}>Delete</button>
-                        </>
-                    )}
-                    </div>
-                </div>
+                
             </div>
             </>
             )}

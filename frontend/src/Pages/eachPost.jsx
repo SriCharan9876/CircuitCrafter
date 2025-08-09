@@ -98,7 +98,8 @@ const PostDetail = () => {
   }, []);
 
   return (
-    <div className="allPages2">
+    <div className="allPages">
+    <div className="post-view-page">
       <div className="post-header">
         <img
           className="avatar"
@@ -131,34 +132,34 @@ const PostDetail = () => {
         </button>
       </div>
       <div className="comment-section">
-  <div className="comment-input-box">
-    <input
-      type="text"
-      placeholder="Add a comment..."
-      value={commentText}
-      onChange={(e) => setCommentText(e.target.value)}
-    />
-    <button onClick={handleCommentSubmit}>
-      <SendIcon />
-    </button>
-  </div>
+        <div className="comment-input-box">
+          <input
+            type="text"
+            placeholder="Add a comment..."
+            value={commentText}
+            onChange={(e) => setCommentText(e.target.value)}
+          />
+          <button onClick={handleCommentSubmit}>
+            <SendIcon />
+          </button>
+        </div>
 
-  <div className="comments-list">
-      {post.comments?.length > 0 ? (
-        post.comments.map((comment, index) => (
-          <div className="comment-card" key={index}>
-            <strong>{comment.user?.name || "Anonymous"}:</strong>
-            <p>{comment.text}</p>
-            <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
-          </div>
-        ))
-      ) : (
-        <p className="no-comments">No comments yet. Be the first!</p>
-      )}
-    </div>
+        <div className="comments-list">
+          {post.comments?.length > 0 ? (
+            post.comments.map((comment, index) => (
+              <div className="comment-card" key={index}>
+                <strong>{comment.user?.name || "Anonymous"}:</strong>
+                <p>{comment.text}</p>
+                <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
+              </div>
+            ))
+          ) : (
+            <p className="no-comments">No comments yet. Be the first!</p>
+          )}
+        </div>
+      </div>
   </div>
-
-    </div>
+  </div>
   );
 };
 

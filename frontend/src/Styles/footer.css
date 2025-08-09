@@ -1,16 +1,7 @@
-/* .footer{
-  width: calc(100% - 47px);
-  position: absolute;
-  left: 47px;
-  bottom: 0vh;
-  right: 0;
-  background-color: black;
-} */
 .footer {
-  width: calc(100% - 47px);
   background-color: #1c1c1c;
   color: #ffffff;
-  padding: 30px 20px;
+  padding: 30px 100px;
   margin-top: 40px;
 }
 
@@ -27,7 +18,7 @@
 }
 
 .footer-section h3 {
-  color: #ffcc00;
+  color: var(--primary-blue);
   margin-bottom: 15px;
 }
 

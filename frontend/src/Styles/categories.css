@@ -1,3 +1,8 @@
+.categories-view-page{
+  padding: 2rem;
+  min-height: 50vh;
+}
+
 .row{
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -6,6 +11,14 @@
 }
 .cathead{
   font-family: var(--font-heading);
-  margin-left: 2rem;
   color: var(--text-primary);
+  text-align: center;
+  padding: 2rem;
+}
+.row{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
 }

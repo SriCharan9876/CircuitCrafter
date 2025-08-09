@@ -18,7 +18,6 @@ const SignUp = () => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [message, setMessage] = useState("");
   const [file, setFile] = useState(null);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
@@ -106,10 +105,8 @@ const SignUp = () => {
       );
 
       if (res.data.added) {
-        setMessage("Signed up successfully");
         notify.success("Signup Successful!!");
       } else {
-        setMessage("User signup failed!");
         notify.error("Signup failed!!");
       }
 
@@ -122,7 +119,6 @@ const SignUp = () => {
       const errMsg =
         error.response?.data?.message || "Signup failed. Please try again.";
       notify.error(errMsg);
-      setMessage(errMsg);
     }finally{
       setLoading(false);
     }
@@ -204,8 +200,6 @@ const SignUp = () => {
           <p style={{ margin: "0 10px", textAlign: "center" }}>OR</p>
           <div style={{ flex: 1, height: "1px", backgroundColor: "#ccc" }}></div>
         </div>
-
-        {message && <p style={{ marginTop: "20px" }}>{message}</p>}
 
         <GoogleLoginButton />
         <p className="auth-footer-link">

@@ -28,7 +28,7 @@
 input::placeholder {
   font-family: var(--font-heading);
   font-size: 0.95rem;
-  color: #888;      
+  color: var(--text-primary);    
   opacity: 1;        
 }
 .auth-form-title {

@@ -7,11 +7,11 @@ import axios from 'axios';
 import { useAuth } from '../../contexts/authContext';
 
 const SaveButton = ({ modelId, savedModels, token ,refreshFavorites,size,theme="light-theme"}) => {
-  const {setUser,user} =useAuth();
+  const {setUser} =useAuth();
   const [saved, setSaved] = useState(savedModels.includes(modelId));
   const [isLoading, setIsLoading] = useState(false);
   const iconSize= size ==="small"?22:32;
-  const color=(theme==="dark-theme")?"white":"black";
+  const color=(theme==="dark-theme")?"white":"#3a6df0";
 
   const toggleSave = async () => {
     if (isLoading) return;

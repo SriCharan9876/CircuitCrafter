@@ -45,7 +45,8 @@ const CreatePost = () => {
   };
 
   return (
-    <div className="create-post">
+    <div className="allPages">
+    <div className="create-post-page">
       <div className="header">
         <input
           className="title-input"
@@ -81,6 +82,7 @@ const CreatePost = () => {
           onChange={(e) => setContent(e.target.value)}
         />
       </div>
+    </div>
     </div>
   );
 };

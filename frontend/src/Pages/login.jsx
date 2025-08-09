@@ -9,7 +9,6 @@ import "../Styles/signUp.css";
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [message, setMessage] = useState("");
     const navigate=useNavigate();
     const { login } = useAuth();
     const notifySuccess = () => notify.success('login Successful');
@@ -25,11 +24,9 @@ const Login = () => {
             if (response.data.token && response.data.user) {
                 login(response.data.token, response.data.user); // from useAuth()
             }
-            setMessage("Login successful!");
-            notifySuccess();
+            notifySuccess("Login successful");
             navigate("/models");
         } catch (error) {
-            setMessage("Login failed. Please check your credentials.");
             notify.error("Login failed. Please check your credentials.")
             console.error(error);
         }

@@ -18,7 +18,6 @@ const MyModels = () => {
 
             if (res.data.message === "Success") {
                 setAllModels(res.data.allModels);
-                console.log(res.data.allModels);
             } else {
                 notify.error("Failed to fetch models")
             }
@@ -34,16 +33,18 @@ const MyModels = () => {
     
 
     return (
-        <div style={{ padding: "20px" }} className="allPages">
-            <h1>My Models</h1>
-            <div className="model-grid">
-            {allModels.length === 0 ? (
-                <p>Loading models....</p>
-            ) : (
-                allModels.map((model) => (
-                    <ModelBox model={model} key={model._id} onDelete={getModels}/>
-                ))
-            )}
+        <div className="allPages">
+            <div className="mymodels-page" style={{padding:"1rem 2rem", minHeight:"100vh"}}>
+                <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Explore your models</h1>
+                <div className="model-grid">
+                {allModels.length === 0 ? (
+                    <h1 style={{color:"var(--text-primary)"}}>Loading your models.....</h1>
+                ) : (
+                    allModels.map((model) => (
+                        <ModelBox model={model} key={model._id} onDelete={getModels}/>
+                    ))
+                )}
+                </div>
             </div>
         </div>
     );

@@ -40,16 +40,18 @@ const PendingModels = () => {
 
     return (
         <div style={{ padding: "20px" }} className="allPages">
-            <h1>Models to be approved / rejected</h1>
-            {allModels.length === 0 ? (
-                <p>Loading models....</p>
-            ) : (
-              <div className="model-grid">
-                {allModels.map((model) => (
-                    <ModelBox model={model} key={model._id} onDelete={getModels}/>
-                ))}
-              </div>
-            )}
+            <div className="pendingmodel-page" style={{padding:"1rem 3rem", minHeight:"50vh"}}>
+                <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Review pending models</h1>
+                {allModels.length === 0 ? (
+                    <h1 style={{color:"var(--text-primary)"}}>Loading Pending Models.....</h1>
+                ) : (
+                <div className="model-grid">
+                    {allModels.map((model) => (
+                        <ModelBox model={model} key={model._id} onDelete={getModels}/>
+                    ))}
+                </div>
+                )}
+            </div>
         </div>
     );
 };

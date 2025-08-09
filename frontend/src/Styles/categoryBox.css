@@ -10,18 +10,27 @@
   align-items: center;
   background: var(--bg-secondary);
   color: var(--text-primary);
+  max-width: 280px;
 }
+
 .categoryBox:hover{
-    transform: scale(1.03);
+  transform: scale(1.03);
 }
+
 #catImg{
   width:200px;
+  height: 200px;
   border-radius:10px;
   text-align: center;
 }
 .catlabel{
   font-family: var(--font-subheading);
+  font-size: 1.3rem;
+  color: var(--text-primary);
 }
 .catDes{
   font-family: var(--font-body);
+  color: var(--text-primary);
+  font-size: 1.2rem;
+  text-align: center;
 }

@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
+import AscFileUploadBox from "../features/AscFileUpload"
 
 const AddCategory = () => {
     const navigate=useNavigate();
@@ -80,60 +81,63 @@ const AddCategory = () => {
     };
 
     return (
-        <div style={{ maxWidth: "500px", margin: "auto", marginTop: "50px" }} className="allPages">
-            <h2>Add New Category</h2>
-            <form onSubmit={handleSubmit}>
-                <div>
-                    <label>Category Name:</label><br />
-                    <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleChange}
-                        required
-                        style={{ width: "100%", padding: "8px" }}
-                    />
-                </div>
+        <div className="allPages">
+            <div style={{ padding:"0 28%"}} className="addcategory-page">
+                <h2 style={{textAlign:"center", color:"var(--text-primary)"}}>Create category</h2>
+                <form onSubmit={handleSubmit} className="addmodel-form">
+                    <div>
+                        <label>Category Name:</label><br />
+                        <input
+                            type="text"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                            style={{ width: "100%", padding: "8px" }}
+                        />
+                    </div>
 
-                <div>
-                    <label>Category Label:</label><br />
-                    <input
-                        type="text"
-                        name="label"
-                        value={formData.label}
-                        onChange={handleChange}
-                        required
-                        style={{ width: "100%", padding: "8px" }}
-                    />
-                </div>
+                    <div>
+                        <label>Category Label:</label><br />
+                        <input
+                            type="text"
+                            name="label"
+                            value={formData.label}
+                            onChange={handleChange}
+                            required
+                            style={{ width: "100%", padding: "8px" }}
+                        />
+                    </div>
 
-                <div>
-                    <label>Description:</label><br />
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        rows={4}
-                        style={{ width: "100%", padding: "8px" }}
-                    />
-                </div>
+                    <div>
+                        <label>Description:</label><br />
+                        <textarea
+                            name="description"
+                            value={formData.description}
+                            onChange={handleChange}
+                            rows={4}
+                            style={{ width: "100%", padding: "8px" }}
+                        />
+                    </div>
 
-                <label>Upload the category thumbnail image</label>
-                <input type="file" onChange={handleFileChange} />
-                <br /><br />
+                    <div>
+                        <label>Upload the category thumbnail image</label>
+                        <AscFileUploadBox file={file} setFile={setFile} />
+                    </div>
 
-                {file && (
-                <div >
-                    <img src={URL.createObjectURL(file)} alt="Preview" style={{width:"450px"}} />
-                </div>
-                )}
+                    {file && (
+                    <div >
+                        <img src={URL.createObjectURL(file)} alt="Preview" style={{width:"450px"}} />
+                    </div>
+                    )}
 
-                <button type="submit" style={{ marginTop: "20px", padding: "10px 20px" }} disabled={!formData.name || !formData.label}>
-                    Submit
-                </button>
-            </form>
+                    <button type="submit" className="addmodel-navigate-btn" style={{marginLeft:"40%"}} disabled={!formData.name || !formData.label}>
+                        Submit
+                    </button>
+                </form>
 
-            {message && <p style={{ marginTop: "20px" }}>{message}</p>}
+                {message && <p style={{ marginTop: "20px" }}>{message}</p>}
+            </div>
         </div>
     );
 };

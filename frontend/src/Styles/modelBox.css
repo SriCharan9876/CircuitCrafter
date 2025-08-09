@@ -96,7 +96,7 @@
 }
 
 .model-button {
-  background-color: #007bff;
+  background-color: var(--primary-blue);
   color: white;
   padding: 5px 7px;
   margin: 4px;

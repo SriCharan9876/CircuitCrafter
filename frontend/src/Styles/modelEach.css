@@ -1,5 +1,7 @@
 .model-view-page{
   padding: 2rem 6rem;
+  color: var(--text-primary);
+  min-height: 50vh;
 }
 
 .model-header-container{
@@ -58,18 +60,20 @@
 
 .model-customize-scrollerbtn{
   border: none;
-  border-radius: 1.5rem;
-  background-color: #28a745;
+  /* border: 2px solid var(--text-primary); */
+  border-radius: 2rem;
+  background:var(--bg-secondary-light);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
   cursor: pointer;
-  color: white;
+  color: black;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.2rem;
-  padding: 1rem 2rem;
+  font-size: 1.4rem;
+  padding: 0.8rem 1.6rem;
 }
 .model-customize-scrollerbtn:hover {
-  background-color: #1e7e34;
+  scale: 1.05;
 }
 
 .model-content-container{
@@ -110,21 +114,70 @@
 }
 
 .model-originalfile-btn{
-  background-color: #007bff;
-  padding: 0.8rem;
+  background: var(--primary-blue);
+  padding: 0;
   border: none;
-  border-radius: 1rem;
+  border-radius: 2rem;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
 }
 
+.model-originalfile-btn>a{
+  color: white;
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 0.8rem;
+  margin: 0;
+}
 .model-originalfile-btn:hover{
   background-color: #0056b3;
   transform: scale(1.02);
+}
+
+.modelEach-controls{
+  padding-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content:center;
+  gap: 10%;
+}
+
+.modelEach-controls>div{
+  display: flex;
+  flex-direction: row;
+}
+
+.modelEach-button {
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 5px 9px;
+  margin: 4px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-size: 1.2rem;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+}
+
+.modelEach-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.03);
+}
+
+.modelEach-button:active {
+  transform: scale(0.97);
 }
 
 .model-description-body {
@@ -147,28 +200,34 @@
 
 .customization-toggler {
   margin: 3rem auto 1rem auto;
-  display: block;
-  background-color: #28a745;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-primary-dark);
   color: white;
   padding: 1rem 2rem;
   border: none;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.805);
   border-radius: 2rem;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .customization-toggler:hover {
-  background-color: #1e7e34;
+  scale: 1.05;
 }
 
 .model-customization-accordion {
   max-height: 0;
   opacity: 0;
   overflow: hidden;
-  transition:opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
+  background: var(--bg-secondary);
   padding: 0 2rem;
+  border-radius: 1.5rem;
+  transition:opacity 0.5s ease, max-height 0.5s ease, padding 0.5s ease;
 }
+
 
 .model-customization-accordion.open {
   max-height: 50rem;
@@ -176,7 +235,6 @@
   min-width: 30rem;
   padding: 3rem;
   /* background-color: red; */
-  border-radius: 1.5rem;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   margin-top: 3rem;
   display: flex;
@@ -220,21 +278,19 @@
   padding: 0.5rem 0;
   width: 50%;
   border: none;
-  border-bottom: 2px solid gray;
+  border-bottom: 2px solid var(--text-primary);
   background: transparent;
+  color: var(--text-primary);
   outline: none;
-}
-.customization-input-field input:focus {
-  border-bottom-color: blue;
 }
 
 .customization-generate-btn{
-  background-color: #28a745;
-  color: white;
+  background: var(--bg-teritiary);
+  color: var(--accent);
   padding: 0.8rem 1.2rem;
   border: none;
   border-radius: 1.5rem;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   cursor: pointer;
   transition: 0.2s ease;
   display: flex;
@@ -243,7 +299,7 @@
 }
 
 .customization-generate-btn:hover{
-  background-color: #1e7e34;
+  background: var(--secondary-blue);
   transform: scale(1.02);
 }
 
@@ -256,16 +312,18 @@
 }
 
 .model-download-btn{
-  background-color: #007bff;
-  padding: 0.8rem;
+  background-color: var(--primary-blue);
+  color: white;
+  padding: 0.6rem 0.8rem;
   border: none;
   border-radius: 1rem;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: center;
   align-items: center;
-  font-size: 1.1rem;
+  font-size: 1.2rem;
+  gap: 0.5rem;
 }
 
 .model-download-btn:hover{

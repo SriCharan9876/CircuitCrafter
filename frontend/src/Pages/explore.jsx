@@ -7,7 +7,6 @@ import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
-import Footer from "../features/footer";
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
@@ -15,6 +14,7 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import UpdateIcon from '@mui/icons-material/Update';
 import TrendingUpIcon from '@mui/icons-material/TrendingUp';
+import SortIcon from '@mui/icons-material/Sort';
 
 const Explore = () => {
     const { token } = useAuth(); // use context
@@ -136,7 +136,6 @@ const Explore = () => {
     return (
         <div className="allPages">
         <div className="models-view-page">
-    
             <div className="explore-hero">
                 <div className="explore-hero-content-container">
                     <h1 className="explore-hero-heading">
@@ -144,6 +143,9 @@ const Explore = () => {
                     </h1>
                     <h2 className="explore-hero-subheading">
                         From community-made circuits to custom designs <br /> Build exactly what you need, faster than ever.
+                    </h2>
+                    <h2 className="explore-hero-mobileheading" style={{color:"var(--text-primary)"}}>
+                        Explore models
                     </h2>
                     <div className="model-search-section" ref={searchRef}>
                         <div className="model-searchbox">
@@ -212,16 +214,19 @@ const Explore = () => {
             
             <div className="explore-subnavbar">
                 <div className="explore-sortby-types">
+                    <div className="sortby-text" style={{color:"var(--text-primary)"}} title="sort by">
+                        <SortIcon sx={{fontSize:"30px"}}/>
+                    </div>
                     <div className={`explore-sortby-type ${sortBy === "alphabetical" ? "active" : ""}`}
-                        onClick={() => setSortBy("alphabetical")}><SortByAlphaIcon/>Default</div>
+                        onClick={() => setSortBy("alphabetical")}><SortByAlphaIcon/><p>Default</p></div>
                     <div className={`explore-sortby-type ${sortBy === "views" ? "active" : ""}`}
-                        onClick={() => setSortBy("views")}><VisibilityOutlinedIcon/> Most viewed</div>
+                        onClick={() => setSortBy("views")}><VisibilityOutlinedIcon/> <p>Most viewed</p></div>
                     <div className={`explore-sortby-type ${sortBy === "likes" ? "active" : ""}`}
-                        onClick={() => setSortBy("likes")}><FavoriteBorderIcon/> Most liked</div>
+                        onClick={() => setSortBy("likes")}><FavoriteBorderIcon/><p>Most liked</p> </div>
                     <div className={`explore-sortby-type ${sortBy === "recent" ? "active" : ""}`}
-                        onClick={() => setSortBy("recent")}><UpdateIcon/> Recent</div>
+                        onClick={() => setSortBy("recent")}><UpdateIcon/> <p>Recent</p></div>
                     <div className={`explore-sortby-type ${sortBy === "designCount" ? "active" : ""}`}
-                        onClick={() => setSortBy("designCount")}><TrendingUpIcon/> Most designed</div>
+                        onClick={() => setSortBy("designCount")}><TrendingUpIcon/> <p>Most designed</p></div>
                 </div>
 
                 <div className="explore-sortby-orders">
@@ -235,7 +240,7 @@ const Explore = () => {
 
             <div className="explore-models">
                 {allModels.length === 0 ? (
-                    <p>Loading models....</p>
+                    <h1 style={{color:"var(--text-primary)"}}>Loading Models.....</h1>
                 ) : displayModels.length==0?(
                     <p style={{ padding: "1rem", color: "gray" }}>No models found</p>
                 ) : (
