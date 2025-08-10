@@ -1,5 +1,5 @@
 import express from "express";
-import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,verifyOtp} from "../controllers/auth.js";
+import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers} from "../controllers/auth.js";
 const router=express.Router();
 import {auth} from '../middlewares/authenticate.js';
 
@@ -36,4 +36,8 @@ router
     .route("/verify-otp")
     .post(verifyOtp)
 
+router
+    .route("/notifications")
+    .post(auth,postNotificationsAllUsers)
+    .get(auth,getNotifications)
 export default router;

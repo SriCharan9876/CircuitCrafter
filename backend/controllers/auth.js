@@ -236,3 +236,91 @@ export const saveModel = async (req, res) => {
     return res.status(500).json({ success: false, message: "Server error while saving model" });
   }
 };
+export const postNotifications = async (req, res) => {
+  try {
+    const { notifi } = req.body;
+    const userId = req.user.userId;
+
+    if (!notifi || !notifi.sender || !notifi.message || !notifi.roomId) {
+      return res.status(400).json({ posted: false, error: "Invalid notification data" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ posted: false, error: "User not found" });
+    }
+
+    user.notifications.push({
+      sender: notifi.sender,
+      message: notifi.message,
+      roomId: notifi.roomId,
+      time: notifi.time || Date.now(),
+    });
+
+    await user.save();
+
+    return res.status(200).json({ posted: true });
+  } catch (err) {
+    console.error("Error posting notification:", err);
+    return res.status(500).json({ posted: false, error: "Server error" });
+  }
+};
+
+export const postNotificationsAllUsers = async (req, res) => {
+  try {
+    const { notifi } = req.body;
+
+    if (!notifi || !notifi.sender || !notifi.message || !notifi.roomId) {
+      return res.status(400).json({ posted: false, error: "Invalid notification data" });
+    }
+
+    // Create notification object
+    const notificationData = {
+      sender: notifi.sender,
+      message: notifi.message,
+      roomId: notifi.roomId,
+      time: notifi.time || Date.now(),
+    };
+
+    // Fetch all users
+    const users = await User.find();
+
+    if (!users || users.length === 0) {
+      return res.status(404).json({ posted: false, error: "No users found" });
+    }
+
+    // Push notification to all users
+    for (let user of users) {
+      user.notifications.push(notificationData);
+      await user.save();
+    }
+
+    return res.status(200).json({ posted: true, message: "Notification sent to all users" });
+
+  } catch (err) {
+    console.error("Error posting notification:", err);
+    return res.status(500).json({ posted: false, error: "Server error" });
+  }
+};
+
+
+export const getNotifications = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId).select("notifications");
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    const notifications = [...user.notifications].sort((a, b) => b.time - a.time);
+
+    return res.status(200).json({
+      success: true,
+      notifications,
+    });
+  } catch (err) {
+    console.error("Error fetching notifications:", err);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+};

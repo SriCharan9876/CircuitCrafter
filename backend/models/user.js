@@ -1,6 +1,26 @@
 import mongoose from 'mongoose';
 const Schema=mongoose.Schema;
 
+const notificationSchema = new mongoose.Schema({
+  sender: {
+    type: String,
+    required: true, // username of sender
+    trim: true
+  },
+  message: {
+    type: String,
+    required: true,
+    trim: true
+  },
+  roomId: {
+    type: String,
+    required: true
+  },
+  time: {
+    type: Date,
+    default: Date.now
+  }
+});
 //Schema for users
 const userSchema=new Schema({
     name:{
@@ -45,6 +65,10 @@ const userSchema=new Schema({
     savedModels:{
         type:[String],
         default:[]
+    },
+    notifications: {
+      type: [notificationSchema],
+      default: []
     }
 });
 

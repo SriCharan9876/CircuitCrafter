@@ -1,5 +1,7 @@
 #notification-container {
-  height: 70vh;
+  position: relative;
+  left: 32vw;
+  height: 65vh;
   width: 30vw;
 }
 
@@ -31,13 +33,13 @@
   border: 1px solid #ccc;
 }
 
-.notification-item.sent {
+.notification-item {
   background-color: #d1e7dd; /* greenish */
 }
 
-.notification-item.received {
-  background-color: #fff3cd; /* yellowish */
-}
+/* .notification-item.received {
+  background-color: #fff3cd; 
+} */
 
 .notification-sender {
   font-weight: bold;

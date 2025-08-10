@@ -3,13 +3,16 @@ import { io } from "socket.io-client";
 import { notify } from "../features/toastManager";
 import { useAuth } from "../contexts/authContext";
 import "../Styles/notifications.css"
+import axios from "axios";
 
 const Notification = () => {
   const socketRef = useRef(null);
   const { token, user,loadingUser } = useAuth();
   const [allNotifications, setNotifications] = useState([]);
   const [newMsg, setnewMsg] = useState("");
-
+  useEffect(()=>{
+    getNotifications();
+  },[])
   useEffect(() => {
     if(loadingUser) return;
     if (!token || !user) {
@@ -58,8 +61,49 @@ const Notification = () => {
     let id = import.meta.env.VITE_PUBLIC_ROOM;
     console.log(newMsg+" "+id+" "+username);
     socketRef.current.emit("public-message", { username, newMsg, id });
+    const newtxt = {
+      sender: username,
+      message: newMsg,
+      roomId: id,
+      time: Date.now(),
+    };
+    saveNoti(newtxt);
     setnewMsg("");
+
   };
+  const saveNoti = async (notifi) => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,
+        { notifi },
+        {
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+    
+      if (res.data.posted) {
+        console.log("Notification saved:", notifi);
+      } else {
+        console.warn("Notification save failed:", res.data);
+      }
+    } catch (err) {
+      console.error("Error saving notification:", err);
+    }
+  };
+
+  const getNotifications=async()=>{
+    const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,{
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if(res.data.success){
+      setNotifications(res.data.notifications);
+      console.log(res.data.notifications);
+    }else{
+      notify.error("Failed to fetch notifications");
+    }
+  }
 
   return (
     <div className="allPages" id="notification-container">
@@ -74,9 +118,7 @@ const Notification = () => {
           allNotifications.map((note, idx) => (
             <div
               key={idx}
-              className={`notification-item ${
-                note.sender === user.name ? "sent" : "received"
-              }`}
+              className="notification-item"
             >
               <div className="notification-sender">{note.sender}</div>
               <div className="notification-message">{note.message}</div>
