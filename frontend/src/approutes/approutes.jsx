@@ -17,7 +17,7 @@ import Community from "../Pages/community";
 import CreatePost from "../Pages/createPost";
 import PostDetail from "../Pages/eachPost";
 import NotFound from "../Pages/NotFound";
-
+import Notification from "../features/notifications";
 import { PrivateRoute } from "./ProtectedRoutes";
 
 export const approutes = (
@@ -47,7 +47,8 @@ export const approutes = (
       <Route path="categories" element={<Categories />} />
       <Route path="contact" element={<Contact />} />
       <Route path="community" element={<Community />} />
-
+      <Route path="notifications" element={<Notification />} />
+      
       <Route path="*" element={<NotFound />} />
     </Route>
   </>

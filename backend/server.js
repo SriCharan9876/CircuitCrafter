@@ -5,7 +5,8 @@ import dotenv from 'dotenv';
 
 import cors from "cors";
 import session from 'express-session';
-
+import Messaging from './config/webSocket.js';
+import {createServer} from "node:http";
 import categoryRouter from './routes/category.js';
 import baseModelRouter from './routes/baseModel.js';
 import authenticationRouter from './routes/auth.js';
@@ -17,6 +18,8 @@ import communityRouter from "./routes/community.js";
 
 import express from 'express';
 const app=express();
+const server=createServer(app);
+Messaging(server);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
 // app.set("trust proxy", 1);
@@ -53,7 +56,7 @@ import connectDB from './config/db.js';
 connectDB();
 
 
-app.listen(port,()=>{
+server.listen(port,()=>{
     console.log("Server started at port ",port)
 });
 
