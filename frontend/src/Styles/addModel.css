@@ -32,7 +32,7 @@
 .addmodel-data h2 {
   text-align: center;
   margin-bottom: 0px;
-  margin-left:15%;
+  margin-left:10%;
   font-family: var(--font-heading);
   color: #1976d2;
   font-size: 25px;
@@ -117,7 +117,7 @@ input::placeholder, textarea::placeholder {
   width: 30%;
   padding: 0.7rem;
   /* background-color: #1976d2; */
-  background: var(--secondary-blue);
+  background: var(--primary-blue);
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -141,6 +141,17 @@ input::placeholder, textarea::placeholder {
     align-items: center;
     justify-content: center;
     gap: 1rem;
+}
+
+.addmodel-upload-section>div>a{
+  background-color: var(--bg-translucent);
+  color: var(--text-primary);
+  padding: 0.6rem 0.8rem;
+  font-size: 1.2rem;
+  border-radius: 2rem;
+  display: flex;
+  align-self: center;
+  justify-content: center;
 }
 
 .addmodel-inputs{

@@ -40,6 +40,7 @@ html, body {
   /* Dark theme raw colors (unchanged) */
   --bg-primary-dark: linear-gradient(to bottom, #000000 0%, #1092f6 100%);
   --bg-secondary-dark: linear-gradient(-45deg, #05050500 0%, #000407 100%);
+  --bg-translucent-dark:#cccccc58;
 
   --bg-hover-dark:rgba(255, 255, 255, 0.25);
   --bg-hover2-dark:rgba(255, 255, 255, 0.05);
@@ -58,6 +59,8 @@ html, body {
 
   --text-primary-light: black;                /* True black for main text */
   --text-secondary-light: #1e4ecc;              /* Blue for links/subtext/icons */
+  --bg-translucent-light:#3a6ef06d;
+
   --font-heading: 'Poppins', sans-serif;
   --font-subheading: 'Montserrat', sans-serif;
   --font-body: 'Roboto', sans-serif;
@@ -72,6 +75,7 @@ html, body {
   --bg-primary: var(--bg-primary-light);
   --bg-secondary: var(--bg-secondary-light);
   --bg-teritiary: var(--bg-secondary-dark);
+  --bg-translucent:var(--bg-translucent-light);
   --bg-navbar: var(--bg-navbar-light);
   --bg-hover:var(--bg-hover-light);
   --bg-hover2:var(--bg-hover2-light);
@@ -84,6 +88,7 @@ html, body {
   --bg-primary: var(--bg-primary-dark);
   --bg-secondary: var(--bg-secondary-dark);
   --bg-teritiary: var(--bg-secondary-light);
+  --bg-translucent:var(--bg-translucent-dark);
   --bg-navbar: var(--bg-navbar-dark);
   --bg-hover:var(--bg-hover-dark);
   --bg-hover2:var(--bg-hover2-dark);

@@ -12,6 +12,7 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from "@mui/material/CircularProgress";
+import DownloadIcon from '@mui/icons-material/Download';
 
 const EditModel = () => {
   const { id } = useParams();
@@ -31,6 +32,7 @@ const EditModel = () => {
     designParameters: [{ parameter: "", upperLimit: 10, lowerLimit: 0 }],
     calcParams: [{ compName: "", comp: "resistor" }],
     relations: [""],
+    specifications:[""]
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -192,6 +194,15 @@ const EditModel = () => {
     setFormData((prev) => ({ ...prev, relations: updated }));
   };
 
+  const handleSpecificationChange = (index, value) => {
+    const updated = [...formData.specifications];
+    updated[index] = value;
+    setFormData((prev) => ({
+        ...prev,
+        specifications: updated,
+    }));
+  };
+
   const addinput = () => {
     setFormData((prev) => ({
       ...prev,
@@ -213,6 +224,13 @@ const EditModel = () => {
     }));
   };
 
+  const addSpecification = () => {
+      setFormData((prev) => ({
+          ...prev,
+          specifications: [...prev.specifications, ""],
+      }));
+  };
+
   const removeDesignParam = (index) => {
     setFormData((prev) => ({
       ...prev,
@@ -232,6 +250,13 @@ const EditModel = () => {
       ...prev,
       relations: prev.relations.filter((_, i) => i !== index),
     }));
+  };
+
+  const removeSpecification = (index) => {
+      setFormData((prev) => ({
+          ...prev,
+          specifications: prev.specifications.filter((_, i) => i !== index),
+      }));
   };
 
   const renderStepContent = () => {
@@ -285,8 +310,8 @@ const EditModel = () => {
             <div >
                 <label >Change circuit file (.asc)</label>
                 {formData.fileUrl && 
-                  <a href={formData.fileUrl} style={{color:"black"}} target="_blank" rel="noreferrer">
-                  View Uploaded raw File
+                  <a href={formData.fileUrl} target="_blank" rel="noreferrer">
+                  Download uploaded raw file <DownloadIcon/>
                   </a>
                 }
                 <AscFileUploadBox file={file} setFile={setFile} initialFile={formData.fileUrl}/>
@@ -397,8 +422,22 @@ const EditModel = () => {
       </div>
       );
     case 4:
-      return <div>
-        Last step for editing instruction and  prerequisite files, if any
+      return <div className="addmodel-inputs lastStep">
+          <label>Edit specifications<button type="button" onClick={addSpecification}>
+              <AddIcon sx={{fontSize:"1.6rem"}}/>
+          </button></label><br />
+
+          {formData.specifications.map((specification, index) => (
+              <div key={index}>
+                  <input
+                  type="text"
+                  value={specification}
+                  onChange={(e) => handleSpecificationChange(index, e.target.value)}
+                  placeholder={`Give Specification - ${index}`}
+                  />
+                  <button onClick={() => removeSpecification(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
+              </div>
+          ))}
       </div>
     default:
       return null;

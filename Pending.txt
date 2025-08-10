@@ -11,7 +11,7 @@ authentication, authorization error generation at all routes, full scale error h
 client side, server side validations (including verifying input in range in customization)
 
 frontend:...............................
-frontend stylings for each page
+frontend stylings community pages
 footer
 frontend handling for loading pages
 
@@ -21,5 +21,4 @@ main page
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 extentions...............................
-edit profile
 delete own account with asking to deleting his models, messages, ....

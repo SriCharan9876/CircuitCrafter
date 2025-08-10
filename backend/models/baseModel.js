@@ -76,6 +76,11 @@ const baseModelSchema=new Schema({
     designCount:{
         type:Number,
         default:0
+    },
+    specifications:{
+        type:[String],
+        required:true,
+        default:[]
     }
 });
 

@@ -30,6 +30,7 @@ const AddModel = () => {
         designParameters: [{parameter: "",upperLimit: 10,lowerLimit: 0,},],
         calcParams: [{compName: "",comp: "resistor",},],
         relations: [""],
+        specifications:["Gain Range is -1 to -10","Input Amplitude Range is 0-10mV", "Invered output"]
     };
     const [formData, setFormData] = useState(initialFormData);
     const [categories, setCategories] = useState([]);
@@ -188,6 +189,12 @@ const AddModel = () => {
         }));
     };
 
+    const addSpecification = () => {
+        setFormData((prev) => ({
+            ...prev,
+            specifications: [...prev.specifications, ""],
+        }));
+    };
 
     const handleDesignParamChange = (index, field, value) => {
         const updatedParams = [...formData.designParameters];
@@ -216,6 +223,15 @@ const AddModel = () => {
         }));
     };
 
+    const handleSpecificationChange = (index, value) => {
+        const updated = [...formData.specifications];
+        updated[index] = value;
+        setFormData((prev) => ({
+            ...prev,
+            specifications: updated,
+        }));
+    };
+
     const removeDesignParam = (index) => {
         setFormData((prev) => ({
             ...prev,
@@ -234,6 +250,13 @@ const AddModel = () => {
         setFormData((prev) => ({
             ...prev,
             relations: prev.relations.filter((_, i) => i !== index),
+        }));
+    };
+
+    const removeSpecification = (index) => {
+        setFormData((prev) => ({
+            ...prev,
+            specifications: prev.specifications.filter((_, i) => i !== index),
         }));
     };
 
@@ -390,8 +413,22 @@ const AddModel = () => {
                 </div>
                 );
             case 4:
-                return <div className="lastStep">
-                    Last step for adding instruction and  prerequisite files, if any
+                return <div className="addmodel-inputs lastStep">
+                    <label>Add Specification<button type="button" onClick={addSpecification}>
+                        <AddIcon sx={{fontSize:"1.6rem"}}/>
+                    </button></label><br />
+
+                    {formData.specifications.map((specification, index) => (
+                        <div key={index}>
+                            <input
+                            type="text"
+                            value={specification}
+                            onChange={(e) => handleSpecificationChange(index, e.target.value)}
+                            placeholder={`Give Specification - ${index}`}
+                            />
+                            <button onClick={() => removeSpecification(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
+                        </div>
+                    ))}
                 </div>
             default:
                 return null;

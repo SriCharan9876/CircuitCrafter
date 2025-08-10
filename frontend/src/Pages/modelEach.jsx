@@ -197,9 +197,9 @@ const EachModel=()=>{
             <div className="model-header-container">
                 <div className="model-titlebox">
                     <div className="model-titlediv">
-                        <h1 className="model-title">{model.modelName}</h1>
+                        <h1 className="model-title">{model.modelName}&nbsp;</h1>
                         {!isApproved?
-                        <span><p>{model.status}</p></span>:
+                        <span><p style={{backgroundColor:"#cccccc55", fontSize:"1.6rem", padding:"0.4rem 0.8rem", borderRadius:"1.2rem"}}>{model.status}</p></span>:
                         <div onClick={(e) => e.stopPropagation()} className="savebtn" style={{padding:"1.5rem 0 0 0"}}>
                             <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel} theme={theme}/>
                         </div>
@@ -226,7 +226,7 @@ const EachModel=()=>{
                     )}
 
                     <div onClick={(e) => {handleShare(e, model)}} style={{cursor:"pointer"}}>
-                        <ShareIcon style={{color:"grey",fontSize:"32"}}/>
+                        <ShareIcon style={{color:"var(--text-primary)",fontSize:"32"}}/>
                     </div>
                     
                     <button onClick={scrollToCustomization} className="model-customize-scrollerbtn">
@@ -305,6 +305,30 @@ const EachModel=()=>{
 
                     </div>
                     
+                </div>
+
+                <div className="model-specifics">
+                    <div className="model-specifications">
+                        <h2 className="model-specifics-heading">Specifications</h2>
+                        {model.specifications?.length > 0 ? (
+                            model.specifications.map((specification, index) => (
+                                <p key={index} className="model-spec-item">{specification}</p>
+                            ))
+                        ) : (
+                            <p>No specifications provided for the model</p>
+                        )}
+                    </div>
+                    
+                    <div className="model-prerequisites">
+                        <h2 className="model-specifics-heading">Prerequisite components</h2>
+                        {model.prerequisites?.length > 0 ? (
+                            model.prerequisites.map((prerequisite, index) => (
+                                <p key={index} className="model-spec-item">{prerequisite}</p>
+                            ))
+                        ) : (
+                            <p>No prerequisite components for the model</p>
+                        )}
+                    </div>
                 </div>
 
                 <button onClick={handleCustomizationButton} className="customization-toggler">

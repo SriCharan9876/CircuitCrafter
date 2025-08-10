@@ -124,6 +124,7 @@ export const editModel = async (req, res) => {
         model.designParameters = updatedData.designParameters;
         model.calcParams = updatedData.calcParams;
         model.relations = updatedData.relations;
+        model.specifications = updatedData.specifications;
 
         // Conditionally update previewImg
         if (updatedData.previewImg && typeof updatedData.previewImg === "object") {
