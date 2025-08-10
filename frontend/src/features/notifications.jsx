@@ -7,7 +7,7 @@ import axios from "axios";
 
 const Notification = () => {
   const socketRef = useRef(null);
-  const { token, user,loadingUser } = useAuth();
+  const { token, user,loadingUser,numNot,setNumNot } = useAuth();
   const [allNotifications, setNotifications] = useState([]);
   const [newMsg, setnewMsg] = useState("");
   useEffect(()=>{
@@ -20,8 +20,8 @@ const Notification = () => {
       return;
     }
     socketRef.current = io(import.meta.env.VITE_API_BASE_URL, {
-      auth: { userId: user._id },
       withCredentials: true,
+      auth: { userId: user._id },
     });
 
     socketRef.current.emit("join-public-room", {
@@ -84,6 +84,7 @@ const Notification = () => {
     
       if (res.data.posted) {
         console.log("Notification saved:", notifi);
+        getNotifications();
       } else {
         console.warn("Notification save failed:", res.data);
       }
@@ -99,16 +100,34 @@ const Notification = () => {
     })
     if(res.data.success){
       setNotifications(res.data.notifications);
+      setNumNot(res.data.notifications.length);
       console.log(res.data.notifications);
     }else{
       notify.error("Failed to fetch notifications");
     }
   }
 
+  const closeNoti=async(noteId)=>{
+    const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,{noteId},{
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if(res.data.success){
+      getNotifications();
+    }else{
+      notify.error("failed to remove")
+    }
+  }
+  const clearAll=async()=>{
+    for(let noti of allNotifications){
+      closeNoti(noti._id);
+    }
+  }
+
   return (
     <div className="allPages" id="notification-container">
       {/* Header */}
-      <h1 className="notification-header">Notifications</h1>
+      <h1 className="notification-header">Notifications <button className="clearAll" onClick={()=>clearAll()}>Clear All</button></h1>
 
       {/* Notifications list */}
       <div className="notification-list">
@@ -116,6 +135,10 @@ const Notification = () => {
           <div className="no-notifications">No notifications yet</div>
         ) : (
           allNotifications.map((note, idx) => (
+            <div className="eachNote">
+            <div className="clear" onClick={()=>closeNoti(note._id)}>
+              x
+            </div>
             <div
               key={idx}
               className="notification-item"
@@ -128,6 +151,7 @@ const Notification = () => {
                   minute: "2-digit",
                 })}
               </div>
+            </div>
             </div>
           ))
         )}

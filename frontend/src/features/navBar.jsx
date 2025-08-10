@@ -8,7 +8,7 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import MenuIcon from "@mui/icons-material/Menu";
 
 export default function NavBar({toggleSidebar}){
-  const { user } = useAuth(); // get user from context
+  const { user,numNot } = useAuth(); // get user from context
   const { theme, toggleTheme } = useTheme();
 
   return(
@@ -44,7 +44,7 @@ export default function NavBar({toggleSidebar}){
           {user?(
             <>
             <div className="navItem">
-              <Link to="/notifications" className="navLink"><NotificationsNoneOutlinedIcon sx={{fontSize:"30px"}}/></Link>
+              <Link to="/notifications" className="navLink"><NotificationsNoneOutlinedIcon sx={{fontSize:"30px"}}/>{numNot}</Link>
             </div>
             <div className="navItem">
               <Link to="/myprofile" ><img src={user.profilePic?.url} alt="dp" className="model-owner-preview" style={{border: "2px solid var(--primary-blue)"}}/></Link>

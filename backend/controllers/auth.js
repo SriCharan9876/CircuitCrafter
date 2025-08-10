@@ -324,3 +324,41 @@ export const getNotifications = async (req, res) => {
     return res.status(500).json({ success: false, error: "Server error" });
   }
 };
+
+
+export const deleteNotification = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { noteId } = req.body;
+    console.log(noteId);
+
+    if (!noteId) {
+      return res.status(400).json({ success: false, error: "Notification ID required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: "User not found" });
+    }
+
+    const initialLength = user.notifications.length;
+    user.notifications = user.notifications.filter(
+      (note) => note._id.toString() !== noteId
+    );
+
+    if (user.notifications.length === initialLength) {
+      return res.status(404).json({ success: false, error: "Notification not found" });
+    }
+
+    await user.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Notification deleted successfully",
+      notifications: [...user.notifications].sort((a, b) => b.time - a.time),
+    });
+  } catch (err) {
+    console.error("Error deleting notification:", err);
+    return res.status(500).json({ success: false, error: "Server error" });
+  }
+};

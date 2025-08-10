@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   const [loadingUser, setLoadingUser] = useState(true); // NEW
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
-
+  const [numNot,setNumNot]=useState(0);
   const initializeUser = async () => {
     setLoadingUser(true);
     try {
@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }) => {
 
       if (res.data.fetched) {
         setUser(res.data.me); // Store full DB user
+        setNumNot(res.data.me.notifications.length)
       } else {
         logout();
       }
@@ -80,7 +81,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loadingUser, setUser,login, logout,initializeUser }}>
+    <AuthContext.Provider value={{ user, token, loadingUser,numNot,setUser,login, logout,initializeUser,setNumNot }}>
       {children}
     </AuthContext.Provider>
   );

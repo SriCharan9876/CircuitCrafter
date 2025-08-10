@@ -11,6 +11,18 @@
   font-family: var(--font-heading);
   font-weight: bold;
   text-align: center;
+  display: flex;
+  justify-content: center;
+}
+.clearAll{
+  padding: 0.5rem;
+  margin-left: 1rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: red;
+  color: white;
+  font-weight: 600;
+  border: 1px solid red;
 }
 
 .notification-list {
@@ -31,6 +43,7 @@
   padding: 8px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  width: 50rem;
 }
 
 .notification-item {
@@ -76,4 +89,16 @@
 
 .notification-send-btn:hover {
   background-color: #0056b3;
+}
+.eachNote{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 2rem;
+}
+.clear{
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  color: red;
+  cursor: pointer;
 }
