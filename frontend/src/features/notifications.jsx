@@ -136,9 +136,7 @@ const Notification = () => {
         ) : (
           allNotifications.map((note, idx) => (
             <div className="eachNote">
-            <div className="clear" onClick={()=>closeNoti(note._id)}>
-              x
-            </div>
+            
             <div
               key={idx}
               className="notification-item"
@@ -151,6 +149,9 @@ const Notification = () => {
                   minute: "2-digit",
                 })}
               </div>
+            </div>
+            <div className="clear" onClick={()=>closeNoti(note._id)}>
+              x
             </div>
             </div>
           ))
