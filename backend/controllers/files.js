@@ -99,3 +99,29 @@ export const uploadCategoryImage=async(req,res)=>{
         return res.status(500).json({ message: "Upload failed" });
     }
 }
+
+// controllers/files.js (or wherever your uploadComponentFile is)
+export const uploadComponentFile = async (req, res) => {
+  try {
+    // Multer + CloudinaryStorage already handled the upload at this point.
+    // req.file will contain the uploaded file info from Cloudinary.
+
+    if (!req.file || !req.file.path) {
+      // This means either no file was sent or Multer didn't parse it
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    // Build the response using Multer's CloudinaryStorage output
+    return res.status(200).json({
+      public_id: req.file.filename,       // Cloudinary public_id
+      fileUrl: req.file.path,             // Direct download URL to .asy file
+      originalName: req.file.originalname, // Name of file on user's system
+      mimetype: req.file.mimetype          // e.g., "application/octet-stream"
+    });
+
+  } catch (err) {
+    console.error("Upload error:", err);
+    return res.status(500).json({ error: "Server error during upload" });
+  }
+};
+

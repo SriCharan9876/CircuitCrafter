@@ -1,4 +1,5 @@
 import BaseModel from '../models/baseModel.js';
+import Component from "../models/component.js";
 
 export const index=async(req,res)=>{
     const { category } = req.query;
@@ -41,7 +42,7 @@ export const createModel=async(req,res)=>{
 export const getModel=async(req,res)=>{
     try{
         const {id}=req.params;
-        const model=await BaseModel.findById(id).populate("createdBy");
+        const model=await BaseModel.findById(id).populate("createdBy").populate("prerequisites");
 
         if (!model) {
             return res.status(404).json({ found: false, message: "Model not found" });
@@ -62,9 +63,8 @@ export const getModel=async(req,res)=>{
 export const deleteModel=async(req,res)=>{
     try{
         const {id}=req.params;
-        const deletedModel=await BaseModel.findByIdAndDelete(id);
+        await BaseModel.findByIdAndDelete(id);
         console.log("Model deleted successfully: ");
-        console.log(deletedModel);
         return res.json({deleted:true,message:"Model deleted successfully"});
     }catch(err){
         console.log(err);
@@ -103,6 +103,16 @@ export const updateModelStatus=async(req,res)=>{
     const model=await BaseModel.findById(id);
     model.status=status;
     await model.save();
+    if(model.prerequisites){
+        for (comp in model.prerequisites){
+            if(model.status=="appproved"){
+                await Component.findByIdAndUpdate({approved:true});
+            }else{
+                await Component.findByIdAndUpdate({approved:false});
+            }
+            await Component.save();
+        }
+    }
     return res.json({updated:true})
 };// to approve pending model created by user (access to admin)
 
@@ -125,6 +135,7 @@ export const editModel = async (req, res) => {
         model.calcParams = updatedData.calcParams;
         model.relations = updatedData.relations;
         model.specifications = updatedData.specifications;
+        model.prerequisites=updatedData.prerequisites;
 
         // Conditionally update previewImg
         if (updatedData.previewImg && typeof updatedData.previewImg === "object") {

@@ -102,7 +102,7 @@ async function modifyLtspiceFileFromCloud(inputFileUrl, inputValues, calc2, rela
 
     return {
         cloudinaryUrl: uploadResult.secure_url,
-        public_id: uploadResult.public_id,   // ✅ this line added
+        public_id: uploadResult.public_id,  
         values: calc2.filter(c => context[c] !== undefined).map(c => ({ [c]: formatValue(context[c]) }))
     };
 

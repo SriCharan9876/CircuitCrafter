@@ -84,6 +84,10 @@
   color: var(--text-primary);
 }
 
+.select-category{
+  cursor: pointer;
+}
+
 .category-options {
   background-color: var(--accent);  /* default white background */
   color: var(--text-primary);             /* readable dark text */
@@ -161,7 +165,7 @@ input::placeholder, textarea::placeholder {
     align-items: center;
 }
 
-.addmodel-inputs div{
+.addmodel-inputs>div{
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -169,16 +173,16 @@ input::placeholder, textarea::placeholder {
     width: 100%;
 }
 
-.addmodel-inputs div div{
+.addmodel-inputs>div>div{
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
 
-.addmodel-inputs>label>button{
+.addmodel-inputs label button{
     padding: 0.2rem;
-    background-color: #1976d2;
+    background-color: var(--primary-blue);
     color: white;
     border: none;
     border-radius: 0.2rem;
@@ -190,8 +194,51 @@ input::placeholder, textarea::placeholder {
 .addmodel-deletebtn{
     background-color: transparent;
     border: none;
-    color: #1976d2;
+    color: black;
     cursor: pointer;
+}
+
+.new-component-form{
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  align-items: center;
+  border: 1px solid var(--text-primary);
+  border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.new-component-form div{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  gap: 3rem;
+}
+
+.new-component-form>section{
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--text-primary);
+  padding: 1rem;
+  border-radius: 1rem;
+}
+
+.new-component-delete-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: black;
+  color: white;
+  text-align: center;
+  text-wrap:nowrap;
+  font-size: 1rem;
+  gap:1rem;
+  padding: 0.6rem 0.8rem;
+  border-radius: 1rem;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.5);
 }
 
 .addmodel-submit-btn{

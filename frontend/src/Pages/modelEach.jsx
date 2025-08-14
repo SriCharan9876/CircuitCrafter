@@ -321,9 +321,9 @@ const EachModel=()=>{
                     
                     <div className="model-prerequisites">
                         <h2 className="model-specifics-heading">Prerequisite components</h2>
-                        {model.prerequisites?.length > 0 ? (
+                        {model.prerequisites.length > 0 ? (
                             model.prerequisites.map((prerequisite, index) => (
-                                <p key={index} className="model-spec-item">{prerequisite}</p>
+                                <p key={index} className="model-spec-item">{prerequisite.name}</p>
                             ))
                         ) : (
                             <p>No prerequisite components for the model</p>

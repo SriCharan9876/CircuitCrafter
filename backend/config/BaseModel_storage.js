@@ -3,9 +3,14 @@ import { cloudinary } from './cloudinary.js';
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: 'CircuitCrafter',
-    resource_type: 'raw',
+  params: async (req, file) => {
+    return {
+      folder: 'CircuitCrafter',
+      resource_type: 'raw',       // Allow non-image files
+      use_filename: true,         // Use a filename we define below
+      unique_filename: false,     // Don't append random characters
+      public_id:(file.originalname)
+    };
   },
 });
 

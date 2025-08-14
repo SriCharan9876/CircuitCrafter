@@ -12,6 +12,8 @@ import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from "@mui/material/CircularProgress";
+import AddLinkIcon from '@mui/icons-material/AddLink';
+import ContentCutIcon from '@mui/icons-material/ContentCut';
 
 const AddModel = () => {
     const navigate=useNavigate();
@@ -30,24 +32,36 @@ const AddModel = () => {
         designParameters: [{parameter: "",upperLimit: 10,lowerLimit: 0,},],
         calcParams: [{compName: "",comp: "resistor",},],
         relations: [""],
-        specifications:["Gain Range is -1 to -10","Input Amplitude Range is 0-10mV", "Invered output"]
+        specifications:["Gain Range is -1 to -10","Input Amplitude Range is 0-10mV", "Invered output"],
+        prerequisites:[]
     };
     const [formData, setFormData] = useState(initialFormData);
     const [categories, setCategories] = useState([]);
     const [file, setFile] = useState(null);
     const [previewFile, setPreviewFile] = useState(null);
     const [submitting,setSubmitting]=useState(false);
-    
+    const [components, setComponents]=useState([]);
+    const [newComponents, setNewComponents] = useState([]); 
+
     useEffect(() => {
         const fetchCategories = async () => {
             try {
                 const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
-                setCategories(res.data.allCategories); // assuming data is array of { _id, name }
+                setCategories(res.data.allCategories);
             } catch (error) {
                 console.error("Error fetching categories", error);
             }
         };
         fetchCategories();
+        const fetchComponents = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/components`);
+                setComponents(res.data.allComponents);
+            } catch (error) {
+                console.error("Error fetching components", error);
+            }
+        };
+        fetchComponents();
     }, []);
 
     const handleChange = (e) => {
@@ -138,11 +152,74 @@ const AddModel = () => {
                 previewImgData = { public_id, url };
             }
 
-            // STEP 2: Now submit the form with the uploaded URL
+            //Step 1c: Add new components if created in datbase 
+            let createdComponentIds = [];
+            if(newComponents.length>0){
+                for(let comp of newComponents){
+                    if (!comp.name.trim()) {
+                        notify.error("New component name cannot be empty");
+                        setSubmitting(false);
+                        return;
+                    }
+
+                    //Upload files to cloud and get download URL's
+                    let uploadedFiles = [];
+                    for (let f of comp.files) {
+                        if (!f.file) continue; // skip empty
+                        const fileForm = new FormData();
+                        fileForm.append("file", f.file);
+
+                        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/componentfile`,fileForm,
+                            {
+                                headers: {
+                                'Content-Type': 'multipart/form-data',
+                                Authorization: `Bearer ${token}`
+                                }
+                            }
+                        );
+
+                        uploadedFiles.push({
+                            type: f.type,
+                            downloadUrl: uploadRes.data.fileUrl,
+                            public_id:uploadRes.data.public_id,
+                            savePath: f.savePath
+                        });
+                    }
+
+                    const compRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/components`,
+                        {
+                            name: comp.name.trim(),
+                            description: comp.description.trim(),
+                            files: uploadedFiles
+                        },
+                        {
+                            withCredentials: true,
+                            headers: {Authorization: `Bearer ${token}` },
+                        }
+                    );
+                    if (compRes.data?.component?._id) {
+                        createdComponentIds.push(compRes.data.component._id);
+                    } else {
+                        notify.error("Failed to create a component: " + comp.name);
+                        setSubmitting(false);
+                        return;
+                    }
+                    
+                }
+            }
+
+            // STEP 1d: Merge prerequisites (existing + new)
+            const prerequisiteIds = [
+                ...(formData.prerequisites?.filter(p => p)?.map(p => p) || []),
+                ...createdComponentIds
+            ];
+
+            // STEP 2: Now submit the form with the uploaded URLs, prerequisites
             const finalData = {
                 ...formData,
                 fileUrl: uploadedUrl2,
                 previewImg:previewImgData,
+                prerequisites: prerequisiteIds
             };
             const modelRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, finalData, {
                 withCredentials: true,
@@ -196,6 +273,17 @@ const AddModel = () => {
         }));
     };
 
+    const addPreRequisite  = () => {
+        setFormData((prev) => ({
+            ...prev,
+            prerequisites: [...(prev.prerequisites||[]),""],
+        }));
+    };
+
+    const addNewComponent = (index) => {
+        setNewComponents([...newComponents, { name: "", description: "", files: [] }]);
+    };
+
     const handleDesignParamChange = (index, field, value) => {
         const updatedParams = [...formData.designParameters];
         updatedParams[index][field] = value;
@@ -232,6 +320,21 @@ const AddModel = () => {
         }));
     };
 
+    const handlePreRequisiteChange = (index, value) => {
+        const updatedPrereqs = [...formData.prerequisites];
+        updatedPrereqs[index] = value;
+        setFormData((prev) => ({
+            ...prev,
+            prerequisites: updatedPrereqs
+        }));
+    };
+
+    const handleNewComponentChange = (index, field, value) => {
+        const updated = [...newComponents];
+        updated[index][field] = value;
+        setNewComponents(updated);
+    };
+
     const removeDesignParam = (index) => {
         setFormData((prev) => ({
             ...prev,
@@ -259,6 +362,49 @@ const AddModel = () => {
             specifications: prev.specifications.filter((_, i) => i !== index),
         }));
     };
+
+    const removePreRequisite = (index) => {
+        const updatedPrereqs = formData.prerequisites.filter((_, i) => i !== index);
+        setFormData((prev) => ({
+            ...prev,
+            prerequisites: updatedPrereqs
+        }));
+    };
+
+    const removeNewComponent = (index) => {
+        const updated = [...newComponents];
+        updated.splice(index, 1);
+        setNewComponents(updated);
+    };
+
+    // Add new empty file entry to a new component
+    const addNewComponentFile = (compIdx) => {
+        const updated = [...newComponents];
+        updated[compIdx].files.push({ type: "symbol", file: null, savePath:""}); // file will be uploaded before submit
+        setNewComponents(updated);
+    };
+
+    // Handle file type change
+    const handleNewComponentFileChange = (compIdx, fileIdx, field, value) => {
+        const updated = [...newComponents];
+        updated[compIdx].files[fileIdx][field] = value;
+        setNewComponents(updated);
+    };
+
+    // Handle actual file selection
+    const handleNewComponentFileUpload = (compIdx, fileIdx, file) => {
+        const updated = [...newComponents];
+        updated[compIdx].files[fileIdx].file = file; // store File object temporarily
+        setNewComponents(updated);
+    };
+
+    // Remove a file entry
+    const removeNewComponentFile = (compIdx, fileIdx) => {
+        const updated = [...newComponents];
+        updated[compIdx].files.splice(fileIdx, 1);
+        setNewComponents(updated);
+    };
+
 
     const renderStepContent = () => {
         switch (currentStep) {
@@ -384,10 +530,11 @@ const AddModel = () => {
                         <select
                             value={param.comp}
                             onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
+                            className=""
                         >
-                            <option value="resistor">Resistor</option>
-                            <option value="capacitor">Capacitor</option>
-                            <option value="inductor">Inductor</option>
+                            <option value="resistor" className="category-options">Resistor</option>
+                            <option value="capacitor" className="category-options">Capacitor</option>
+                            <option value="inductor" className="category-options">Inductor</option>
                             {/* Add more if needed */}
                         </select>
                         <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>   
@@ -429,6 +576,104 @@ const AddModel = () => {
                             <button onClick={() => removeSpecification(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
                         </div>
                     ))}
+
+                    <label>Create or Link pre-requisite components
+                        <button type="button" onClick={addPreRequisite} style={{padding:"0.4rem"}} title="Link existing component as prerequisite">
+                        <AddLinkIcon/>
+                        </button>
+                        <button type="button" onClick={addNewComponent} style={{padding:"0.4rem"}} title="Create new component as prerequisite">
+                        <AddIcon/>
+                        </button>
+                    </label><br />
+                    
+                    {formData.prerequisites?.map((prerequisite, index) => (
+                        <div key={index} >
+                        <select
+                            value={prerequisite}
+                            onChange={(e) => handlePreRequisiteChange(index,e.target.value)}
+                            className="select-category"
+                        >
+                            <option value="" className="category-options">Select component</option>
+                            {components.map(comp => (
+                                <option key={comp._id} value={comp._id} className="category-options">
+                                {comp.name}
+                                </option>
+                            ))}
+                        </select>
+                        <button onClick={() => removePreRequisite(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>
+                        </div>
+                    ))}
+
+                    <section style={{width:"100%", marginBottom:"1rem"}}>
+                    {newComponents.map((comp, idx) => (
+                        <div key={idx} className="new-component-form">
+                            <div>
+                                <input
+                                    type="text"
+                                    placeholder="Component Name"
+                                    value={comp.name}
+                                    onChange={(e) => handleNewComponentChange(idx, "name", e.target.value)}
+                                />
+                                <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponent(idx)}><DeleteIcon/>Delete Component</button>
+                            </div>
+                            <textarea
+                                placeholder="Description"
+                                value={comp.description}
+                                onChange={(e) => handleNewComponentChange(idx, "description", e.target.value)}
+                            />
+
+                            {/* File inputs */}
+                            <label>Create files for this component
+                                <button style={{padding:"0.4rem"}} type="button" onClick={() => addNewComponentFile(idx)}>
+                                <AddIcon/>
+                                </button>
+                            </label><br />
+
+                            {comp.files.map((fileObj, fIdx) => (
+                            <section key={fIdx} style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
+
+                                <div>
+                                    {/* File picker */}
+                                    <input
+                                    type="file"
+                                    accept={
+                                        fileObj.type === "symbol" ? ".asy" :
+                                        fileObj.type === "model" ? ".sub,.lib,.301,.cir" :
+                                        ".asc"
+                                    }
+                                    onChange={(e) => handleNewComponentFileUpload(idx, fIdx, e.target.files[0])}
+                                    />
+
+                                    {/* Type selector */}
+                                    <select
+                                        value={fileObj.type}
+                                        onChange={(e) => handleNewComponentFileChange(idx, fIdx, "type", e.target.value)}
+                                        className="select-category"
+                                        >
+                                        <option value="symbol" className="category-options">Symbol (.asy)</option>
+                                        <option value="model" className="category-options">Model (.sub, .lib, .301, .cir)</option>
+                                        <option value="hierarchicalSchematic" className="category-options">Hierarchical Schematic (.asc)</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    {/*Save path */}
+                                    <input
+                                        type="text"
+                                        placeholder="Path to save file in local storage"
+                                        value={fileObj.savePath}
+                                        onChange={(e) => handleNewComponentFileChange(idx, fIdx, "savePath", e.target.value)}
+                                    />
+
+                                    <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponentFile(idx, fIdx)}><ContentCutIcon/>Delete File</button>
+                                    
+                                </div>
+                            </section>
+                            ))}
+                        </div>
+                    ))}
+                    </section>   
+
                 </div>
             default:
                 return null;

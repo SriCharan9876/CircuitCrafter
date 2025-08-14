@@ -81,7 +81,11 @@ const baseModelSchema=new Schema({
         type:[String],
         required:true,
         default:[]
-    }
+    },
+    prerequisites: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Component',
+    }],
 });
 
 const BaseModel=mongoose.model("BaseModel",baseModelSchema);

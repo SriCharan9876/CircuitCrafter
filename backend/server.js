@@ -12,6 +12,8 @@ import baseModelRouter from './routes/baseModel.js';
 import authenticationRouter from './routes/auth.js';
 import filesRouter from './routes/files.js';
 import communityRouter from "./routes/community.js";
+import componentsRouter from "./routes/component.js";
+
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
 
@@ -66,6 +68,7 @@ app.use("/api/auth",authenticationRouter);//for signup, login,.. authenticationr
 //Handling backend routes............................................................
 app.use("/api/categories",categoryRouter);
 app.use("/api/models",baseModelRouter);
+app.use("/api/components",componentsRouter);
 //  "/api/models?category=xyz"	route for fetching models under a specific category
 	
 //File handling routes (for client usage of models)
