@@ -96,7 +96,6 @@ const ModelBox=(({model, onDelete})=>{
 
     return(
         <div className="modelBox"
-            key={model._id}
             onClick={() => navigate(`/models/${model._id}`)}
             onMouseEnter={(e) => e.currentTarget.style.transform = "scale(1.02)"}
             onMouseLeave={(e) => e.currentTarget.style.transform = "scale(1)"}

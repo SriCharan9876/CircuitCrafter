@@ -1,0 +1,125 @@
+.compBox{
+    background-color: var(--bg-translucent);
+    color: var(--text-primary);
+    padding: 1rem 2rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.2);
+    margin-bottom: 1rem;
+}
+
+.compBox-header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.compBox>p{
+    font-size: 1.2rem;
+    padding: 0;
+    margin: 0;
+}
+
+.compBox-fileBox{
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.compBox-fileBox>h4,p{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+}
+
+.compBox-fileBox>h4{
+    font-size: 1.3rem;
+}
+
+.compFile-download-btn{
+  color: white;
+  background-color: var(--primary-blue);
+  border-radius: 0.4rem;
+  
+  padding: 0.4rem 0.8rem;
+  font-weight: bold;
+  gap: 0.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: transform 0.1s ease-in-out, box-shadow 0.1s ease-in-out;
+}
+
+.compFile-download-btn:hover{
+  transform: scale(1.01);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+}
+.path-label{
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-right: 0.3rem;
+}
+
+.path-label-sm{
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-right: 0.3rem;
+    display: none;
+}
+
+code{
+    padding:4px;
+    border-bottom:1px solid var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.copy-icon {
+    margin-left: 6px;
+    margin-top: 2px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--primary-blue);
+    transition: all 0.5s ease-in-out;
+}
+.copy-icon:hover {
+    color: black;
+    transition: all 0.5s ease-in-out;
+}
+
+.compBox-Footer{
+    display: flex;
+    justify-content: flex-end;
+    padding: 0 1rem;
+    font-size: 1.2rem;
+}
+
+@media (max-width: 960px) {
+    .compBox-fileBox{
+        background: rgba(0, 0, 0, 0.04);
+        border-left: 4px solid var(--primary-blue);
+        gap: 0.5 res;
+        padding: 1.5rem 1rem 0.5rem 1rem;
+        margin-bottom: 1rem;
+    }
+}
+
+@media (max-width: 600px) {
+    code{
+        display: none;
+    }
+    .path-label-sm{
+        display: inline;
+    }
+    .path-label{
+        display: none;
+    }
+    .compBox-fileBox{
+        gap:0;
+    }
+}

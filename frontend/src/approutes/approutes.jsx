@@ -18,6 +18,7 @@ import CreatePost from "../Pages/createPost";
 import PostDetail from "../Pages/eachPost";
 import NotFound from "../Pages/NotFound";
 import Notification from "../features/notifications";
+import Resources from "../Pages/resources";
 import { PrivateRoute } from "./ProtectedRoutes";
 
 export const approutes = (
@@ -45,6 +46,7 @@ export const approutes = (
       <Route path="models" element={<Explore />} />
       <Route path="models/:id" element={<EachModel />} />
       <Route path="categories" element={<Categories />} />
+      <Route path="resources" element={<Resources />} />
       <Route path="contact" element={<Contact />} />
       <Route path="community" element={<Community />} />
       <Route path="notifications" element={<Notification />} />

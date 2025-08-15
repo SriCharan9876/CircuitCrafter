@@ -1,7 +1,6 @@
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
 database:.............................
-instructions for models, showing it in modeleach.jsx, createmodel.jsx while customization
 storing, connecting images for categories
 
 backend:...............................

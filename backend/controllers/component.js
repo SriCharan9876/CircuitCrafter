@@ -41,8 +41,8 @@ export const createComponent=async(req,res)=>{
 
 export const deleteComponent=async(req,res)=>{
     try{
-        const {id}=req.params;
-        await Component.findByIdAndDelete(id);
+        const {compId}=req.params;
+        await Component.findByIdAndDelete(compId);
         return res.json({deleted:true,message:"Component deleted successfully"});
     }catch(err){
         console.log(err);

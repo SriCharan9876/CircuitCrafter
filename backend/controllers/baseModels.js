@@ -104,13 +104,10 @@ export const updateModelStatus=async(req,res)=>{
     model.status=status;
     await model.save();
     if(model.prerequisites){
-        for (comp in model.prerequisites){
-            if(model.status=="appproved"){
-                await Component.findByIdAndUpdate({approved:true});
-            }else{
-                await Component.findByIdAndUpdate({approved:false});
+        for (const compId of model.prerequisites){
+            if(model.status==="approved"){
+                await Component.findByIdAndUpdate(compId,{approved:true});
             }
-            await Component.save();
         }
     }
     return res.json({updated:true})

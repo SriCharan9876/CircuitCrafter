@@ -13,10 +13,10 @@ router
 
 router
     .route("/all")
-    .get(auth,isAdmin,allComponents)
+    .get(allComponents)
 
 router
-    .route("/:id")
-    .delete(auth,isOwnerOrAdmin,deleteComponent)
+    .route("/:compId")
+    .delete(auth,deleteComponent)
 
 export default router;

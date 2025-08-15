@@ -1,0 +1,16 @@
+.resources-page{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 3rem;
+    min-height: 100vh;
+}
+.resources-page>section{
+    width: 100%;
+}
+
+.components-container{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}

@@ -4,9 +4,9 @@ const fileSchema = new mongoose.Schema({
   type: {
     type: String,
     enum: [
-      'symbol',               // .asy
-      'model',                // .sub, .lib, .301, .cir
-      'hierarchicalSchematic' // .asc for hierarchical symbols
+      'Symbol',               // .asy
+      'Model',                // .sub, .lib, .301, .cir
+      'Schematic' // .asc for  symbols
     ],
     required: true
   },

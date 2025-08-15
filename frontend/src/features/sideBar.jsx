@@ -12,6 +12,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ContactPageIcon from "@mui/icons-material/ContactPage"; // Contact
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import ForumIcon from '@mui/icons-material/Forum';
+import ArticleIcon from '@mui/icons-material/Article';
 
 import { useAuth } from "../contexts/authContext"; // 👈 get from context
 import { useRef } from "react";
@@ -26,6 +27,7 @@ export default function Sidebar({ isOpen, toggleSidebar,setSidebarOpen,sidebarRe
     { to: "/models/mymodels", label: "My Models", icon: <InventoryIcon /> },
     { to: "/models/favourites", label: "Saved Models", icon: <BookmarkIcon /> },
     { to: "/contact", label: "Contact", icon: <ContactPageIcon /> },
+    { to: "/resources", label: "Resources", icon: <ArticleIcon /> },
     { to: "/community", label: "Community", icon: <ForumIcon /> },
   ];
 

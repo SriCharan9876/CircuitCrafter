@@ -380,7 +380,7 @@ const AddModel = () => {
     // Add new empty file entry to a new component
     const addNewComponentFile = (compIdx) => {
         const updated = [...newComponents];
-        updated[compIdx].files.push({ type: "symbol", file: null, savePath:""}); // file will be uploaded before submit
+        updated[compIdx].files.push({ type: "Symbol", file: null, savePath:""}); // file will be uploaded before submit
         setNewComponents(updated);
     };
 
@@ -637,8 +637,8 @@ const AddModel = () => {
                                     <input
                                     type="file"
                                     accept={
-                                        fileObj.type === "symbol" ? ".asy" :
-                                        fileObj.type === "model" ? ".sub,.lib,.301,.cir" :
+                                        fileObj.type === "Symbol" ? ".asy" :
+                                        fileObj.type === "Model" ? ".sub,.lib,.301,.cir" :
                                         ".asc"
                                     }
                                     onChange={(e) => handleNewComponentFileUpload(idx, fIdx, e.target.files[0])}
@@ -650,9 +650,9 @@ const AddModel = () => {
                                         onChange={(e) => handleNewComponentFileChange(idx, fIdx, "type", e.target.value)}
                                         className="select-category"
                                         >
-                                        <option value="symbol" className="category-options">Symbol (.asy)</option>
-                                        <option value="model" className="category-options">Model (.sub, .lib, .301, .cir)</option>
-                                        <option value="hierarchicalSchematic" className="category-options">Hierarchical Schematic (.asc)</option>
+                                        <option value="Symbol" className="category-options">Symbol (.asy)</option>
+                                        <option value="Model" className="category-options">Model (.sub, .lib, .301, .cir)</option>
+                                        <option value="Schematic" className="category-options">Schematic (.asc)</option>
                                     </select>
                                 </div>
 
