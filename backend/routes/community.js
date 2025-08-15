@@ -1,5 +1,5 @@
 import express from "express";
-import { getPosts,createPost,likeToggle,getPost,addComment } from "../controllers/community.js";
+import { getPosts,createPost,likeToggle,getPost,addComment,postExist } from "../controllers/community.js";
 import {auth} from '../middlewares/authenticate.js';
 const router=express.Router();
 
@@ -22,4 +22,8 @@ router
 router
     .route("/:id/addComment")   
     .put(auth,addComment)
+
+router
+    .route("/check-exist/:value")
+    .get(auth,postExist)
 export default router;

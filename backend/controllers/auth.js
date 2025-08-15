@@ -362,3 +362,20 @@ export const deleteNotification = async (req, res) => {
     return res.status(500).json({ success: false, error: "Server error" });
   }
 };
+
+export const checkExist = async (req, res) => {
+  try {
+    const { value } = req.params;
+    console.log("value: ",value)
+    const user = await User.findOne({ name: value });
+
+    if (!user) {
+      return res.json({ exist: false });
+    } else {
+      return res.json({ exist: true });
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Server error" });
+  }
+};

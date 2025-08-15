@@ -17,9 +17,14 @@
   flex: 1;
   padding: 12px 16px;
   font-size: 20px;
+  background-color: transparent;
   border: 1px solid #ccc;
+  color: var(--text-primary);
   border-radius: 8px;
   outline: none;
+}
+.title-input::placeholder{
+  color: var(--text-primary);
 }
 
 .cancel, .post {
@@ -75,5 +80,68 @@
   resize: vertical;
   border-radius: 8px;
   border: 1px solid #ccc;
+  background-color: transparent;
   outline: none;
+}
+.tag {
+  display: inline-block;
+  background: #e0e0e0;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-right: 6px;
+  font-size: 16px;
+  color: black;
+}
+
+.sideTags{
+  display: block;
+  width: 4rem;
+  margin-right: 1rem;
+  min-width: 5rem;
+  font-size: larger;
+}
+.tag-lists {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.eachTag{
+  display: flex;
+  flex-direction: row;
+  color: var(--text-primary);
+}
+.tag-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.tag-buttons button {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  background: #f9f9f9;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.tag-buttons button:hover {
+  background: #e0e0e0;
+}
+
+.tag-input-wrapper {
+  margin-top: 10px;
+}
+
+.tag-input-wrapper input {
+  width: 40%;
+  padding: 10px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #bbb;
+  color: var(--text-primary);
+  outline: none;
+  background-color: transparent;
 }

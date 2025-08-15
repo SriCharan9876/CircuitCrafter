@@ -94,3 +94,18 @@ export const addComment = async (req, res) => {
     return res.json({ success: false, message: "Failed to add comment." });
   }
 };
+
+export const postExist=async(req,res)=>{
+  try{
+    const {value}=req.params;
+    const post=await Post.findOne({title:value})
+    if(post){
+      return res.json({exist:true})
+    }else{
+      return res.json({exist:false})
+    }
+  }catch(err){
+    console.log(err);
+    return res.status(500).json({ error: "Server error" });
+  }
+}
