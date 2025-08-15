@@ -14,10 +14,11 @@ import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import ForumIcon from '@mui/icons-material/Forum';
 
 import { useAuth } from "../contexts/authContext"; // 👈 get from context
+import { useRef } from "react";
+import { useEffect } from "react";
 
-export default function Sidebar({ isOpen, toggleSidebar }) {
+export default function Sidebar({ isOpen, toggleSidebar,setSidebarOpen,sidebarRef  }) {
   const { user } = useAuth();
-
   const commonLinks = [
     { to: "/models", label: "Models", icon: <AutoAwesomeMotionIcon /> },
     { to: "/models/create", label: "New Model", icon: <AddBoxIcon /> },
@@ -32,10 +33,8 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
     { to: "/categories/create", label: "New Category", icon: <CreateNewFolderIcon /> },
     { to: "/models/pending", label: "Pending Models", icon: <HourglassBottomIcon /> },
   ];
-
-
   return (
-    <div className={`sideBar ${isOpen ? "open" : "closed"}`}>
+    <div ref={sidebarRef} className={`sideBar ${isOpen ? "open" : "closed"}`}>
       <div className="inside">
 
         <div className="close-btn">
@@ -62,7 +61,7 @@ export default function Sidebar({ isOpen, toggleSidebar }) {
         
         {commonLinks.map(({ to, label, icon }, idx) => (
           <div key={idx} className="nav-item"  title={label}>
-            <Link to={to} className="nav-link">
+            <Link to={to} className="nav-link" onClick={toggleSidebar}>
               {icon} {isOpen && label}
             </Link>
           </div>
