@@ -714,7 +714,7 @@ const AddModel = () => {
                                         <CircularProgress size={20} color="inherit" />
                                         </>
                                     ) : (
-                                        "Submit"
+                                        "Submit for Approval"
                                     )}
                                     </button>
                             }

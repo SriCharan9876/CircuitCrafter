@@ -4,11 +4,13 @@ import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
 import ComponentBox from "../features/ComponentBox";
 import "../Styles/resources.css"
+import { useLocation } from "react-router-dom";
 
 const Resources = () => {
     const { user, token } = useAuth();
     const [allComponents, setAllComponents] = useState([]);
     const [compLoading, setCompLoading] = useState(true);
+    const location = useLocation();
 
     const getComponents = async () => {
         try {
@@ -34,6 +36,19 @@ const Resources = () => {
         getComponents();
     }, []);
 
+    useEffect(() => {
+        if (!compLoading && location.hash) {
+            const elementId = location.hash.replace("#", "");
+            const element = document.getElementById(elementId);
+            if (element) {
+                const yOffset = -140; // adjust this based on your header height
+                const y = element.getBoundingClientRect().top + window.scrollY + yOffset;
+                window.scrollTo({ top: y, behavior: "smooth" });
+            }
+        }
+    }, [compLoading, location.hash]);
+
+
     const approvedComponents=allComponents.filter(comp=>comp.approved);
     const pendingComponents=allComponents.filter(comp=>!comp.approved&&(user)&&((user.role=="admin")||(comp.createdBy._id===user._id)));
     
@@ -49,7 +64,9 @@ const Resources = () => {
                         <h1 style={{color:"var(--text-primary)"}}>Loading components .....</h1>
                     ):(
                         approvedComponents.map((component) => (
-                            <ComponentBox component={component} key={component._id} onDelete={getComponents} editAccess={user&&((user.role==="admin")||(user._id===component.createdBy._id))}/>
+                            <div id={`component-${component._id}`} key={component._id}>
+                                <ComponentBox  component={component} onDelete={getComponents} editAccess={user&&((user.role==="admin")||(user._id===component.createdBy._id))}/>
+                            </div>
                         ))
                     )}
                     </div>

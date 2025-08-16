@@ -11,12 +11,12 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const ComponentBox=(({component, onDelete, editAccess})=>{
     const { token } = useAuth(); //get current user and token
-    const [copied, setCopied] = useState(false);
+    const [copiedIndex, setCopiedIndex] = useState(null);
 
-    const copyPath = (path) => {
+    const copyPath = (path, index) => {
         navigator.clipboard.writeText(path).then(() => {
-        setCopied(true);
-        setTimeout(() => setCopied(false), 1500); // revert after 1.5s
+            setCopiedIndex(index);
+            setTimeout(() => setCopiedIndex(null), 1500);
         });
     };
 
@@ -71,8 +71,8 @@ const ComponentBox=(({component, onDelete, editAccess})=>{
                                 <span className="path-label">Path to Save File: </span>
                                 <span className="path-label-sm">Copy Path to Save File: </span>
                                 <code>{simfile.savePath}</code>
-                                <span className="copy-icon" onClick={()=>copyPath(simfile.savePath)}>
-                                    {copied?<CheckCircleOutlineIcon fontSize="large"/>:<ContentCopyIcon fontSize="large"/>}
+                                <span className="copy-icon" onClick={()=>copyPath(simfile.savePath, index)}>
+                                    {copiedIndex === index?<CheckCircleOutlineIcon fontSize="large"/>:<ContentCopyIcon fontSize="large"/>}
                                 </span>
                             </p>
                         </div>

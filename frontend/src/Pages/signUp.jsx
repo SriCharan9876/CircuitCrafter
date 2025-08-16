@@ -7,7 +7,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ImageUploadBox from "../features/ImageUploadBox";
 import { useNavigate } from "react-router-dom";
-
+import PersonIcon from '@mui/icons-material/Person';
 
 const SignUp = () => {
   const initialFormData = {
@@ -202,18 +202,19 @@ const SignUp = () => {
         </div>
 
         <GoogleLoginButton />
-        <p className="auth-footer-link">
-          Already have an account? <a href="/login">Log In</a>
+        <p className="auth-footer-link" style={{display:"flex", justifyContent:"center", fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem"}}>
+          Already have an account? &nbsp;<a href="/login">Log In</a>
         </p>
 
         <div className="auth-guest-access">
-            <p style={{ textAlign: "center", marginTop: "1rem" }}>
+            <p style={{ display:"flex", justifyContent:"center", textAlign: "center", marginTop: "1rem" }}>
               <button
                 type="button"
                 onClick={() => navigate("/models")}
                 className="auth-guest-btn"
+                style={{display:"flex", gap:"0.5rem", alignItems:"center"}}
               >
-                👀 Continue as Guest
+                <PersonIcon/> Continue as Guest
               </button>
             </p>
           </div>

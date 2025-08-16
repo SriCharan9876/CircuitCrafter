@@ -1,5 +1,6 @@
 import BaseModel from '../models/baseModel.js';
 import Component from "../models/component.js";
+import User from "../models/user.js";
 
 export const index=async(req,res)=>{
     const { category } = req.query;
@@ -28,6 +29,9 @@ export const createModel=async(req,res)=>{
             createdBy:req.user.userId
         });
         await newmodel.save();
+
+        await User.findByIdAndUpdate(req.user.userId,{ $inc: { contributionCount: 1 } });
+
         return res.json({added:true,message:"Successfully added"});
     }catch(err){
         console.log(err);
@@ -63,7 +67,8 @@ export const getModel=async(req,res)=>{
 export const deleteModel=async(req,res)=>{
     try{
         const {id}=req.params;
-        await BaseModel.findByIdAndDelete(id);
+        const deletedModel=await BaseModel.findByIdAndDelete(id);
+        await User.findByIdAndUpdate(deletedModel.createdBy,{ $inc: { contributionCount: -1 } });
         console.log("Model deleted successfully: ");
         return res.json({deleted:true,message:"Model deleted successfully"});
     }catch(err){
@@ -140,6 +145,10 @@ export const editModel = async (req, res) => {
                 public_id: updatedData.previewImg.public_id || "",
                 url: updatedData.previewImg.url || "https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
             };
+        }
+
+        if(model.status==="approved"){
+            model.status="pending";
         }
         
         await model.save();

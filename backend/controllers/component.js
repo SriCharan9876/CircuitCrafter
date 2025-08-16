@@ -42,8 +42,21 @@ export const createComponent=async(req,res)=>{
 export const deleteComponent=async(req,res)=>{
     try{
         const {compId}=req.params;
-        await Component.findByIdAndDelete(compId);
-        return res.json({deleted:true,message:"Component deleted successfully"});
+        const deletedComp = await Component.findByIdAndDelete(compId);
+        if (!deletedComp) {
+            return res.status(404).json({ deleted: false, message: "Component not found to delete" });
+        }
+
+        await BaseModel.updateMany(
+            { prerequisites: compId },
+            { $pull: { prerequisites: compId } }
+        );
+
+        return res.json({
+            deleted: true,
+            message: "Component deleted successfully and references removed from base models"
+        });
+        
     }catch(err){
         console.log(err);
         return res.status(500).json({ deleted: false, message: "Failed to delete Component" });

@@ -21,6 +21,7 @@ const MyProfile = () => {
               <p className="proSub"><strong>Name:</strong> {user.name}</p>
               <p className="proSub"><strong>Email:</strong> {user.email}</p>
               <p className="proSub"><strong>Role:</strong> {user.role}</p>
+              <p className="proSub"><strong>Models Created:</strong> {user.contributionCount}</p>
             </div>
 
             <div className="profile-buttons">

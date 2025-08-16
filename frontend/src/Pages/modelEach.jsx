@@ -210,9 +210,8 @@ const EachModel=()=>{
                         <img src={model.createdBy.profilePic.url} alt="dp" className="model-owner-preview" />
                         <div className="model-owner-details">
                             <p className="model-owner-name" style={{fontSize:"1.8rem"}}>{model.createdBy.name}</p>
-                            <p className="model-owner-contributions" style={{fontSize:"1.2rem"}}>4 contributions</p>
+                            <p className="model-owner-contributions" style={{fontSize:"1.2rem"}}>{model.createdBy.contributionCount} contributions</p>
                         </div>
-                        
                     </div>
                 </div>
 
@@ -312,18 +311,20 @@ const EachModel=()=>{
                         <h2 className="model-specifics-heading">Specifications</h2>
                         {model.specifications?.length > 0 ? (
                             model.specifications.map((specification, index) => (
-                                <p key={index} className="model-spec-item">{specification}</p>
+                                <p key={index}>{specification}</p>
                             ))
                         ) : (
                             <p>No specifications provided for the model</p>
                         )}
                     </div>
                     
-                    <div className="model-prerequisites">
-                        <h2 className="model-specifics-heading">Prerequisite components</h2>
+                    <div className="model-prerequisites" style={{paddingLeft:"3rem"}}>
+                        <h2 className="model-specifics-heading">
+                            Prerequisite components 
+                        </h2>
                         {model.prerequisites.length > 0 ? (
                             model.prerequisites.map((prerequisite, index) => (
-                                <p key={index} className="model-spec-item">{prerequisite.name}</p>
+                                <span key={index} className="model-prerequisite-item" onClick={() => navigate(`/resources#component-${prerequisite._id}`)}>{prerequisite.name}</span>
                             ))
                         ) : (
                             <p>No prerequisite components for the model</p>

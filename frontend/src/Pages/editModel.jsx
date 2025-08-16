@@ -67,7 +67,7 @@ const EditModel = () => {
     };
     const fetchComponents = async () => {
         try {
-            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/components`);
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/components/all`);
             setComponents(res.data.allComponents);
         } catch (error) {
             console.error("Error fetching components", error);

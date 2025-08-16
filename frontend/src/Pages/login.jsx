@@ -5,6 +5,7 @@ import {notify} from "../features/toastManager";
 import GoogleLoginButton from "../features/googleLogin";
 import { useNavigate } from "react-router-dom";
 import "../Styles/signUp.css";
+import PersonIcon from '@mui/icons-material/Person';
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -64,18 +65,19 @@ const Login = () => {
           </div>
           <GoogleLoginButton/>
 
-          <p className="auth-footer-link" style={{fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem"}}>
-            Don't have an account? <a href="/signup">Sign Up</a>
+          <p className="auth-footer-link" style={{display:"flex", justifyContent:"center", fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem"}}>
+            Don't have an account? &nbsp;<a href="/signup">Sign Up</a>
           </p>
 
           <div className="auth-guest-access">
-            <p style={{ textAlign: "center", marginTop: "1rem",fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem" }}>
+            <p style={{ display:"flex", justifyContent:"center", marginTop: "1rem",fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem" }}>
               <button
                 type="button"
                 onClick={() => navigate("/models")}
                 className="auth-guest-btn"
+                style={{display:"flex", gap:"0.5rem", alignItems:"center"}}
               >
-                👀 Continue as Guest
+                <PersonIcon/> Continue as Guest
               </button>
             </p>
           </div>

@@ -66,6 +66,10 @@ const userSchema=new Schema({
         type:[String],
         default:[]
     },
+    contributionCount:{
+      type:Number,
+      default:0
+    },
     notifications: {
       type: [notificationSchema],
       default: []

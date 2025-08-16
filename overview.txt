@@ -1,0 +1,118 @@
+Here’s a rephrased and slightly structured version of your **Circuit Crafter** project overview. I kept all information intact but polished the flow, grammar, and readability:
+
+---
+
+# CIRCUIT CRAFTER
+
+**Circuit Crafter** is a web platform designed for **designing, publishing, categorizing, sharing, and saving circuits**, as well as **generating simulation files**. The platform simplifies experimentation for students, hobbyists, and engineers by providing ready-to-use circuit models and tools, eliminating the need to start from scratch.
+
+---
+
+## Key Features
+
+### Circuit Designing (Main Feature)
+
+* Users can browse existing circuit models (e.g., **instrumentation amplifier**) on the website.
+* Logged-in users can:
+
+  * Select a model.
+  * View its **specifications** (e.g., amplification range, input type), **prerequisite components** (e.g., potentiometer), and **description**.
+  * Input their own requirements (e.g., desired gain).
+  * Generate and download an **LTSpice simulation file**.
+
+---
+
+### Circuit Models
+
+Circuit models are **collections of standard circuits** useful for project work. Each model includes:
+
+* Designing strategy
+* Category
+* Description
+* Specifications
+* Prerequisite components
+
+Users can:
+
+* View published models.
+* Filter by category (e.g., amplifier, filter, etc.).
+* Sort by likes, design count, upload time.
+* Like, save, share, or design models.
+
+**Adding a Circuit Model**
+
+* Users with knowledge of a circuit design strategy can contribute a model by submitting:
+
+  * Model name, description, category
+  * Circuit file (with default values for calculation components, e.g., resistance)
+  * Preview image
+  * Design parameters (e.g., amplification) with upper & lower limits
+  * Calculation components (e.g., Rin, Rf)
+  * Formulas linking parameters and components (e.g., Rin=1000, Rf=-amplification\*Rin)
+  * Specifications
+  * Prerequisites (if any)
+
+* **Approval Workflow**:
+
+  * Submitted models enter a **pending state** (not published/visible).
+  * Admin reviews and approves/rejects the model.
+  * Once approved, the model becomes publicly available for design.
+  * Owners/Admins can always edit or delete their models.
+  * Admins may unapprove or reject models at any time.
+  * If rejected, the user must edit and resubmit.
+
+---
+
+### Components
+
+Components are **standard circuit elements** used in some models that are not available in LTSpice by default.
+
+* To design models requiring such components, users must **download and save the component files** locally before viewing the generated simulation file.
+* Users can view all available components in the **Resources page**.
+* While creating a model that needs additional components:
+
+  * The user must link to existing components or create new ones during the final step.
+  * Once the model is approved, the linked components are also approved and become publicly available.
+* **Delete Access**: Component deletion is allowed for its owner or the admin.
+
+---
+
+### Community & Notifications
+
+* Users can create posts to share queries or information.
+* Posts can:
+
+  * Tag other users (with contribution count > 0), models, or custom tags.
+  * Have **visibility settings**:
+
+    * Private (visible only to tagged users and the post creator).
+    * Public (visible to all).
+  * Have **post type**: query or information.
+* Other users can **share, view, like, and comment** on posts.
+* Posts can only be deleted by their owner or the admin.
+
+**Model Rejection Workflow in Community**:
+
+* When a model is rejected, a private post is automatically created, tagging the model and its owner.
+* User and admin can communicate via comments on that post regarding the approval process.
+
+**Post Management**:
+
+* Users can filter or search posts while browsing.
+
+---
+
+### Other Features
+
+* Users can view:
+
+  * Their own created models.
+  * Saved models separately.
+* **Notifications**: integrated with all activities (e.g., model status updates, community interactions).
+* **Dark/Light Mode** toggle.
+* **Creator’s Contact** options.
+* Account management: logout, delete account, view last generated file.
+* **Resources page** to guide users in utilizing the platform.
+* Fully **responsive design**, optimized for both desktops and mobile devices.
+
+---

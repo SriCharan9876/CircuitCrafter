@@ -4,18 +4,28 @@ database:.............................
 storing, connecting images for categories
 
 backend:...............................
-resources page, components page (, show as prerequisites in modeleach.jsx)
+resources page (, show as prerequisites in modeleach.jsx)
 show message icon in model each to message in community with its owner tag
 authentication, authorization error generation at all routes, full scale error handling
 client side, server side validations (including verifying input in range in customization)
+contribution count by users (to show in modeleach page, to show list of users having contribution-count >0 to tag in community)
+
+Community-posts: custom tags, model tags, visibility:private/public, usertag (tag users having contribution count>0), type:query/info, delete post
+When admin rejects, redirect to community, tag that models's owner, keep post visibility private, set post type to info, tag the model, noty to admin to send reason fo rrejection 
+
+Notifications- to model owner when its status changes or its edited/deleted, to user when he is tagged in a post, to admin when someone someone submits model for approval,
+                to user when someone likes, comments on his post, 
 
 frontend:...............................
 frontend stylings community pages
 footer
 frontend handling for loading pages
+Community-filters: visibility-private/public (all/sent to only us), tagged us/ all, type-query/info
+Community-other :search (search in modeltags, postnames, customtags), sort as recent last, auto scroll to end when page opens
 
 minor changes, final changes...........................
-notifications,contact,resources, userslist for admin
+profile pic replace url's in contact page with original pictures
+notifications,contact, userslist for admin
 main page
 http://localhost:5173/models/asdf checking if model ID exists if no :id found display No Model Found.
 
