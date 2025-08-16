@@ -15,6 +15,24 @@ const postSchema = new mongoose.Schema({
       trim: true
     }
   ],
+  people: [
+    {
+      type: String,
+      trim: true
+    }
+  ],
+  posts: [
+    {
+      type: String,
+      trim: true
+    }
+  ],
+  models: [
+    {
+      type: String,
+      trim: true
+    }
+  ],
   author: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

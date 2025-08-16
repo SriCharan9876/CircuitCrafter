@@ -1,5 +1,5 @@
 import express from "express";
-import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel, toggleLike, updateViews} from "../controllers/baseModels.js";
+import {index,createModel,getModel,deleteModel,getPendingModels,getMyModels,updateModelStatus, editModel, toggleLike, updateViews,modelExist} from "../controllers/baseModels.js";
 import {auth} from '../middlewares/authenticate.js';
 import {isAdmin,isOwnerOrAdmin} from '../middlewares/authorize.js';
 import multer from 'multer';
@@ -39,4 +39,7 @@ router
     .route("/:id/view")
     .put(auth,updateViews)
 
+router
+    .route("/check-exist/:value")
+    .get(auth,modelExist)
 export default router;

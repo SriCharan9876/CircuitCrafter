@@ -187,3 +187,19 @@ export const updateViews=async(req,res)=>{
         await model.save();
     }
 }
+
+export const modelExist=async(req,res)=>{
+    try{
+        const {value}=req.params;
+        console.log(value);
+        const model=await BaseModel.findOne({modelName:value})
+        if(model){
+          return res.json({exist:true})
+        }else{
+          return res.json({exist:false})
+        }
+    }catch(err){
+        console.log(err)
+        return res.status(500).json({ error: "Server error" });
+    }
+}

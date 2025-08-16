@@ -115,7 +115,39 @@ const PostDetail = () => {
       <div className="post-content2">
         <h2>{post.title}</h2>
         <p>{post.content}</p>
+
+        {/* Tags Section */}
+        <div className="tag-lists" id="tl2">
+          <h2 className="taghead">Tagged:</h2>
+          {post.people?.length > 0 && (
+            <div className="eachTag">
+              <strong className="sideTags">People:</strong>
+              {post.people.map((p, i) => (
+                <span key={i} className="tag">{p}</span>
+              ))}
+            </div>
+          )}
+
+          {post.posts?.length > 0 && (
+            <div className="eachTag">
+              <strong className="sideTags">Posts:</strong>
+              {post.posts.map((p, i) => (
+                <span key={i} className="tag">{p}</span>
+              ))}
+            </div>
+          )}
+
+          {post.models?.length > 0 && (
+            <div className="eachTag">
+              <strong className="sideTags">Models:</strong>
+              {post.models.map((m, i) => (
+                <span key={i} className="tag">{m}</span>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+        
 
       <div className="post-actions">
         <button onClick={() => onLike(post._id)} style={{ color: token && post.likes?.includes(user?._id) ? "red" : "inherit" }}>
