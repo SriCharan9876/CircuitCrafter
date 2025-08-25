@@ -6,93 +6,21 @@ import "../Styles/notifications.css"
 import axios from "axios";
 
 const Notification = () => {
-  const socketRef = useRef(null);
-  const { token, user,loadingUser,numNot,setNumNot } = useAuth();
-  const [allNotifications, setNotifications] = useState([]);
+  const { token, user,loadingUser,numNot,setNumNot,allNotifications, setNotifications,emitPublicMessage,emitPrivateMessage } = useAuth();
   const [newMsg, setnewMsg] = useState("");
   useEffect(()=>{
     getNotifications();
   },[])
-  useEffect(() => {
-    if(loadingUser) return;
-    if (!token || !user) {
-      notify.error("Login or signUp to receive notifications");
-      return;
-    }
-    socketRef.current = io(import.meta.env.VITE_API_BASE_URL, {
-      withCredentials: true,
-      auth: { userId: user._id },
-    });
-
-    socketRef.current.emit("join-public-room", {
-      roomId: import.meta.env.VITE_PUBLIC_ROOM,
-    });
-
-    socketRef.current.on("public-message", ({ username, newMsg, id }) => {
-      const newtxt = {
-        sender: username,
-        message: newMsg,
-        roomId: id,
-        time: Date.now(),
-      };
-      setNotifications((prev) => [...prev, newtxt]);
-    });
-
-    socketRef.current.on("private-message", ({ username, newMsg, id }) => {
-      const newtxt = {
-        sender: username,
-        message: newMsg,
-        roomId: id,
-        time: Date.now(),
-      };
-      setNotifications((prev) => [...prev, newtxt]);
-    });
-
-    return () => {
-      socketRef.current?.disconnect();
-      socketRef.current = null;
-    };
-  }, [user,token]);
 
   const handlePublicSubmit = async (event) => {
     event.preventDefault();
     let username = user.name;
-    if (!socketRef.current || newMsg.trim() === "") return;
     let id = import.meta.env.VITE_PUBLIC_ROOM;
+    let id2="686293bb86e54745cc8913c8"
+    emitPrivateMessage("private","saiamma",id,id2)
     console.log(newMsg+" "+id+" "+username);
-    socketRef.current.emit("public-message", { username, newMsg, id });
-    const newtxt = {
-      sender: username,
-      message: newMsg,
-      roomId: id,
-      time: Date.now(),
-    };
-    saveNoti(newtxt);
     setnewMsg("");
-
   };
-  const saveNoti = async (notifi) => {
-    try {
-      const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,
-        { notifi },
-        {
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-    
-      if (res.data.posted) {
-        console.log("Notification saved:", notifi);
-        getNotifications();
-      } else {
-        console.warn("Notification save failed:", res.data);
-      }
-    } catch (err) {
-      console.error("Error saving notification:", err);
-    }
-  };
-
   const getNotifications=async()=>{
     const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,{
       withCredentials: true,

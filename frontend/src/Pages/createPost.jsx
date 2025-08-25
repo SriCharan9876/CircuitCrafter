@@ -17,7 +17,7 @@ const CreatePost = () => {
   const [activeTag, setActiveTag] = useState(null); // which input is open
   const [inputValue, setInputValue] = useState("");
 
-  const { token } = useAuth();
+  const { token,emitPublicMessage,emitPrivateMessage,user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -39,7 +39,8 @@ const CreatePost = () => {
       if(!res.data.exist){
         notify.error("User doesn't exist");
       }else{
-        setPeople([...people, value]); 
+        setPeople([...people, res.data.user]); 
+        console.log(people)
       }
     }
     if (activeTag === "post" && !posts.includes(value)){
@@ -50,7 +51,7 @@ const CreatePost = () => {
         if(!res.data.exist){
           notify.error("Post doesn't exist");
         }else{
-          setPosts([...posts, value]); 
+          setPosts([...posts, res.data.post]);
         }
     }
     if (activeTag === "model" && !models.includes(value)){
@@ -61,7 +62,7 @@ const CreatePost = () => {
         if(!res.data.exist){
           notify.error("Model doesn't exist");
         }else{
-          setModels([...models, value]); 
+          setModels([...models, res.data.model]); 
         }
     }
     
@@ -84,6 +85,31 @@ const CreatePost = () => {
       );
 
       if (res.data.posted) {
+        const id =import.meta.env.VITE_PUBLIC_ROOM;
+        people.forEach((p) => {
+          emitPrivateMessage(
+            user.name,
+            `You are tagged in post named "${title}"`,
+            id,
+            p._id,
+          );
+        });
+        models.forEach((p) => {
+          emitPrivateMessage(
+            user.name,
+            `Your model was tagged in post named "${title}"`,
+            id,
+            p.createdBy,
+          );
+        });
+        posts.forEach((p) => {
+          emitPrivateMessage(
+            user.name,
+            `Your post was tagged in post named "${title}"`,
+            id,
+            p.author,
+          );
+        });
         notify.success(res.data.message);
       } else {
         notify.error(res.data.message);
@@ -138,7 +164,7 @@ const CreatePost = () => {
             <div className="eachTag">
               <strong className="sideTags">People:</strong>{" "}
               {people.map((p, i) => (
-                <span key={i} className="tag">{p}</span>
+                <span key={i} className="tag">{p.name}</span>
               ))}
             </div>
           )}
@@ -146,7 +172,7 @@ const CreatePost = () => {
             <div className="eachTag">
               <strong className="sideTags">Posts:</strong>{" "}
               {posts.map((p, i) => (
-                <span key={i} className="tag">{p}</span>
+                <span key={i} className="tag">{p.title}</span>
               ))}
             </div>
           )}
@@ -154,7 +180,7 @@ const CreatePost = () => {
             <div className="eachTag">
               <strong className="sideTags">Models:</strong>{" "}
               {models.map((m, i) => (
-                <span key={i} className="tag">{m}</span>
+                <span key={i} className="tag">{m.modelName}</span>
               ))}
             </div>
           )}

@@ -28,10 +28,10 @@ const Messaging=(server)=>{
                 username,newMsg,id
             })
         }) 
-        socket.on("private-message",async({username,newMsg,id})=>{
-            console.log(`New message from ${username}: ${newMsg} to room ${id}`);
+        socket.on("private-message",async({username,newMsg,id,receiverId})=>{
+            console.log(`New message from ${username}: ${newMsg} to room ${receiverId}`);
             io.to(id).emit('private-message',{
-                username,newMsg,id
+                username,newMsg,id,receiverId
             })
         })
     });

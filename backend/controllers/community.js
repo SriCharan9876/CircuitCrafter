@@ -32,20 +32,28 @@ export const getPost=async(req,res)=>{
         return res.json({fetched:false,message:"Failed to fetch Posts"});
     }
 }
-export const createPost=async(req,res)=>{
-    try {
-      const postData = req.body;
-      const post = new Post({
-        ... postData,
-        author: req.user.userId
-      });
-      await post.save();
-      return res.json({posted:true,message:"Successfully posted"});
-    } catch (error) {
-        console.log(error)
-        return res.json({ posted:false,message: "Failed to create post" });
-    }
-}
+export const createPost = async (req, res) => {
+  try {
+    const { title, content, topics, people, posts, models } = req.body;
+
+    const post = new Post({
+      title,
+      content,
+      topics,
+      posts: posts?.map(p=> p.title),
+      models: models?.map(p=>p.modelName),
+      people: people?.map(p => p.name), // ✅ only store names
+      author: req.user.userId,
+    });
+
+    await post.save();
+    return res.json({ posted: true, message: "Successfully posted" });
+  } catch (error) {
+    console.log(error);
+    return res.json({ posted: false, message: "Failed to create post" });
+  }
+};
+
 
 export const likeToggle=async(req,res)=>{
     try{
@@ -100,7 +108,7 @@ export const postExist=async(req,res)=>{
     const {value}=req.params;
     const post=await Post.findOne({title:value})
     if(post){
-      return res.json({exist:true})
+      return res.json({exist:true,post:post})
     }else{
       return res.json({exist:false})
     }

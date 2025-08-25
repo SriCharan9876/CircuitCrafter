@@ -194,7 +194,7 @@ export const modelExist=async(req,res)=>{
         console.log(value);
         const model=await BaseModel.findOne({modelName:value})
         if(model){
-          return res.json({exist:true})
+          return res.json({exist:true,model:model})
         }else{
           return res.json({exist:false})
         }
