@@ -1,5 +1,5 @@
 import express from "express";
-import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,deleteNotification,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers,checkExist} from "../controllers/auth.js";
+import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,deleteNotification,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers,checkExist,getAdminIds} from "../controllers/auth.js";
 const router=express.Router();
 import {auth} from '../middlewares/authenticate.js';
 
@@ -19,6 +19,10 @@ router
 router
     .route("/me")
     .get(auth,getmydata)
+
+router
+    .route("/admins")
+    .get(auth,getAdminIds)
 
 router
     .route("/favModels")

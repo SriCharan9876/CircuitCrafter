@@ -21,7 +21,7 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 const EachModel=()=>{
     const {id}= useParams();
-    const { user,token } = useAuth();
+    const { user,token, emitPrivateMessage } = useAuth();
     const navigate=useNavigate();
     const customizationRef = useRef(null); 
     const [model,setModel]=useState({});
@@ -36,6 +36,7 @@ const EachModel=()=>{
     const isApproved = model.status === "approved";
     const allFilled = model.designParameters?.every(param => inputValues[param.parameter]);
     const {theme}=useTheme();
+    const [AdminArr,setAdminArr] = useState([]); 
 
     const getThisModel = async () => {
         try {
@@ -78,10 +79,25 @@ const EachModel=()=>{
 
     const handleInputValueChange=(e)=>{
         const {name,value}=e.target;
-        setInputValues(prev=>({...prev,[name]:value}));
+        setInputValues(prev => ({ ...prev, [name]: Number(value) })); 
     }
 
     const generateModel=async()=>{
+
+        for (let param of model.designParameters){
+            const value=inputValues[param.parameter];
+            if(value==null||value===""){
+                notify.error(`Please provide value for ${param.parameter} to design`);
+                return;
+            }
+            if(value<param.lowerLimit||value>param.upperLimit){
+                notify.error(
+                    `${param.parameter} must be between ${param.lowerLimit} and ${param.upperLimit}`
+                );
+                return;
+            }
+        }
+
         setGenerating(true);
         try{
             const calc2 = model.calcParams.map(each => each.compName);
@@ -111,14 +127,26 @@ const EachModel=()=>{
 
     const deleteModel = async (modelId) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/models/${modelId}`, {
+            const res=await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/models/${modelId}`, {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            notify.success(`${model.modelName} deleted successfully`);
-            navigate("/models");
+            if(res.data.deleted){
+                const roomId =import.meta.env.VITE_PUBLIC_ROOM;
+                let updateMessage=`Your model "${model.modelName}" is deleted by ${user.name} `;
+                
+                emitPrivateMessage(
+                    user.name,
+                    updateMessage,
+                    roomId,
+                    model.createdBy._id,
+                );
+                notify.success(`${model.modelName} deleted successfully`);
+                navigate("/models");
+            }
+            
         } catch (error) {
             console.error("Delete error:", error.response?.data || error.message);
         }
@@ -128,10 +156,40 @@ const EachModel=()=>{
         e.stopPropagation();
         try{
             const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status:newStatus},{
-                headers:{Authorization:`Bearer ${token}`},
-                withCredentials:true
+                withCredentials:true,
+                headers:{Authorization:`Bearer ${token}`}
             });
-            getThisModel();
+
+            if(res.data.updated){
+                const roomId =import.meta.env.VITE_PUBLIC_ROOM;
+                let statusMessage=`Your model "${model.modelName}" is ${newStatus} `;
+                let adminMesssage=`Model ${model.modelName} is waiting for approval (Sent for Re-Verification by ${user.name})`;
+
+                if(newStatus==="pending"){
+                    if(model.status==="approved"){
+                        statusMessage=`Your model "${model.modelName}" is unapproved `;//if previous status changes approved--->pending
+                    }
+                    if(model.status==="rejected"){
+                        statusMessage=`Your model "${model.modelName}" is sent for Re-Verification `;
+
+                        AdminArr.forEach((p) => {//message to all Admins
+                            emitPrivateMessage(
+                                user.name,
+                                adminMesssage,
+                                roomId,
+                                p,
+                            );
+                        });
+                    }
+                }
+                emitPrivateMessage(//message to model owner
+                    user.name,
+                    statusMessage,
+                    roomId,
+                    model.createdBy._id,
+                );
+                getThisModel();
+            }
         }catch (err) {
             console.error("Error updating model status", err);
             notify.error("Error updating model status")
@@ -176,6 +234,17 @@ const EachModel=()=>{
 
     useEffect(() => {
         getThisModel();
+        const fetchAdminIds=async ()=>{
+            try{
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`,{
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setAdminArr(res.data.adminIds);
+            } catch (error) {
+                console.error("Error fetching adminIds", error);
+            }
+        }
+        fetchAdminIds();
     }, [id,user]);
 
     useEffect(()=>{
@@ -183,7 +252,7 @@ const EachModel=()=>{
             setIsAdmin(user.role === "admin");
             setIsOwner(model.createdBy._id === user._id);
         }
-    })
+    },[user,model])
 
     return(
         <div style={{ padding: "20px" }} className="allPages">

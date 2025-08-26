@@ -137,6 +137,16 @@ export const getmydata = async (req, res) => {
     }
 };
 
+export const getAdminIds=async(req,res)=>{
+  try{
+    const adminArr=await User.find({role:"admin"}).select("_id");
+    const adminIds = adminArr.map(admin => admin._id);
+    res.status(200).json({ fetched:true, adminIds });    
+  } catch (error) {
+    res.status(500).json({ fetched:false, message: "Error fetching admin IDs" });
+  }
+}
+
 const client = new OAuth2Client(process.env.VITE_GOOGLE_CLIENT_ID);
 export const googleLogin=async(req,res)=>{
   try{

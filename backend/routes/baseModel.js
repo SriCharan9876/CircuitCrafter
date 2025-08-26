@@ -29,7 +29,7 @@ router
 
 router
     .route("/:id/status")
-    .put(auth,isAdmin,updateModelStatus)//access to admin only
+    .put(auth,isOwnerOrAdmin,updateModelStatus)//access to admin only
 
 router
     .route("/:id/like")

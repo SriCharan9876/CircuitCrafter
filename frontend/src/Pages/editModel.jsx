@@ -18,7 +18,7 @@ import ContentCutIcon from '@mui/icons-material/ContentCut';
 
 const EditModel = () => {
   const { id } = useParams();
-  const { token } = useAuth();
+  const { emitPrivateMessage,user,token } = useAuth();
   const navigate = useNavigate();
 
   const [currentStep, setCurrentStep] = useState(1);
@@ -45,6 +45,7 @@ const EditModel = () => {
   const [saving, setSaving]=useState(false);
   const [components, setComponents]=useState([]);
   const [newComponents, setNewComponents] = useState([]); 
+  const [AdminArr,setAdminArr] = useState([]); 
 
   useEffect(() => {
     const fetchModel = async () => {
@@ -60,7 +61,7 @@ const EditModel = () => {
     const fetchCategories = async () => {
       try {
         const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/categories`);
-        setCategories(res.data.allCategories);
+        setAdminArr(res.data.adminIds);
       } catch (err) {
         console.error("Failed to fetch categories", err);
       }
@@ -73,10 +74,21 @@ const EditModel = () => {
             console.error("Error fetching components", error);
         }
     };
+    const fetchAdminIds=async ()=>{
+      try{
+        const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`,{
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setAdminArr(res.data.adminIds);
+      } catch (error) {
+          console.error("Error fetching adminIds", error);
+      }
+    }
 
     fetchModel();
     fetchCategories();
     fetchComponents();
+    fetchAdminIds();
   }, [id,token]);
 
   const handleChange = (e) => {
@@ -235,7 +247,29 @@ const EditModel = () => {
         }
       );
 
+      //Finally submit edited model, notify, message
+
       if (res.data.updated) {
+
+        const roomId =import.meta.env.VITE_PUBLIC_ROOM;
+        let updateMessage1=`Your Model "${formData.modelName}" is modified by @${user.name} and submitted for approval `;//to model owner
+        let updateMessage2=`Model "${formData.modelName}" is waiting for approval (modified by @${user.name} ) `;//to admin
+
+        emitPrivateMessage(//to model owner
+            user.name,
+            updateMessage1,
+            roomId,
+            res.data.model.createdBy,
+        );
+        AdminArr.forEach((p) => {//to all Admins
+          emitPrivateMessage(
+            user.name,
+            updateMessage2,
+            roomId,
+            p,
+          );
+        });
+
         notify.success("model updated successfully");
         setTimeout(() => navigate(`/models/${id}`), 1000);
         console.log(updatedModel);

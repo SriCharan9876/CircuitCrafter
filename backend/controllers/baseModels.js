@@ -105,6 +105,10 @@ export const getMyModels=async(req,res)=>{
 export const updateModelStatus=async(req,res)=>{
     const {id}=req.params;
     const {status}=req.body;
+    if(status!=="pending"&&req.user.role!=="admin"){
+        return res.status(403).json({updated:false, message:"Model can be Approved or rejected only by admins"})
+    }
+
     const model=await BaseModel.findById(id);
     model.status=status;
     await model.save();

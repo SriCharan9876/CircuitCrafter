@@ -17,7 +17,7 @@ import ContentCutIcon from '@mui/icons-material/ContentCut';
 
 const AddModel = () => {
     const navigate=useNavigate();
-    const { token } = useAuth();
+    const { emitPrivateMessage, token, user } = useAuth();
 
     const [currentStep, setCurrentStep] = useState(1);
     const stepNames = ["Model details","Upload files","Parameters","Submit"];
@@ -42,6 +42,7 @@ const AddModel = () => {
     const [submitting,setSubmitting]=useState(false);
     const [components, setComponents]=useState([]);
     const [newComponents, setNewComponents] = useState([]); 
+    const [AdminArr,setAdminArr] = useState([]); 
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -62,6 +63,17 @@ const AddModel = () => {
             }
         };
         fetchComponents();
+        const fetchAdminIds=async ()=>{
+            try{
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`,{
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setAdminArr(res.data.adminIds);
+            } catch (error) {
+                console.error("Error fetching adminIds", error);
+            }
+        }
+        fetchAdminIds();
     }, []);
 
     const handleChange = (e) => {
@@ -226,6 +238,25 @@ const AddModel = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (modelRes.data.added) {
+                const roomId =import.meta.env.VITE_PUBLIC_ROOM;
+                let updateMessage1=`Your Model "${formData.modelName}" is submitted for approval `;
+                let updateMessage2=`Model "${formData.modelName}" is waiting for approval (created by @${user.name})`;
+
+                emitPrivateMessage(
+                    user.name,
+                    updateMessage1,
+                    roomId,
+                    user._id,
+                );
+                AdminArr.forEach((p) => {//to all Admins
+                    emitPrivateMessage(
+                        user.name,
+                        updateMessage2,
+                        roomId,
+                        p,
+                    );
+                });
+
                 notify.success("Model submitted for approval!");
                 setTimeout(() => navigate("/models/mymodels"), 1000);
                 // Reset form after success

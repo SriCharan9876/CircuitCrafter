@@ -14,7 +14,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 const ModelBox=(({model, onDelete})=>{
     const navigate = useNavigate();
-    const { user, token } = useAuth(); //get current user and token
+    const { user, token, emitPrivateMessage } = useAuth(); //get current user and token
     const [pmodel,setModel]=useState({});
 
     const isAdmin= user?.role==="admin";
@@ -22,17 +22,29 @@ const ModelBox=(({model, onDelete})=>{
     const currUserId=user?._id;
     const {theme}=useTheme();
     const color = (theme==="dark-theme")?"white":"grey";
+    const [AdminArr,setAdminArr] = useState([]); 
 
     const deleteModel = async (modelId) => {
         try {
-            await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/models/${modelId}`, {
+            const res=await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/models/${modelId}`, {
                 withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
-            onDelete();
-            console.log(`${model.modelName} model deleted successfully`);
+            if(res.data.deleted){
+                const id =import.meta.env.VITE_PUBLIC_ROOM;
+                let updateMessage=`Your model "${model.modelName}" is deleted by ${user.name} `;
+                
+                emitPrivateMessage(
+                    user.name,
+                    updateMessage,
+                    id,
+                    model.createdBy._id,
+                );
+                notify.success(`${model.modelName} deleted successfully`);
+                onDelete();
+            }
         } catch (error) {
             console.error("Delete error:", error.response?.data || error.message);
         }
@@ -45,7 +57,36 @@ const ModelBox=(({model, onDelete})=>{
                 headers:{Authorization:`Bearer ${token}`},
                 withCredentials:true
             });
-            onDelete();
+            if(res.data.updated){
+                const roomId =import.meta.env.VITE_PUBLIC_ROOM;
+                let statusMessage=`Your model "${model.modelName}" is ${newStatus} `;
+                let adminMesssage=`Model ${model.modelName} is waiting for approval (Sent for Re-Verification by ${user.name})`;
+
+                if(newStatus==="pending"){
+                    if(model.status==="approved"){
+                        statusMessage=`Your model "${model.modelName}" is unapproved `;//if previous status changes approved--->pending
+                    }
+                    if(model.status==="rejected"){
+                        statusMessage=`Your model "${model.modelName}" is sent for Re-Verification `;
+
+                        AdminArr.forEach((p) => {//message to all Admins
+                            emitPrivateMessage(
+                                user.name,
+                                adminMesssage,
+                                roomId,
+                                p,
+                            );
+                        });
+                    }
+                }
+                emitPrivateMessage(
+                    user.name,
+                    statusMessage,
+                    roomId,
+                    model.createdBy._id,
+                );
+                onDelete();
+            }
         }catch (err) {
             console.error("Error updating model status", err);
             notify.error("Error updating model status")
@@ -63,6 +104,17 @@ const ModelBox=(({model, onDelete})=>{
     }
     useEffect(()=>{
         getData();
+        const fetchAdminIds=async ()=>{
+            try{
+            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`,{
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setAdminArr(res.data.adminIds);
+            } catch (error) {
+                console.error("Error fetching adminIds", error);
+            }
+        }
+        fetchAdminIds();
     },[]);
     
     const handleShare = async (e, model) => {
@@ -137,7 +189,9 @@ const ModelBox=(({model, onDelete})=>{
                             <ShareIcon sx={{color:{color}}} style={{fontSize:"22"}}/>
                         </div>
                     </div>
-
+                    {isOwner && model.status == "rejected" && (
+                        <p>Model is rejected</p>
+                    )}
                 </div>  
             </div>
 
@@ -152,9 +206,8 @@ const ModelBox=(({model, onDelete})=>{
                 {isAdmin && model.status == "approved" && (
                     <button className="model-button" onClick={(e) => {updateStatus(e,"pending")}}>UnApprove</button>
                 )}
-                {isOwner && model.status == "rejected" && (<>
-                    <p>Model is rejected</p>
-                    <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button></>
+                {isOwner && model.status == "rejected" && (
+                    <button className="model-button"onClick={(e) => {updateStatus(e,"pending")}}>Send for re-verification</button>
                 )}
                 </div>
                             
