@@ -29,7 +29,7 @@ const favourites=()=>{
     },[])
     return(
         <div className="allPages">
-            <div className="favmodels-page" style={{padding:"3rem 3rem", minHeight:"100vh"}}>
+            <div className="favmodels-page" style={{padding:"3rem 3rem"}}>
                 <div className="subnavbar">
                     <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Explore your saved models</h1>
                 </div>

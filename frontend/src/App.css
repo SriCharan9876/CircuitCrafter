@@ -2,15 +2,13 @@
 
 .allPages{
   padding: 0;
-  position: relative;
+  /* position:relative; */
   margin-left: 59px;
-  left: 0;
-  bottom: 0;
-  top: 9vh;
-  right: 0;
+  padding-top: 9vh;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  min-height: 40vh;
 }
 
 /* App.css */

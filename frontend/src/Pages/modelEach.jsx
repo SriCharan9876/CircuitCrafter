@@ -255,7 +255,7 @@ const EachModel=()=>{
     },[user,model])
 
     return(
-        <div style={{ padding: "20px" }} className="allPages">
+        <div className="allPages">
         <div className="model-view-page">
             
         {!got ? (
@@ -268,7 +268,7 @@ const EachModel=()=>{
                     <div className="model-titlediv">
                         <h1 className="model-title">{model.modelName}&nbsp;</h1>
                         {!isApproved?
-                        <span><p style={{backgroundColor:"#cccccc55", fontSize:"1.6rem", padding:"0.4rem 0.8rem", borderRadius:"1.2rem"}}>{model.status}</p></span>:
+                        <span><p className="model-status-tag">{model.status}</p></span>:
                         <div onClick={(e) => e.stopPropagation()} className="savebtn" style={{padding:"1.5rem 0 0 0"}}>
                             <SaveButton modelId={model._id} savedModels={user?.savedModels || []} token={token} refreshFavorites={getThisModel} theme={theme}/>
                         </div>
@@ -278,8 +278,8 @@ const EachModel=()=>{
                     <div className="model-owner">
                         <img src={model.createdBy.profilePic.url} alt="dp" className="model-owner-preview" />
                         <div className="model-owner-details">
-                            <p className="model-owner-name" style={{fontSize:"1.8rem"}}>{model.createdBy.name}</p>
-                            <p className="model-owner-contributions" style={{fontSize:"1.2rem"}}>{model.createdBy.contributionCount} contributions</p>
+                            <p className="model-owner-name" >{model.createdBy.name}</p>
+                            <p className="model-owner-contributions">{model.createdBy.contributionCount} contributions</p>
                         </div>
                     </div>
                 </div>
@@ -298,7 +298,7 @@ const EachModel=()=>{
                     </div>
                     
                     <button onClick={scrollToCustomization} className="model-customize-scrollerbtn">
-                       Design model &nbsp; <DrawIcon style={{fontSize:"24"}}/>
+                       <p>Design model</p> &nbsp; <DrawIcon style={{fontSize:"24"}}/>
                     </button>
 
                 </div>

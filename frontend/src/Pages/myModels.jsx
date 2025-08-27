@@ -34,7 +34,7 @@ const MyModels = () => {
 
     return (
         <div className="allPages">
-            <div className="mymodels-page" style={{padding:"1rem 2rem", minHeight:"100vh"}}>
+            <div className="mymodels-page" style={{padding:"4rem 2rem"}}>
                 <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Explore your models</h1>
                 <div className="model-grid">
                 {allModels.length === 0 ? (

@@ -7,13 +7,13 @@ backend:...............................
 resources page
 show message icon in model each to message in community with its owner tag
 authentication, authorization error generation at all routes, full scale error handling
-client side, server side validations (including verifying input in range in customization)
+client side, server side validations
 contribution count by users (to show in modeleach page, to show list of users having contribution-count >0 to tag in community)
 
 Community-posts: custom tags, model tags, visibility:private/public, usertag (tag users having contribution count>0), type:query/info, delete post
 When admin rejects, redirect to community, tag that models's owner, keep post visibility private, set post type to info, tag the model, noty to admin to send reason fo rrejection 
 
-Notifications- to model owner when its status changes or its edited/deleted, to user when he is tagged in a post, to admin when someone submits model for approval,
+Notifications- to user when he is tagged in a post
                 to user when someone likes, comments on his post, 
 
 frontend:...............................
