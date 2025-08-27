@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
-import AscFileUploadBox from "../features/AscFileUpload"
+import ImageUploadBox from "../features/ImageUploadBox";
 
 const AddCategory = () => {
     const navigate=useNavigate();
@@ -15,7 +15,7 @@ const AddCategory = () => {
     }
     const [formData, setFormData] = useState(initialFormData);
     const [message, setMessage] = useState("");
-    const [file, setFile] = useState(null);
+    const [previewFile, setPreviewFile] = useState(null);
 
     useEffect(() => {
         if (!user || user.role !== "admin") {
@@ -27,17 +27,6 @@ const AddCategory = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
-    };
-
-    const handleFileChange = (e) => {
-        const selectedFile = e.target.files[0];
-        if (selectedFile && !selectedFile.type.startsWith("image/")) {
-            setMessage("Only image files are allowed for category thumbnail.");
-            setFile(null);
-        } else {
-            setFile(selectedFile);
-            setMessage("");
-        }
     };
 
     const handleSubmit = async (e) => {
@@ -120,20 +109,18 @@ const AddCategory = () => {
                         />
                     </div>
 
-                    <div>
+                    <div style={{display:"flex",flexDirection:"column", alignItems:"center"}}>
                         <label>Upload the category thumbnail image</label>
-                        <AscFileUploadBox file={file} setFile={setFile} />
+                        <ImageUploadBox initialPreview={previewFile ? URL.createObjectURL(previewFile) : null} setPreviewFile={setPreviewFile} boxSize={200} />
                     </div>
 
-                    {file && (
-                    <div >
-                        <img src={URL.createObjectURL(file)} alt="Preview" style={{width:"450px"}} />
+                    <div style={{display:"flex",flexDirection:"column", alignItems:"center"}}>
+                        <button type="submit" className="addmodel-navigate-btn" style={{marginTop:"10px"}} disabled={!formData.name || !formData.label}>
+                            Submit
+                        </button>
                     </div>
-                    )}
 
-                    <button type="submit" className="addmodel-navigate-btn" style={{marginLeft:"40%"}} disabled={!formData.name || !formData.label}>
-                        Submit
-                    </button>
+                    
                 </form>
 
                 {message && <p style={{ marginTop: "20px" }}>{message}</p>}
