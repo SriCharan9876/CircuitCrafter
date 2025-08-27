@@ -29,7 +29,7 @@ const LikeButton=(({modelId,userId,initialLikes,token,size, theme="light-theme"}
             );
         }catch(err){
             console.error("Error updating model status", err);
-            notify.error("Error Liking the model");
+            notify.error("Login to Like the model");
         }finally{
             setIsLoading(false);
         }

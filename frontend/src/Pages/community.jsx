@@ -30,7 +30,7 @@ const Community = () => {
   };
   const likeIt=async(id)=>{
 
-    if(!isLogggedIn) {
+    if(!token) {
       notify.warning("Login to interact with posts");
       navigate("/login");
     }
@@ -76,7 +76,6 @@ const Community = () => {
             <span><ChatBubbleOutlineIcon fontSize="small" /> {post.comments?.length || 0}</span>
           </div>
         </div>
-        <hr/>
         </>
       ))}
     </div>

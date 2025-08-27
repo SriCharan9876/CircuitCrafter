@@ -18,22 +18,19 @@ export default function Footer() {
         <div className="footer-section links">
           <h3>Quick Links</h3>
           <ul>
-            <li><Link to="/">Home</Link></li>
             <li><Link to="/models">Circuit Models</Link></li>
             <li><Link to="/categories">Categories</Link></li>
             <li><Link to="/community">Community</Link></li>
-            <li><Link to="/about">About</Link></li>
+            <li><Link to="/resources">Resources</Link></li>
             <li><Link to="/contact">Contact</Link></li>
           </ul>
         </div>
 
         <div className="footer-section contact">
           <h3>Contact</h3>
-          <p>Email: support@circuitcrafter.com</p>
-          <p>Phone: +91 98765 43210</p>
           <div className="socials">
-            <a href="https://twitter.com" target="_blank" rel="noreferrer">Twitter</a> | 
-            <a href="https://linkedin.com" target="_blank" rel="noreferrer">LinkedIn</a>
+            <a href="https://t.me/+nl-Q0sG3IGY0Mjc1" target="_blank" rel="noreferrer">Telegram</a> |  
+            <a href="https://www.linkedin.com/in/navaneeth-adharapuram-190686278/" target="_blank" rel="noreferrer">LinkedIn</a>
           </div>
         </div>
       </div>

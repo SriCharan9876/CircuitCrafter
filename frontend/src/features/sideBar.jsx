@@ -13,7 +13,7 @@ import ContactPageIcon from "@mui/icons-material/ContactPage"; // Contact
 import HourglassBottomIcon from '@mui/icons-material/HourglassBottom';
 import ForumIcon from '@mui/icons-material/Forum';
 import ArticleIcon from '@mui/icons-material/Article';
-
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import { useAuth } from "../contexts/authContext"; // 👈 get from context
 import { useRef } from "react";
 import { useEffect } from "react";
@@ -29,6 +29,7 @@ export default function Sidebar({ isOpen, toggleSidebar,setSidebarOpen,sidebarRe
     { to: "/contact", label: "Contact", icon: <ContactPageIcon /> },
     { to: "/resources", label: "Resources", icon: <ArticleIcon /> },
     { to: "/community", label: "Community", icon: <ForumIcon /> },
+    { to: "/community/mentions", label: "Mentions" ,icon:<AlternateEmailIcon/>}
   ];
 
   const adminLinks = [

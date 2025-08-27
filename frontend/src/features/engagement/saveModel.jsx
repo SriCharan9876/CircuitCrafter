@@ -41,7 +41,7 @@ const SaveButton = ({ modelId, savedModels, token ,refreshFavorites,size,theme="
       notify.success(newSavedStatus ? 'Model saved!' : 'Model removed from saved list');
     } catch (err) {
       console.error("Error toggling saved model:", err);
-      notify.error("Failed to update saved status");
+      notify.error("Login to Save model");
     } finally {
       setIsLoading(false);
     }

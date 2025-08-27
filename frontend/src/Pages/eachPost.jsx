@@ -18,7 +18,9 @@ const PostDetail = () => {
   const [commentText, setCommentText] = useState("");
 
   const handleCommentSubmit = async () => {
-    if (!isLoggedIn) return navigate("/login");
+    if (!isLoggedIn){
+      notify.warning("login to comment");
+       return navigate("/login");}
     if (!commentText.trim()) return notify.error("Comment cannot be empty.");
 
     try {
@@ -82,7 +84,10 @@ const PostDetail = () => {
   };
 
   const onLike = async (id) => {
-    if (!isLoggedIn) return navigate("/login");
+    if (!isLoggedIn){
+      notify.warning("Login to interact with posts")
+       return navigate("/login");
+    }
     const res = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/community/${id}/like`, {}, {
       withCredentials: true,
       headers: { Authorization: `Bearer ${token}` }
