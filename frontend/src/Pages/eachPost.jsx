@@ -44,11 +44,15 @@ const PostDetail = () => {
 
   const getPost = async () => {
     try {
-      // console.log("token:",token)
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${id}`
-        // withCredentials: true,
-        // headers: token ? { Authorization: `Bearer ${token}` } : {}
-    );
+      let res;
+      if(token){
+        res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${id}/logged`,{
+          withCredentials: true,
+          headers: { Authorization: `Bearer ${token}` }
+        });
+      }else{
+        res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/${id}`);
+      }
       if (res.data.fetched) {
         setPosts(res.data.posts);
         console.log(res.data.posts);

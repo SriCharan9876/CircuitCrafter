@@ -3,19 +3,18 @@ import BaseModel from '../models/baseModel.js';
 
 export const getPosts=async(req,res)=>{
     try{
-        // const posts=await Post.find({});
-        // const users=[];
-        // for(let post of posts){
-        //     const puser=post.author;
-        //     console.log("user:",puser);
-        //     const user=await User.find({_id:puser});
-        //     users.push(user);
-        // }
-        const puser=req.user?.userId;
         const posts = await Post.find({}).populate("author");
+        return res.json({fetched:true,posts})
+    }catch(err){
+        console.log(err);
+        return res.json({fetched:false,message:"Failed to fetch Posts"});
+    }
+}
+export const getPostsMen=async(req,res)=>{
+    try{
+        const posts = await Post.find({}).populate("author");
+        const puser=req.user?.userId;
         const models= await BaseModel.find({createdBy:puser});
-        console.log("models:",models)
-        console.log(req.user.name)
         return res.json({fetched:true,posts,models});
     }catch(err){
         console.log(err);
@@ -25,10 +24,21 @@ export const getPosts=async(req,res)=>{
 export const getPost=async(req,res)=>{
     try{
         const {id}=req.params;
-        const puser=req.user?.userId;
         const posts = await Post.findOne({_id:id}).populate("author").populate("comments.user");
-        if(puser&&!!posts.views.includes(puser)){
-          posts.views?.push(puser);
+        return res.json({fetched:true,posts});
+    }catch(err){
+        console.log(err);
+        return res.json({fetched:false,message:"Failed to fetch Posts"});
+    }
+}
+export const getPostlogged=async(req,res)=>{
+    try{
+        const {id}=req.params;
+        const puser=req.user?.userId;
+        console.log("checking:",puser)
+        const posts = await Post.findOne({_id:id}).populate("author").populate("comments.user");
+        if(puser&&(!posts.views.includes(puser) || posts.views==[])){
+          posts.views.push(puser);
           await posts.save();
         }
         return res.json({fetched:true,posts});

@@ -1,5 +1,5 @@
 import express from "express";
-import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,deleteNotification,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers,checkExist,getAdminIds} from "../controllers/auth.js";
+import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,deleteNotification,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers,checkExist,getAdminIds,deleteAccount} from "../controllers/auth.js";
 const router=express.Router();
 import {auth} from '../middlewares/authenticate.js';
 
@@ -49,4 +49,8 @@ router
 router
     .route("/check-exist/:value")
     .get(auth,checkExist)
+
+router
+    .route("/deleteAccount")
+    .delete(auth,deleteAccount)
 export default router;

@@ -41,10 +41,9 @@ export const approutes = (
         <Route path="categories/create" element={<AddCategory />} />
         
         <Route path="community/createPost" element={<CreatePost />} />
-        <Route path="community/:id" element={<PostDetail />} />
         <Route path="community/mentions" element={<Mentions />} />
       </Route>
-
+      <Route path="community/:id" element={<PostDetail />} />
       <Route path="models" element={<Explore />} />
       <Route path="models/:id" element={<EachModel />} />
       <Route path="categories" element={<Categories />} />

@@ -5,11 +5,25 @@ import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 import LogoutIcon from '@mui/icons-material/Logout';
 import DownloadIcon from '@mui/icons-material/Download';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import axios from "axios";
+import { notify } from "../features/toastManager";
 
 const MyProfile = () => {
-  const { user, logout } = useAuth();
+  const { user, logout,token } = useAuth();
   const navigate = useNavigate();
-
+  const deleteAcc=async()=>{
+    const deletion = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/auth/deleteAccount`, {
+      withCredentials: true,
+      headers: { Authorization: `Bearer ${token}` }
+    });
+    if(deletion.data.success){
+      notify.success("Successfully deleted account");
+      navigate("/signup")
+    }else{
+      notify.error("Failed to delete account");
+      console.log(deletion.data.error)
+    }
+  }
   return (
     <div className="allPages">
       <div className="myprofile-page">
@@ -37,7 +51,7 @@ const MyProfile = () => {
                 </button>
               </div>
               <div className="profile-mainbtns">
-                <button className="profile-btn logout-btn proHead" onClick={logout}>
+                <button className="profile-btn logout-btn proHead" onClick={deleteAcc}>
                   Delete Account <DeleteForeverIcon/>
                 </button>
                 <button className="profile-btn logout-btn proHead" onClick={logout}>

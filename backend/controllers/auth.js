@@ -6,6 +6,8 @@ import dotenv from 'dotenv';
 import BaseModel from '../models/baseModel.js';
 import sendOTP from "../config/mailer.js";
 import Otp from "../models/otp.js";
+import Post from "../models/community.js";
+
 dotenv.config();
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
@@ -396,5 +398,17 @@ export const checkExist = async (req, res) => {
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server error" });
+  }
+};
+export const deleteAccount = async (req, res) => {
+  try {
+    const user = req.user;
+    await BaseModel.deleteMany({ createdBy: user.userId });
+    await Post.deleteMany({ author: user.userId });
+    await User.findByIdAndDelete(user.userId);
+    return res.json({ success: true, message: "Account and related data deleted successfully" });
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ success:false,error: "Failed to delete account" });
   }
 };

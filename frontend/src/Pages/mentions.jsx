@@ -17,7 +17,7 @@ const Mentions = () => {
   const navigate=useNavigate();
   const getPostData = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community`, {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/men`, {
         withCredentials: true,
         headers: { Authorization: `Bearer ${token}` }
       });
