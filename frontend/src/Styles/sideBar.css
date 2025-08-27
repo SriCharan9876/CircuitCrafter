@@ -72,3 +72,27 @@
 .nav-item{
   transition: all 0.3s ease;
 }
+
+/* Scrollbar customization */
+.sideBar::-webkit-scrollbar {
+  width: 6px;              /* make it thin */
+}
+
+.sideBar::-webkit-scrollbar-track {
+  background: transparent; /* keep it clean */
+}
+
+.sideBar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3); /* scrollbar color */
+  border-radius: 10px;                  /* rounded look */
+}
+
+.sideBar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.5); /* darker on hover */
+}
+
+/* Firefox support */
+.sideBar {
+  scrollbar-width: thin;                 /* make it thin */
+  scrollbar-color: rgba(0,0,0,0.3) transparent;
+}

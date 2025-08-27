@@ -8,6 +8,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ImageUploadBox from "../features/ImageUploadBox";
 import { useNavigate } from "react-router-dom";
 import PersonIcon from '@mui/icons-material/Person';
+import { useAuth } from "../contexts/authContext";
 
 const SignUp = () => {
   const initialFormData = {
@@ -25,6 +26,7 @@ const SignUp = () => {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const navigate=useNavigate();
+  const { login } = useAuth();
 
 
   const handleChange = (e) => {
@@ -106,6 +108,14 @@ const SignUp = () => {
 
       if (res.data.added) {
         notify.success("Signup Successful!!");
+        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,{
+          email:formData.email,
+          password:formData.password
+        },{withCredentials:true})
+        if (res.data.token && res.data.user) {
+            login(res.data.token, res.data.user); // from useAuth()
+        }
+        navigate("/models");
       } else {
         notify.error("Signup failed!!");
       }

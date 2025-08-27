@@ -69,7 +69,7 @@ export default function Sidebar({ isOpen, toggleSidebar,setSidebarOpen,sidebarRe
             </Link>
           </div>
         ))}
-        {isOpen &&<hr style={{width:"210px"}}/>}
+        {isOpen &&<hr style={{width:"150px"}}/>}
 
         {/* Admin only access links: */}
 
