@@ -5,7 +5,7 @@ const router=express.Router();
 
 router
     .route("/")
-    .get(getPosts)
+    .get(auth,getPosts)
 
 router
     .route("/create")

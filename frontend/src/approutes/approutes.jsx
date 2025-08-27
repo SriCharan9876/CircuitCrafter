@@ -20,6 +20,7 @@ import NotFound from "../Pages/NotFound";
 import Notification from "../features/notifications";
 import Resources from "../Pages/resources";
 import { PrivateRoute } from "./ProtectedRoutes";
+import Mentions from "../Pages/mentions";
 
 export const approutes = (
   <>
@@ -41,6 +42,7 @@ export const approutes = (
         
         <Route path="community/createPost" element={<CreatePost />} />
         <Route path="community/:id" element={<PostDetail />} />
+        <Route path="community/mentions" element={<Mentions />} />
       </Route>
 
       <Route path="models" element={<Explore />} />

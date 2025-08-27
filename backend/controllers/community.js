@@ -1,4 +1,5 @@
 import Post from "../models/community.js";
+import BaseModel from '../models/baseModel.js';
 
 export const getPosts=async(req,res)=>{
     try{
@@ -10,8 +11,12 @@ export const getPosts=async(req,res)=>{
         //     const user=await User.find({_id:puser});
         //     users.push(user);
         // }
+        const puser=req.user?.userId;
         const posts = await Post.find({}).populate("author");
-        return res.json({fetched:true,posts});
+        const models= await BaseModel.find({createdBy:puser});
+        console.log("models:",models)
+        console.log(req.user.name)
+        return res.json({fetched:true,posts,models});
     }catch(err){
         console.log(err);
         return res.json({fetched:false,message:"Failed to fetch Posts"});

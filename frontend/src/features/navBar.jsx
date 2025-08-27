@@ -32,6 +32,12 @@ export default function NavBar({toggleSidebar}){
           <div className="navItem mobile-collapse">
             <Link to="/categories" className="navLink">Categories</Link>
           </div>
+          <div className="navItem mobile-collapse">
+            <Link to="/community/createpost" className="navLink">Start a Community Post</Link>
+          </div>
+          <div className="navItem mobile-collapse">
+            <Link to="/community/mentions" className="navLink">Mentions</Link>
+          </div>
         </div>
 
         <div className="navRight">

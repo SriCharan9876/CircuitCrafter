@@ -99,3 +99,9 @@ hr {
   margin: 0;
   align-self: center;
 }
+.menHead {
+  color: var(--text-primary);
+  border-bottom: 1px solid var(--text-primary); /* choose your color */
+  padding-bottom: 4px;             /* space between text and border */
+  display: inline-block;           /* so border fits text width */
+}
