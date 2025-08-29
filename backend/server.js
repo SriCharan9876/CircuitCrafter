@@ -40,7 +40,7 @@ const sessionOptions={
 const allowedOrigins=[
     "http://localhost:5173",
     "http://localhost:5174",
-    "https://circuit-crafter.vercel.app/"
+    "https://circuit-crafter.vercel.app"
 ]
 app.use(cors({
     origin:(origin,callback)=>{
