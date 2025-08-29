@@ -1,5 +1,5 @@
 import UploadFileIcon from '@mui/icons-material/UploadFile';
-import "../styles/ascFileUpload.css";
+import "../Styles/ascFileUpload.css";
 import { notify } from './toastManager';
 import ClearIcon from '@mui/icons-material/Clear';
 

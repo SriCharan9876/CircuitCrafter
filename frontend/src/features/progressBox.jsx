@@ -1,5 +1,5 @@
 // components/ProgressBox.jsx
-import "../styles/progressBox.css"; // optional: separate styles
+import "../Styles/progressBox.css"; // optional: separate styles
 import DoneIcon from '@mui/icons-material/Done';
 
 const ProgressBox = ({ stepNames, stepInfos, currentStep }) => {

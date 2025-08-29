@@ -6,7 +6,7 @@ import { useAuth } from "../contexts/authContext";
 import ProgressBox from "../features/progressBox";
 import ImageUploadBox from "../features/ImageUploadBox";
 import AscFileUploadBox from "../features/AscFileUpload";
-import "../styles/addModel.css"; 
+import "../Styles/addModel.css"; 
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import DeleteIcon from '@mui/icons-material/Delete';
