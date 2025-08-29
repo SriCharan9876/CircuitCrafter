@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../contexts/authContext";
 import {notify} from "../features/toastManager"
-import ProgressBox from "../features/progressbox";
+import ProgressBox from "../features/progressBox";
 import ImageUploadBox from "../features/ImageUploadBox";
 import AscFileUploadBox from "../features/AscFileUpload";
 import "../Styles/addModel.css"; 
