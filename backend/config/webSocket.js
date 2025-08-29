@@ -2,7 +2,7 @@ import { Server } from "socket.io";
 const Messaging=(server)=>{
     const io=new Server(server,{
         cors:{
-            origin:"https://circuit-crafter.vercel.app/",
+            origin:"https://circuit-crafter.vercel.app",
             methods:["GET","POST"],
             allowedHeaders:["*"],
             credentials:true
