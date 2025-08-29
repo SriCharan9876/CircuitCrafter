@@ -114,7 +114,9 @@ const ModelBox=(({model, onDelete})=>{
                 console.error("Error fetching adminIds", error);
             }
         }
-        fetchAdminIds();
+        if(token){
+            fetchAdminIds();
+        }
     },[]);
     
     const handleShare = async (e, model) => {

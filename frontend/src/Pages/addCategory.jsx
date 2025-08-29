@@ -34,9 +34,9 @@ const AddCategory = () => {
 
         try {
             let visual=null;
-            if(file){
+            if(previewFile){
                 const imageForm = new FormData();
-                imageForm.append("file", file);
+                imageForm.append("file", previewFile);
                 const imageUploadRes = await axios.post(
                     `${import.meta.env.VITE_API_BASE_URL}/api/files/category`,
                     imageForm,{

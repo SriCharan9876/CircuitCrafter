@@ -205,8 +205,8 @@ const Explore = () => {
 
                 <aside className="explore-hero-animation-container">
                     <video width="640" height="360" autoPlay muted loop playsInline className="explore-hero-animation" >
-                        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4"></source>
-                        <source src="https://www.w3schools.com/html/mov_bbb.ogg" type="video/ogg"></source>
+                        <source src="https://res.cloudinary.com/du1tos77l/video/upload/v1756318049/WhatsApp_Video_2025-08-27_at_23.37.09_6e00171a_hd2bpz.mp4" type="video/mp4"></source>
+                        <source src="https://res.cloudinary.com/du1tos77l/video/upload/v1756318049/WhatsApp_Video_2025-08-27_at_23.37.09_6e00171a_hd2bpz.mp4" type="video/ogg"></source>
                         Your browser does not support the video tag.
                     </video>
                 </aside>
