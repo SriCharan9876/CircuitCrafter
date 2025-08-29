@@ -27,7 +27,7 @@ export const approutes = (
     <Route path="/signUp" element={<SignUp />} />
     <Route path="/login" element={<Login />} />
     <Route path="/" element={<Layout />}>
-
+      <Route index element={<Navigate to="/models" />} />
       <Route element={<PrivateRoute />}>
 
         <Route path="myprofile" element={<MyProfile />} />
