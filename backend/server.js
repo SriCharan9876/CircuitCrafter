@@ -33,13 +33,14 @@ const sessionOptions={
         httpOnly:true,
         sameSite:"none",
         secure:true,
-        domain:"localhost:5000",
+        domain:"circuitcrafter-818t.onrender.com",
         maxAge:7 * 24 * 60 * 60 * 1000,
     },
 };
 const allowedOrigins=[
     "http://localhost:5173",
     "http://localhost:5174",
+    "https://circuit-crafter.vercel.app/"
 ]
 app.use(cors({
     origin:(origin,callback)=>{
