@@ -24,7 +24,7 @@ const server=createServer(app);
 Messaging(server);
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 const sessionOptions={
     secret:process.env.SECRET,
     resave:false,
