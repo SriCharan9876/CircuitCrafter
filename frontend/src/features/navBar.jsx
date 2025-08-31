@@ -26,17 +26,14 @@ export default function NavBar({toggleSidebar}){
               <div className="logo-icon" title="CircuitCrafter"><img src="cc_logo_img.png" alt="logo" width="80px" height="70px"/></div>
             </Link>
           </div>
-          <div className="navItem">
+          <div className="navItem mobile-collapse">
             <Link to="/models" className="navLink">Explore</Link>
           </div>
           <div className="navItem mobile-collapse">
             <Link to="/categories" className="navLink">Categories</Link>
           </div>
-          <div className="navItem">
-            <Link to="/community/createpost" className="navLink">Start a Community Post</Link>
-          </div>
           <div className="navItem mobile-collapse">
-            <Link to="/community/mentions" className="navLink">Mentions</Link>
+            <Link to="/community/createpost" className="navLink">New Post</Link>
           </div>
         </div>
 

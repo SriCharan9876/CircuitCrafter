@@ -86,7 +86,9 @@ app.use("/community",communityRouter);
 //     res.status(401).json({message:"error occured"});
 //     // res.status(statusCode).render("error.ejs",{message});
 // });
-
+app.get("/ping",(req,res)=>{
+  res.send("backend is live");
+})
 app.use("/",(req,res)=>{
   res.send("Page not found");
 })

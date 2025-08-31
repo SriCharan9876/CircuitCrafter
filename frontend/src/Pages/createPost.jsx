@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import "../Styles/createPost.css";
 import { useAuth } from "../contexts/authContext";
+import AddIcon from '@mui/icons-material/Add';
 import { notify } from "../features/toastManager";
 
 const CreatePost = () => {
@@ -155,6 +156,13 @@ const CreatePost = () => {
               onKeyDown={(e) => e.key === "Enter" && handleAddTag()}
               autoFocus
             />
+            <button 
+              className="tag-add-btn" 
+              onClick={handleAddTag}
+              disabled={!inputValue.trim()}  // prevent empty adds
+            >
+              Tag
+            </button>
           </div>
         )}
 

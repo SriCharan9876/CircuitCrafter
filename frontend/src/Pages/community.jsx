@@ -7,7 +7,8 @@ import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { useAuth } from "../contexts/authContext";
-
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import AddIcon from '@mui/icons-material/Add';
 const Community = () => {
   const [posts, setPosts] = useState([]);
   const [isLogggedIn,setIsLoggedIn]=useState(false);
@@ -54,6 +55,14 @@ const Community = () => {
 
   return (
     <div className="allPages" id="community-wrapper">
+      <div className="com-buts">
+        <div className="com-men">
+          <button onClick={()=>navigate("/community/mentions")}><AlternateEmailIcon/> Mentions</button>
+        </div>
+        <div className="com-men">
+          <button onClick={()=>navigate("/community/createPost")}><AddIcon/> New Community Post</button>
+        </div>
+      </div>
       {posts.map((post) => (<>
         <div className="post-card" key={post._id} onClick={()=>navigate(`${post._id}`)}>
           <div className="post-header">

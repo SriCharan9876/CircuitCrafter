@@ -566,6 +566,8 @@ const AddModel = () => {
                             <option value="resistor" className="category-options">Resistor</option>
                             <option value="capacitor" className="category-options">Capacitor</option>
                             <option value="inductor" className="category-options">Inductor</option>
+                            <option value="voltage" className="category-options">Voltage</option>
+                            <option value="diode" className="category-options">Diode</option>
                             {/* Add more if needed */}
                         </select>
                         <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>   

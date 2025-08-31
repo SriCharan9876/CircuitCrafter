@@ -119,7 +119,8 @@
 
 .tag-buttons button {
   padding: 8px 14px;
-  font-size: 14px;
+  font-size: 1rem;
+  /* font-size: 14px; */
   border-radius: 20px;
   border: 1px solid #ccc;
   background: #f9f9f9;
@@ -144,4 +145,27 @@
   color: var(--text-primary);
   outline: none;
   background-color: transparent;
+}
+.tag-input-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; /* space between input and button */
+}
+.tag-add-btn {
+  background-color: white;
+  border: none;
+  border-radius: 20px;
+  width: 5.2rem;
+  height: 2.2rem;
+  color: black;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tag-add-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }

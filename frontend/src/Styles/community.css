@@ -107,3 +107,28 @@ hr {
   padding-bottom: 4px;             /* space between text and border */
   display: inline-block;           /* so border fits text width */
 }
+.com-buts{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin-bottom: 2rem;
+}
+.com-men button{
+  width: auto;
+  height: auto;
+  min-width: 15vw;
+  cursor: pointer;
+  min-height: 5vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  font-size: larger;
+  font-family: var(--font-heading);
+  background: var(--bg-translucent);
+  gap: 0.5rem;
+  color: var(--text-primary);
+  border: none;
+  border-radius: 0.5rem;
+}
