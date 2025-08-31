@@ -6,11 +6,13 @@
   left: 0;
 
   /*Glassy effect background:*/
-  background: rgba(255, 255, 255, 0.15);
+  /* background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px); */
+  background: var(--side-bar);
+  color: black;
 
-  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05); 
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.05);
   transition: width 0.5s ease;
   z-index: 1000;
   overflow-y: auto;
@@ -34,7 +36,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: black;
+  color: var(--text-side);
   text-decoration: none;
   font-size: 1.2rem;
   padding: 1.3rem 1.3rem;

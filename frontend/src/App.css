@@ -41,7 +41,7 @@ html, body {
   --bg-primary-dark: linear-gradient(to bottom, #000000 0%, #1092f6 100%);
   --bg-secondary-dark: linear-gradient(-45deg, #05050500 0%, #000407 100%);
   --bg-translucent-dark:#cccccc58;
-
+  
   --bg-hover-dark:rgba(255, 255, 255, 0.25);
   --bg-hover2-dark:rgba(255, 255, 255, 0.05);
 
@@ -80,6 +80,8 @@ html, body {
   --bg-hover:var(--bg-hover-light);
   --bg-hover2:var(--bg-hover2-light);
   --accent:var(--accent-light);
+  --side-bar:var(--accent-light);
+  --text-side:var(--text-primary-light);
 }
 
 .dark-theme {
@@ -93,6 +95,8 @@ html, body {
   --bg-hover:var(--bg-hover-dark);
   --bg-hover2:var(--bg-hover2-dark);
   --accent:var(--accent-dark);
+  --side-bar:var(--text-primary-light);
+  --text-side:var(--accent-light);
 }
 
 @media (max-width:650px) {

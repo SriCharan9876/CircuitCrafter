@@ -63,30 +63,42 @@ const Community = () => {
           <button onClick={()=>navigate("/community/createPost")}><AddIcon/> New Community Post</button>
         </div>
       </div>
-      {posts.map((post) => (<>
-        <div className="post-card" key={post._id} onClick={()=>navigate(`${post._id}`)}>
-          <div className="post-header">
-            <img src={post.author?.profilePic?.url} alt="Profile" className="profile-img" />
-            <div className="user-info">
-              <p className="username">{post.author?.name || "Anonymous User"}</p>
-              <p className="time">{new Date(post.createdAt).toLocaleString()}</p>
+      {[...posts]
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .map((post) => (
+          <div className="post-card" key={post._id} onClick={() => navigate(`${post._id}`)}>
+            <div className="post-header">
+              <img src={post.author?.profilePic?.url} alt="Profile" className="profile-img" />
+              <div className="user-info">
+                <p className="username">{post.author?.name || "Anonymous User"}</p>
+                <p className="time">{new Date(post.createdAt).toLocaleString()}</p>
+              </div>
+            </div>
+            <div className="post-body">
+              <h3 className="post-title">{post.title}</h3>
+              <p className="post-content">
+                {post.content.split(" ").slice(0, 70).join(" ")}
+                {post.content.split(" ").length > 30 && "..."}
+              </p>
+            </div>
+            <div className="post-footer">
+              <span
+                onClick={(e) => {
+                  e.stopPropagation();
+                  likeIt(post._id);
+                }}
+                style={{
+                  color: token && post.likes?.includes(user?._id) ? "red" : "inherit",
+                }}
+              >
+                <ThumbUpIcon fontSize="small" /> {post.likes?.length || 0}
+              </span>
+              <span><VisibilityIcon fontSize="small" /> {post.views?.length || 0}</span>
+              <span><ChatBubbleOutlineIcon fontSize="small" /> {post.comments?.length || 0}</span>
             </div>
           </div>
-          <div className="post-body">
-            <h3 className="post-title">{post.title}</h3>
-            <p className="post-content">
-              {post.content.split(" ").slice(0, 70).join(" ")}{post.content.split(" ").length > 30 && "..."}
-            </p>
-            {/* <p className="post-content">{post.content}</p> */}
-          </div>
-          <div className="post-footer">
-            <span onClick={(e) => {e.stopPropagation();  likeIt(post._id);}} style={{ color: token && post.likes?.includes(user?._id) ? "red" : "inherit" }}><ThumbUpIcon fontSize="small"/> {post.likes?.length || 0}</span>
-            <span><VisibilityIcon fontSize="small" /> {post.views?.length || 0}</span>
-            <span><ChatBubbleOutlineIcon fontSize="small" /> {post.comments?.length || 0}</span>
-          </div>
-        </div>
-        </>
       ))}
+      
     </div>
   );
 };

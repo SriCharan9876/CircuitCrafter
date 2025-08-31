@@ -274,6 +274,10 @@
   box-shadow: 0 2px 12px rgba(0,0,0,0.8);
   border: 1px solid black;
 }
+.sort-head{
+  color: var(--text-primary);
+  padding-right: 2rem;
+}
 
 @media (max-width: 1170px) {
   .explore-hero-animation-container{
@@ -326,5 +330,18 @@
   .active{
     background-color: var(--accent);
     color: var(--primary-blue);
+  }
+}
+
+@media (max-width:480px) {
+  .models-view-page{
+    padding: 1.5rem;
+  }
+  .sortby-text{
+    display: none;
+  }
+  .sort-head{
+    font-size: medium;
+    padding: 1rem;
   }
 }

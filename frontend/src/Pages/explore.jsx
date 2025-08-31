@@ -214,6 +214,7 @@ const Explore = () => {
             
             <div className="explore-subnavbar">
                 <div className="explore-sortby-types">
+                    <h2 className="sort-head">Sort By:  </h2>
                     <div className="sortby-text" style={{color:"var(--text-primary)"}} title="sort by">
                         <SortIcon sx={{fontSize:"30px"}}/>
                     </div>

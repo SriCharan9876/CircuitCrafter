@@ -36,12 +36,12 @@
 }
 
 .cancel {
-  background-color: #f44336;
+  background: var(--bg-translucent);
   color: white;
 }
 
 .post {
-  background-color: #2196f3;
+  background: var(--bg-translucent);
   color: white;
 }
 
