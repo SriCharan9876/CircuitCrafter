@@ -7,8 +7,10 @@ import ModelBox from "../features/ModelBox";
 const favourites=()=>{
     const { token } = useAuth(); // use context
     const [favModels, setfavModels] = useState([]);
+    const [loadingModels,setLoadingModels]=useState(false);
     const getModels = async () => {
         try {
+            setLoadingModels(true);
             const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/favModels`, {
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` },
@@ -22,6 +24,8 @@ const favourites=()=>{
         } catch (err) {
             console.error("Error fetching models:", err);
             notify.error("Error occurred while fetching models")
+        }finally{
+            setLoadingModels(false);
         }
     };
     useEffect(()=>{
@@ -29,13 +33,15 @@ const favourites=()=>{
     },[])
     return(
         <div className="allPages">
-            <div className="favmodels-page" style={{padding:"3rem 3rem"}}>
+            <div className="favmodels-page" style={{padding:"3rem 3rem", minHeight:"50vh"}}>
                 <div className="subnavbar">
                     <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Explore your saved models</h1>
                 </div>
-                {favModels.length === 0 ? (
+                {favModels.length === 0 ? loadingModels?(
                 <h1 style={{color:"var(--text-primary)"}}>Loading Saved models.....</h1>
-                ) : (
+                ):(
+                    <h1 style={{color:"var(--text-primary)"}}>No Saved models found</h1>
+                )  : (
                 <div className="model-grid">
                     {favModels.map((model) => (
                     <ModelBox model={model} key={model._id} onDelete={getModels} />

@@ -8,6 +8,7 @@ import {notify} from "../features/toastManager"
 const MyModels = () => {
     const { token } = useAuth();
     const [allModels, setAllModels] = useState([]);
+    const [loadingModels,setLoadingModels]=useState(false);
 
     const getModels = async () => {
         try {
@@ -24,6 +25,8 @@ const MyModels = () => {
         } catch (err) {
             console.error("Error fetching models:", err);
             notify.error("Error occurred while fetching models")
+        }finally{
+            setLoadingModels(false);
         }
     };
 
@@ -34,11 +37,13 @@ const MyModels = () => {
 
     return (
         <div className="allPages">
-            <div className="mymodels-page" style={{padding:"4rem 2rem"}}>
+            <div className="mymodels-page" style={{padding:"4rem 2rem", minHeight:"50vh"}}>
                 <h1 style={{textAlign:"center", marginBottom:"3rem", color:"var(--text-primary)"}}>Explore your models</h1>
                 <div className="model-grid">
-                {allModels.length === 0 ? (
+                {allModels.length === 0 ? loadingModels?(
                     <h1 style={{color:"var(--text-primary)"}}>Loading your models.....</h1>
+                ) :(
+                    <h1 style={{color:"var(--text-primary)"}}>Start creating models to manage your models!</h1>
                 ) : (
                     allModels.map((model) => (
                         <ModelBox model={model} key={model._id} onDelete={getModels}/>

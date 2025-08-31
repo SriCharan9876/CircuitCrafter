@@ -120,3 +120,14 @@
 .model-button:active {
   transform: scale(0.97);
 }
+
+.modelbox-rejectreason{
+  border:1px solid black;
+  padding:0.5rem;
+  width:90%;
+  margin: 2%;
+  background-color:var(--accent);
+  color:var(--text-primary);
+  border-radius: 1rem;
+}
+

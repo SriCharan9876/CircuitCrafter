@@ -36,7 +36,9 @@ const EachModel=()=>{
     const isApproved = model.status === "approved";
     const allFilled = model.designParameters?.every(param => inputValues[param.parameter]);
     const {theme}=useTheme();
-    const [AdminArr,setAdminArr] = useState([]); 
+    const [AdminArr,setAdminArr] = useState([]);
+    const [rejectReason,setRejectreason]=useState("");
+    const [rejectClicked, setRejectClicked]=useState(false);
 
     const getThisModel = async () => {
         try {
@@ -155,6 +157,14 @@ const EachModel=()=>{
     const updateStatus=async(e,newStatus)=>{
         e.stopPropagation();
         try{
+            if(newStatus==="rejected"){
+                if(!rejectClicked){
+                    setRejectClicked(true);
+                    return;
+                }else{
+                    setRejectClicked(false);
+                }
+            }
             const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status:newStatus},{
                 withCredentials:true,
                 headers:{Authorization:`Bearer ${token}`}
@@ -163,6 +173,13 @@ const EachModel=()=>{
             if(res.data.updated){
                 const roomId =import.meta.env.VITE_PUBLIC_ROOM;
                 let statusMessage=`Your model "${model.modelName}" is ${newStatus} `;
+                if(newStatus==="rejected"){
+                    if(rejectReason.trim()){
+                        statusMessage=`Your model "${model.modelName}" is rejected.   Reason: ${rejectReason}`;
+                    }else{
+                        statusMessage=`Your model "${model.modelName}" is rejected.   Reason: unspecified`;
+                    }
+                }
                 let adminMesssage=`Model ${model.modelName} is waiting for approval (Sent for Re-Verification by ${user.name})`;
 
                 if(newStatus==="pending"){
@@ -207,7 +224,7 @@ const EachModel=()=>{
             try {
                 await navigator.share({
                     title: model.modelName,
-                    text: "Check out this model on our platform!",
+                    text: `Check out Check out "${model.modelName}" on Circuit Crafter — a platform for creating and sharing circuit designs!on Circuit Crafter — a platform for creating and sharing circuit designs!`,
                     url: modelUrl,
                 });
             } catch (err) {
@@ -244,7 +261,9 @@ const EachModel=()=>{
                 console.error("Error fetching adminIds", error);
             }
         }
-        fetchAdminIds();
+        if(token){
+            fetchAdminIds();
+        }
     }, [id,user]);
 
     useEffect(()=>{
@@ -351,6 +370,20 @@ const EachModel=()=>{
                             )}
 
                         </div>
+
+                        {rejectClicked&&
+                            <div className="modelbox-msg">
+                                <input
+                                            type="text"
+                                            value={rejectReason}
+                                            onClick={(e)=>e.stopPropagation()}
+                                            onChange={(e) => {setRejectreason(e.target.value)}}
+                                            placeholder={`Give reason for rejection`}
+                                            className="modelbox-rejectreason"
+                                            style={{padding:"1rem",borderRadius:"1.5rem"}}
+                                        />
+                            </div>
+                        }
 
                         <div className="model-description-body">
                             <p className="model-about">{model.description || "No description available for this model"}</p>

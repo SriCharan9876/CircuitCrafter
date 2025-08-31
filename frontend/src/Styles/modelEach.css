@@ -12,7 +12,7 @@
 }
 
 .model-titlebox{
-  padding: 0 2rem;
+  padding: 0 0rem;
 }
 
 .model-title{
@@ -113,11 +113,11 @@
 
 .model-description{
   /* background-color: #0056b3; */
-  width: 40rem;
+  /* width: 40rem; */
   flex: 1;
   display: flex;
   flex-direction: column;
-  padding: 2rem 5rem;
+  padding: 2rem 2rem 2rem 5rem;
   font-size: 1.8rem;
 }
 
@@ -204,6 +204,7 @@
 }
 
 .model-engagement{
+  margin-top: 2rem;
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
@@ -443,13 +444,31 @@ input, textarea, [contenteditable="true"] {
   .model-description{
     width: 100%;
     min-height: 40rem;
+    padding: 2rem 0;
   }
   .model-view-page{
-    padding: 3rem 1rem;
+    padding: 3rem 3rem;
   }
 }
 
 @media (max-width: 670px) {
+  .model-header-container{
+    display: flex;
+    flex-direction: column;
+    /* background-color: #0056b3; */
+    justify-content: space-between;
+  }
+  .model-interactbox{
+    /* background-color: skyblue; */
+    display: flex;
+    flex-direction: row;
+    justify-content: end;
+    align-items: center;
+    padding-right: 0rem;
+    padding-top: 1rem;
+    gap: 1rem;
+    font-size: 1.2rem;
+  }
   .model-preview{
     display: flex;
     justify-content: center;
@@ -460,15 +479,13 @@ input, textarea, [contenteditable="true"] {
     height: 90%;
   }
   .model-description{
-    width: 100%;
-    min-height: 40rem;
+    min-height: 30rem;
+    font-size: 1.6rem;
+    gap: 1rem;
   }
   .model-customize-scrollerbtn{
     display: none;
   }
-}
-
-@media (max-width: 670px) {
   .model-specifics{
     flex-direction: column;
     align-items: center;
@@ -487,7 +504,7 @@ input, textarea, [contenteditable="true"] {
 @media (max-width: 500px) {
   .model-title{
     font-size: 2rem;
-    margin: 2rem 0 1rem 0 ;
+    width: 100%;
   }
   .model-status-tag{
     font-size:1.2rem;
@@ -500,6 +517,21 @@ input, textarea, [contenteditable="true"] {
 
   .model-owner-contributions{
     font-size: 1rem;
+  }
+
+  .model-customization-accordion.open {
+    max-width: 90%;
+    padding: 3rem 0.2rem;
+    margin-top: 3rem;
+  }
+
+  .customization-input-section{
+    padding: 2rem 0rem;
+  }
+
+  .customization-input-field{
+    padding: 0.5rem 0rem;
+    gap: 1rem;
   }
 
 }

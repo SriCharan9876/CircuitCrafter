@@ -23,6 +23,8 @@ const ModelBox=(({model, onDelete})=>{
     const {theme}=useTheme();
     const color = (theme==="dark-theme")?"white":"grey";
     const [AdminArr,setAdminArr] = useState([]); 
+    const [rejectReason,setRejectreason]=useState("");
+    const [rejectClicked, setRejectClicked]=useState(false);
 
     const deleteModel = async (modelId) => {
         try {
@@ -53,6 +55,14 @@ const ModelBox=(({model, onDelete})=>{
     const updateStatus=async(e,newStatus)=>{
         e.stopPropagation();
         try{
+            if(newStatus==="rejected"){
+                if(!rejectClicked){
+                    setRejectClicked(true);
+                    return;
+                }else{
+                    setRejectClicked(false);
+                }
+            }
             const res=await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/models/${model._id}/status`,{status:newStatus},{
                 headers:{Authorization:`Bearer ${token}`},
                 withCredentials:true
@@ -60,6 +70,13 @@ const ModelBox=(({model, onDelete})=>{
             if(res.data.updated){
                 const roomId =import.meta.env.VITE_PUBLIC_ROOM;
                 let statusMessage=`Your model "${model.modelName}" is ${newStatus} `;
+                if(newStatus==="rejected"){
+                    if(rejectReason.trim()){
+                        statusMessage=`Your model "${model.modelName}" is rejected.   Reason: ${rejectReason}`;
+                    }else{
+                        statusMessage=`Your model "${model.modelName}" is rejected.   Reason: unspecified`;
+                    }
+                }
                 let adminMesssage=`Model ${model.modelName} is waiting for approval (Sent for Re-Verification by ${user.name})`;
 
                 if(newStatus==="pending"){
@@ -129,7 +146,7 @@ const ModelBox=(({model, onDelete})=>{
             try {
                 await navigator.share({
                     title: model.modelName,
-                    text: "Check out this model on our platform!",
+                    text: `Check out Check out "${model.modelName}" on Circuit Crafter — a platform for creating and sharing circuit designs!on Circuit Crafter — a platform for creating and sharing circuit designs!`,
                     url: modelUrl,
                 });
             } catch (err) {
@@ -222,6 +239,19 @@ const ModelBox=(({model, onDelete})=>{
                 )}
 
             </div>
+
+            {rejectClicked&&
+                <div className="modelbox-msg">
+                    <input
+                                type="text"
+                                value={rejectReason}
+                                onClick={(e)=>e.stopPropagation()}
+                                onChange={(e) => {setRejectreason(e.target.value)}}
+                                placeholder={`Give reason for rejection`}
+                                className="modelbox-rejectreason"
+                            />
+                </div>
+            }
         </div>
     )
 })

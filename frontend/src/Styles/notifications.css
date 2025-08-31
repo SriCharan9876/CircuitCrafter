@@ -1,16 +1,16 @@
-/* #notification-container {
-  position: relative;
-  height: 65vh;
-  width: 90vw;
+.notifications-page {
+  padding: 1rem 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-} */
+}
 .notification-list{
   min-height: 60vh;
-  width: 35vw;
+  width: 100%;
+  max-width:48rem;
   align-self: center;
 }
+
 .notification-header {
   color: var(--text-primary);
   padding: 10px;
@@ -21,15 +21,15 @@
   justify-content: center;
 }
 .clearAll{
-  padding: 0.5rem;
-  margin-left: 1rem;
+  padding: 0.5rem 1rem;
+  margin-left: 2rem;
+  border: none;
   border-radius: 10px;
-  font-size: 1rem;
-  background-color: red;
-  color: white;
+  font-size: 1.2rem;
+  background-color: var(--text-secondary);
   cursor: pointer;
   font-weight: 600;
-  border: 1px solid red;
+  color: var(--accent);
 }
 
 /* .notification-list {
@@ -50,7 +50,7 @@
   padding: 8px;
   /* border-radius: 18px;
   border: 1px solid #ccc; */
-  width: 40rem;
+  /* width: 40rem; */
   min-height: 10vh;
   display: flex;
   height: auto;
@@ -58,15 +58,6 @@
   justify-content: space-around;
 }
 
-/* .notification-item {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  font-size: 1.3rem;
-  transition: transform 0.3s ease;
-}
-.notification-item:hover{
-  transform: scale(1.05);
-} */
 .eachNote {
   background: var(--bg-secondary);
   margin-bottom: 10px;
@@ -75,13 +66,14 @@
   border: 1px solid #ccc;
   font-size: 1.3rem;
   transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
 }
 .eachNote:hover{
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
-/* .notification-item.received {
-  background-color: #fff3cd; 
-} */
 
 .notification-sender {
   font-weight: bold;
@@ -96,45 +88,11 @@
   color: var(--text-primary);
 }
 
-.notification-form {
-  display: flex;
-}
-
-.notification-input {
-  /* flex: 1; */
-  border: none;
-  padding: 10px;
-  font-size: 1em;
-  outline: none;
-}
-
-.notification-send-btn {
-  background-color: #007bff;
-  color: white;
-  border: none;
-  padding: 0 15px;
-  cursor: pointer;
-}
-
-.notification-send-btn:hover {
-  background-color: #0056b3;
-}
-.eachNote{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 1rem;
-}
 .clear{
   font-family: var(--font-heading);
-  font-size: 2rem;
-  color: red;
+  color: var(--text-secondary);
   cursor: pointer;
-  padding: 0.1rem;
-  border-radius: 10px;
-  width: 2rem;
-  font-weight: bolder;
-  height: 2rem;
+  padding: 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -142,7 +100,26 @@
 }
 
 .clear:hover{
-  background-color: rgb(248, 114, 114);
   color: white;
   transform: rotate(90deg);
+}
+
+
+@media (max-width: 970px) {
+  .notification-list{
+    max-width: none;
+    width: 80%;
+  }
+}
+
+@media (max-width: 640px) {
+  .notifications-page{
+    padding: 1rem;
+  }
+  .notification-list{
+    width: 90%;
+  }
+  .clear{
+    padding: 0.5rem;
+  }
 }

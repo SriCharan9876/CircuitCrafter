@@ -4,6 +4,7 @@ import { notify } from "../features/toastManager";
 import { useAuth } from "../contexts/authContext";
 import "../Styles/notifications.css"
 import axios from "axios";
+import ClearIcon from '@mui/icons-material/Clear';
 
 const Notification = () => {
   const { token, user,loadingUser,numNot,setNumNot,allNotifications, setNotifications,emitPublicMessage,emitPrivateMessage } = useAuth();
@@ -53,7 +54,8 @@ const Notification = () => {
   }
 
   return (
-    <div className="allPages" id="notification-container">
+    <div className="allPages">
+    <div className="notifications-page">
       {/* Header */}
       <h1 className="notification-header">Notifications <button className="clearAll" onClick={()=>clearAll()}>Clear All</button></h1>
 
@@ -72,33 +74,39 @@ const Notification = () => {
               <div className="notification-sender">{note.sender}</div>
               <div className="notification-message">{note.message}</div>
               <div className="notification-time">
-                {new Date(note.time).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                })}
+                {(() => {
+                  const date = new Date(note.time);
+                  const today = new Date();
+
+                  const isToday =
+                    date.getDate() === today.getDate() &&
+                    date.getMonth() === today.getMonth() &&
+                    date.getFullYear() === today.getFullYear();
+
+                  return isToday
+                    ? date.toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : date.toLocaleDateString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        year: "numeric",
+                        month: "short",
+                        day: "numeric",
+                      });
+                })()}
               </div>
+
             </div>
             <div className="clear" onClick={()=>closeNoti(note._id)}>
-              x
+              <ClearIcon sx={{ fontSize: 32}}/>
             </div>
             </div>
           ))
         )}
       </div>
-
-      {/* Debug message input */}
-      <form className="notification-form" onSubmit={handlePublicSubmit}>
-        <input
-          type="text"
-          value={newMsg}
-          onChange={(e) => setnewMsg(e.target.value)}
-          placeholder="Type debug message..."
-          className="notification-input"
-        />
-        <button type="submit" className="notification-send-btn">
-          Send
-        </button>
-      </form>
+    </div>
     </div>
   );
 };
