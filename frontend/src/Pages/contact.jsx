@@ -12,7 +12,7 @@ const Contact = () => {
       name: "Navaneeth A B S",
       email: "navaneethabs.2006@gmail.com",
       linkedin: "https://www.linkedin.com/in/navaneeth-adharapuram-190686278",
-      profilePic: "https://lh3.googleusercontent.com/a/ACg8ocKDJ9Q6PhNQv3y1rKy9uRQGu4K5q_SiyFjm3tApPoRJsFaCTnlX=s96-c",
+      profilePic: "https://res.cloudinary.com/du1tos77l/image/upload/v1756991919/navaneeth2_ydnram.jpg",
       github:"https://github.com/navaneethgold",
       telegram:"https://t.me/+nl-Q0sG3IGY0Mjc1"
     },
