@@ -205,8 +205,8 @@ const Explore = () => {
 
                 <aside className="explore-hero-animation-container">
                     <video width="640" height="360" autoPlay muted loop playsInline className="explore-hero-animation" >
-                        <source src="https://res.cloudinary.com/du1tos77l/video/upload/v1757343254/Aug_01__2345_24s_202509082016_xew7b_uokith.mp4" type="video/mp4"></source>
-                        <source src="https://res.cloudinary.com/du1tos77l/video/upload/v1757343254/Aug_01__2345_24s_202509082016_xew7b_uokith.mp4" type="video/ogg"></source>
+                        <source src="https://res.cloudinary.com/di75recky/video/upload/v1766602449/CircuitCrafter-demo_boqw7k.mp4"></source>
+                        <source src="https://res.cloudinary.com/di75recky/video/upload/v1766602449/CircuitCrafter-demo_boqw7k.mp4" type="video/ogg"></source>
                         Your browser does not support the video tag.
                     </video>
                 </aside>
