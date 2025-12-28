@@ -577,6 +577,7 @@ const EditModel = () => {
                   <option value="resistor">Resistor</option>
                   <option value="capacitor">Capacitor</option>
                   <option value="inductor">Inductor</option>
+                  <option value="text">Text variable</option>
                   {/* Add more if needed */}
               </select>
               <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>   
