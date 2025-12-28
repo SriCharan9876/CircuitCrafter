@@ -9,17 +9,17 @@ import axios from "axios";
 import { notify } from "../features/toastManager";
 
 const MyProfile = () => {
-  const { user, logout,token } = useAuth();
+  const { user, logout, token } = useAuth();
   const navigate = useNavigate();
-  const deleteAcc=async()=>{
+  const deleteAcc = async () => {
     const deletion = await axios.delete(`${import.meta.env.VITE_API_BASE_URL}/api/auth/deleteAccount`, {
       withCredentials: true,
       headers: { Authorization: `Bearer ${token}` }
     });
-    if(deletion.data.success){
+    if (deletion.data.success) {
       notify.success("Successfully deleted account");
       navigate("/signup")
-    }else{
+    } else {
       notify.error("Failed to delete account");
       console.log(deletion.data.error)
     }
@@ -42,30 +42,30 @@ const MyProfile = () => {
               <div className="profile-secondarybtns">
                 {user.generatedFile?.url && (
                   <button className="profile-btn proHead">
-                      <a href={user.generatedFile.url} target="_blank" rel="noreferrer">Download generated file</a>
-                       <DownloadIcon sx={{fontSize:"25px"}}/>
+                    <a href={user.generatedFile.url} target="_blank" rel="noreferrer">Download generated file</a>
+                    <DownloadIcon sx={{ fontSize: "25px" }} />
                   </button>
                 )}
                 <button className="profile-btn proHead" onClick={() => navigate(`/models/mymodels`)}>
-                  Explore your models <RocketLaunchIcon/>
+                  Explore your models <RocketLaunchIcon />
                 </button>
               </div>
               <div className="profile-mainbtns">
                 <button className="profile-btn logout-btn proHead" onClick={deleteAcc}>
-                  Delete Account <DeleteForeverIcon/>
+                  Delete Account <DeleteForeverIcon />
                 </button>
                 <button className="profile-btn logout-btn proHead" onClick={logout}>
-                  Log Out <LogoutIcon/>
+                  Log Out <LogoutIcon />
                 </button>
               </div>
-              
+
             </div>
 
           </div>
         ) : (
-          <h1 style={{color:"var(--text-primary)"}}>Loading your profile data.....</h1>
+          <h1 style={{ color: "var(--text-primary)" }}>Loading your profile data.....</h1>
         )}
-    </div>
+      </div>
     </div>
   );
 };

@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect,useRef } from "react";
+import { createContext, useContext, useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import axios from "axios";
@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const socketRef = useRef(null);
   const [allNotifications, setNotifications] = useState([]);
   const token = localStorage.getItem("token");
-  const [numNot,setNumNot]=useState(0);
+  const [numNot, setNumNot] = useState(0);
   const initializeUser = async () => {
     setLoadingUser(true);
     try {
@@ -45,58 +45,57 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error("Auth initialization error:", err);
       logout();
-    }finally{
+    } finally {
       setLoadingUser(false);
     }
   };
 
   useEffect(() => {
-    if (!token){
+    if (!token) {
       setLoadingUser(false);
       return;
     }
     initializeUser();
   }, [token]);
   useEffect(() => {
-  if (!token || !user) return;
+    if (!token || !user) return;
 
-  socketRef.current = io(import.meta.env.VITE_API_BASE_URL, {
-    withCredentials: true,
-    auth: { userId: user._id },
-  });
-
-  socketRef.current.on("connect", () => {
-    console.log("✅ Socket connected:", socketRef.current.id);
-
-    // Join public room immediately after connect
-    socketRef.current.emit("join-public-room", {
-      roomId: import.meta.env.VITE_PUBLIC_ROOM,
+    socketRef.current = io(import.meta.env.VITE_API_BASE_URL, {
+      withCredentials: true,
+      auth: { userId: user._id },
     });
 
-    // 🔥 Now safe to emit a test message
-    // socketRef.current.emit("public-message", {
-    //   username: "navs",
-    //   newMsg: "hello world",
-    //   id: import.meta.env.VITE_PUBLIC_ROOM,
-    // });
-  });
+    socketRef.current.on("connect", () => {
 
-  socketRef.current.on("public-message", ({ username, newMsg, id }) => {
-    const newtxt = { sender: username, message: newMsg, roomId: id, time: Date.now() };
-    setNotifications(prev => [...prev, newtxt]);
-  });
-  socketRef.current.on("private-message", ({ username, newMsg, id,receiverId }) => {
-    if(receiverId==user._id){
+      // Join public room immediately after connect
+      socketRef.current.emit("join-public-room", {
+        roomId: import.meta.env.VITE_PUBLIC_ROOM,
+      });
+
+      // 🔥 Now safe to emit a test message
+      // socketRef.current.emit("public-message", {
+      //   username: "navs",
+      //   newMsg: "hello world",
+      //   id: import.meta.env.VITE_PUBLIC_ROOM,
+      // });
+    });
+
+    socketRef.current.on("public-message", ({ username, newMsg, id }) => {
       const newtxt = { sender: username, message: newMsg, roomId: id, time: Date.now() };
       setNotifications(prev => [...prev, newtxt]);
-    }
-  });
+    });
+    socketRef.current.on("private-message", ({ username, newMsg, id, receiverId }) => {
+      if (receiverId == user._id) {
+        const newtxt = { sender: username, message: newMsg, roomId: id, time: Date.now() };
+        setNotifications(prev => [...prev, newtxt]);
+      }
+    });
 
-  return () => {
-    socketRef.current?.disconnect();
-    socketRef.current = null;
-  };
-}, [user, token]);
+    return () => {
+      socketRef.current?.disconnect();
+      socketRef.current = null;
+    };
+  }, [user, token]);
 
   const login = async (token, userDataFromBackend = null) => {
     localStorage.setItem("token", token);
@@ -111,7 +110,7 @@ export const AuthProvider = ({ children }) => {
           },
           withCredentials: true,
         });
-        if (res.data.fetched){ 
+        if (res.data.fetched) {
           setUser(res.data.me);
           getNotifications();
         }
@@ -134,12 +133,12 @@ export const AuthProvider = ({ children }) => {
       console.error("Socket is not connected yet!");
     }
   };
-  const emitPrivateMessage = (username, newMsg, id,receiverId) => {
+  const emitPrivateMessage = (username, newMsg, id, receiverId) => {
     if (socketRef.current) {
-      socketRef.current.emit("private-message", { username, newMsg, id,receiverId });
+      socketRef.current.emit("private-message", { username, newMsg, id, receiverId });
       const newtxt = {
         sender: username,
-        receiverId:receiverId,
+        receiverId: receiverId,
         message: newMsg,
         roomId: id,
         time: Date.now(),
@@ -159,9 +158,8 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-    
+
       if (res.data.posted) {
-        console.log("Notification saved:", notifi);
         getNotifications();
       } else {
         console.warn("Notification save failed:", res.data);
@@ -181,9 +179,8 @@ export const AuthProvider = ({ children }) => {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
-    
+
       if (res.data.posted) {
-        console.log("Notification saved:", notifi);
         getNotifications();
       } else {
         console.warn("Notification save failed:", res.data);
@@ -193,16 +190,15 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const getNotifications=async()=>{
-    const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`,{
+  const getNotifications = async () => {
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/notifications`, {
       withCredentials: true,
       headers: { Authorization: `Bearer ${token}` },
     })
-    if(res.data.success){
+    if (res.data.success) {
       setNotifications(res.data.notifications);
       setNumNot(res.data.notifications.length);
-      console.log(res.data.notifications);
-    }else{
+    } else {
       notify.error("Failed to fetch notifications");
     }
   }
@@ -214,7 +210,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loadingUser,numNot,setUser,login, logout,initializeUser,setNumNot,allNotifications,setNotifications,emitPublicMessage,emitPrivateMessage }}>
+    <AuthContext.Provider value={{ user, token, loadingUser, numNot, setUser, login, logout, initializeUser, setNumNot, allNotifications, setNotifications, emitPublicMessage, emitPrivateMessage }}>
       {children}
     </AuthContext.Provider>
   );

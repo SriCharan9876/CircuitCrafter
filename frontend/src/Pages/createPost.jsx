@@ -18,7 +18,7 @@ const CreatePost = () => {
   const [activeTag, setActiveTag] = useState(null); // which input is open
   const [inputValue, setInputValue] = useState("");
 
-  const { token,emitPublicMessage,emitPrivateMessage,user } = useAuth();
+  const { token, emitPublicMessage, emitPrivateMessage, user } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,45 +28,44 @@ const CreatePost = () => {
     }
   }, []);
 
-  const handleAddTag = async() => {
+  const handleAddTag = async () => {
     if (!inputValue.trim()) return;
 
     const value = inputValue.trim();
-    if(activeTag === "people" && !people.includes(value)){
-      const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/check-exist/${value}`,{
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` }
+    if (activeTag === "people" && !people.includes(value)) {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/check-exist/${value}`, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` }
       })
-      if(!res.data.exist){
+      if (!res.data.exist) {
         notify.error("User doesn't exist");
-      }else{
-        setPeople([...people, res.data.user]); 
-        console.log(people)
+      } else {
+        setPeople([...people, res.data.user]);
       }
     }
-    if (activeTag === "post" && !posts.includes(value)){
-        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/check-exist/${value}`,{
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        if(!res.data.exist){
-          notify.error("Post doesn't exist");
-        }else{
-          setPosts([...posts, res.data.post]);
-        }
+    if (activeTag === "post" && !posts.includes(value)) {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/community/check-exist/${value}`, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.data.exist) {
+        notify.error("Post doesn't exist");
+      } else {
+        setPosts([...posts, res.data.post]);
+      }
     }
-    if (activeTag === "model" && !models.includes(value)){
-        const res=await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/check-exist/${value}`,{
-          withCredentials: true,
-          headers: { Authorization: `Bearer ${token}` }
-        })
-        if(!res.data.exist){
-          notify.error("Model doesn't exist");
-        }else{
-          setModels([...models, res.data.model]); 
-        }
+    if (activeTag === "model" && !models.includes(value)) {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/models/check-exist/${value}`, {
+        withCredentials: true,
+        headers: { Authorization: `Bearer ${token}` }
+      })
+      if (!res.data.exist) {
+        notify.error("Model doesn't exist");
+      } else {
+        setModels([...models, res.data.model]);
+      }
     }
-    
+
     if (activeTag === "topic" && !topics.includes(value)) setTopics([...topics, value]);
     setInputValue("");
     setActiveTag(null); // close after adding
@@ -86,7 +85,7 @@ const CreatePost = () => {
       );
 
       if (res.data.posted) {
-        const id =import.meta.env.VITE_PUBLIC_ROOM;
+        const id = import.meta.env.VITE_PUBLIC_ROOM;
         people.forEach((p) => {
           emitPrivateMessage(
             user.name,
@@ -156,8 +155,8 @@ const CreatePost = () => {
               onKeyDown={(e) => e.key === "Enter" && handleAddTag()}
               autoFocus
             />
-            <button 
-              className="tag-add-btn" 
+            <button
+              className="tag-add-btn"
               onClick={handleAddTag}
               disabled={!inputValue.trim()}  // prevent empty adds
             >

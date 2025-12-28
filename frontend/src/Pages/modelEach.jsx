@@ -104,7 +104,6 @@ const EachModel = () => {
         try {
             const calc2 = model.calcParams.map(each => each.compName);
             const relations = model.relations;
-            console.log("model");
             const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/userfile`, { model, inputValues, calc2, relations }, {
                 withCredentials: true,
                 headers: { Authorization: `Bearer ${token}` }
