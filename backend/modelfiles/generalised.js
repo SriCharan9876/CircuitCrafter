@@ -3,21 +3,6 @@ import path from "path";
 import { v2 as cloudinary } from "cloudinary";
 import streamifier from "streamifier"; // to upload from string/buffer
 import axios from "axios"
-/**
- * Parses LTspice-style values like '1k', '10m', etc. to numeric.
- */
-function parseValue(valStr) {
-    const multipliers = { 'k': 1e3, 'm': 1e-3, 'u': 1e-6, 'n': 1e-9 };
-    valStr = valStr.trim().toLowerCase();
-
-    for (const [suffix, factor] of Object.entries(multipliers)) {
-        if (valStr.endsWith(suffix)) {
-            return parseFloat(valStr.replace(suffix, '')) * factor;
-        }
-    }
-
-    return parseFloat(valStr);
-}
 
 /**
  * Converts numeric values to LTspice-style format.
@@ -71,6 +56,21 @@ async function modifyLtspiceFileFromCloud(inputFileUrl, inputValues, calc2, rela
         }
     }
 
+    for (let i = 0; i < lines.length; i++) {
+        const line = lines[i];
+        if (line.trim().startsWith('TEXT')) {
+            for (const compName of Object.keys(context)) {
+                if (line.includes(compName)) {
+                    const formattedVal = formatValue(context[compName]);
+
+                    lines[i] = line.replace(
+                        new RegExp(`\\b${compName}\\b`, 'g'),
+                        formattedVal
+                    );
+                }
+            }
+        }
+    }
     const modifiedContent = lines.join('\n');
 
     // Step 3: Upload modified content to Cloudinary
@@ -102,7 +102,7 @@ async function modifyLtspiceFileFromCloud(inputFileUrl, inputValues, calc2, rela
 
     return {
         cloudinaryUrl: uploadResult.secure_url,
-        public_id: uploadResult.public_id,  
+        public_id: uploadResult.public_id,
         values: calc2.filter(c => context[c] !== undefined).map(c => ({ [c]: formatValue(context[c]) }))
     };
 

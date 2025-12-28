@@ -3,21 +3,21 @@ import User from "../models/user.js";
 import { v2 as cloudinary } from "cloudinary";
 import BaseModel from "../models/baseModel.js";
 
-export const uploadBaseFile=async(req, res) => {
-  try {
-    if (!req.file || !req.file.path) {
-      return res.status(400).json({ error: 'No file uploaded' });
+export const uploadBaseFile = async (req, res) => {
+    try {
+        if (!req.file || !req.file.path) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        return res.status(200).json({ fileUrl: req.file.path }); // or req.file.url if that's what Cloudinary gives
+    } catch (err) {
+        console.error("Upload error:");
+        console.dir(err, { depth: null });
+        return res.status(500).json({ error: 'Server error during upload' });
     }
-    return res.status(200).json({ fileUrl: req.file.path }); // or req.file.url if that's what Cloudinary gives
-  } catch (err) {
-    console.error("Upload error:");
-    console.dir(err, { depth: null });
-    return res.status(500).json({ error: 'Server error during upload' });
-  }
 };
 
-export const generateUserFile=async (req, res) => {
-    const { model,inputValues,calc2,relations } = req.body;
+export const generateUserFile = async (req, res) => {
+    const { model, inputValues, calc2, relations } = req.body;
     const inputFile = model.fileUrl;
 
     //Deleting current userspicefile if exists
@@ -25,7 +25,7 @@ export const generateUserFile=async (req, res) => {
     if (user.generatedFile?.public_id) {
         try {
             await cloudinary.uploader.destroy(user.generatedFile.public_id, {
-            resource_type: "raw",
+                resource_type: "raw",
             });
         } catch (err) {
             console.warn("Failed to delete previous file:", err.message);
@@ -33,7 +33,7 @@ export const generateUserFile=async (req, res) => {
     }
 
     try {
-        const {cloudinaryUrl,public_id,values}=await modifyLtspiceFileFromCloud(inputFile, inputValues, calc2, relations);
+        const { cloudinaryUrl, public_id, values } = await modifyLtspiceFileFromCloud(inputFile, inputValues, calc2, relations);
         user.generatedFile = {
             public_id,
             url: cloudinaryUrl,
@@ -41,11 +41,11 @@ export const generateUserFile=async (req, res) => {
         };
         await user.save();
 
-        const id=model._id;
-        const newmodel=await BaseModel.findById(id);
-        newmodel.designCount=newmodel.designCount+1;
+        const id = model._id;
+        const newmodel = await BaseModel.findById(id);
+        newmodel.designCount = newmodel.designCount + 1;
         await newmodel.save();
-        res.json({ success: true, message: "Circuit generated successfully." ,cloudinaryUrl,values});
+        res.json({ success: true, message: "Circuit generated successfully.", cloudinaryUrl, values });
     } catch (err) {
         console.error(err);
         res.status(500).json({ success: false, error: "Failed to generate circuit." });
@@ -84,7 +84,7 @@ export const uploadModelPreviewImg = async (req, res) => {
     }
 };
 
-export const uploadCategoryImage=async(req,res)=>{
+export const uploadCategoryImage = async (req, res) => {
     try {
         const result = await cloudinary.uploader.upload(req.file.path, {
             folder: "category_visual"
@@ -102,26 +102,26 @@ export const uploadCategoryImage=async(req,res)=>{
 
 // controllers/files.js (or wherever your uploadComponentFile is)
 export const uploadComponentFile = async (req, res) => {
-  try {
-    // Multer + CloudinaryStorage already handled the upload at this point.
-    // req.file will contain the uploaded file info from Cloudinary.
+    try {
+        // Multer + CloudinaryStorage already handled the upload at this point.
+        // req.file will contain the uploaded file info from Cloudinary.
 
-    if (!req.file || !req.file.path) {
-      // This means either no file was sent or Multer didn't parse it
-      return res.status(400).json({ error: "No file uploaded" });
+        if (!req.file || !req.file.path) {
+            // This means either no file was sent or Multer didn't parse it
+            return res.status(400).json({ error: "No file uploaded" });
+        }
+
+        // Build the response using Multer's CloudinaryStorage output
+        return res.status(200).json({
+            public_id: req.file.filename,       // Cloudinary public_id
+            fileUrl: req.file.path,             // Direct download URL to .asy file
+            originalName: req.file.originalname, // Name of file on user's system
+            mimetype: req.file.mimetype          // e.g., "application/octet-stream"
+        });
+
+    } catch (err) {
+        console.error("Upload error:", err);
+        return res.status(500).json({ error: "Server error during upload" });
     }
-
-    // Build the response using Multer's CloudinaryStorage output
-    return res.status(200).json({
-      public_id: req.file.filename,       // Cloudinary public_id
-      fileUrl: req.file.path,             // Direct download URL to .asy file
-      originalName: req.file.originalname, // Name of file on user's system
-      mimetype: req.file.mimetype          // e.g., "application/octet-stream"
-    });
-
-  } catch (err) {
-    console.error("Upload error:", err);
-    return res.status(500).json({ error: "Server error during upload" });
-  }
 };
 
