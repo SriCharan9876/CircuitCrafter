@@ -10,9 +10,9 @@
   overflow-y: auto;
   min-height: 40vh;
 }
-*{
+/* *{
   user-select: none;
-}
+} */
 /* App.css */
 
 /* ------------------ Layout ------------------ */

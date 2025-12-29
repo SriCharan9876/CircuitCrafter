@@ -274,7 +274,6 @@ const EditModel = () => {
 
         notify.success("model updated successfully");
         setTimeout(() => navigate(`/models/${id}`), 1000);
-        console.log(updatedModel);
         // Reset form after success
         setFormData(initialFormData);
         setFile(null);
@@ -576,10 +575,10 @@ const EditModel = () => {
                   value={param.comp}
                   onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
                 >
-                  <option value="resistor">Resistor</option>
-                  <option value="capacitor">Capacitor</option>
-                  <option value="inductor">Inductor</option>
-                  <option value="text">Text variable</option>
+                  <option value="resistor" className="category-options">Resistor</option>
+                  <option value="capacitor" className="category-options">Capacitor</option>
+                  <option value="inductor" className="category-options">Inductor</option>
+                  <option value="text" className="category-options">Text variable</option>
                   {/* Add more if needed */}
                 </select>
                 <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon /></button>
