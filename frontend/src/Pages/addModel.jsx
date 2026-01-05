@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {notify} from "../features/toastManager"
+import { notify } from "../features/toastManager"
 import { useAuth } from "../contexts/authContext";
 import ProgressBox from "../features/progressBox";
 import ImageUploadBox from "../features/ImageUploadBox";
 import AscFileUploadBox from "../features/AscFileUpload";
-import "../Styles/addModel.css"; 
+import "../Styles/addModel.css";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import NavigateBeforeIcon from '@mui/icons-material/NavigateBefore';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -14,35 +14,42 @@ import AddIcon from '@mui/icons-material/Add';
 import CircularProgress from "@mui/material/CircularProgress";
 import AddLinkIcon from '@mui/icons-material/AddLink';
 import ContentCutIcon from '@mui/icons-material/ContentCut';
+import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome';
+import InfoIcon from '@mui/icons-material/Info';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import { Circuitanalyze } from "../features/AnalyzeCircuit";
 
 const AddModel = () => {
-    const navigate=useNavigate();
+    const navigate = useNavigate();
     const { emitPrivateMessage, token, user } = useAuth();
 
     const [currentStep, setCurrentStep] = useState(1);
-    const stepNames = ["Model details","Upload files","Parameters","Submit"];
-    const stepInfos=["Fill model name", "Upload files", "Add params", "Finish"];
+    const stepNames = ["Model details", "Upload files", "Parameters", "Submit"];
+    const stepInfos = ["Fill model name", "Upload files", "Add params", "Finish"];
 
-    const initialFormData ={
+    const initialFormData = {
         modelName: "",
         typeName: "",
         description: "",
         fileUrl: "",
-        previewImg:{public_id:"",url:""},
-        designParameters: [{parameter: "",upperLimit: 10,lowerLimit: 0,},],
-        calcParams: [{compName: "",comp: "resistor",},],
+        previewImg: { public_id: "", url: "" },
+        designParameters: [{ parameter: "", upperLimit: 10, lowerLimit: 0, },],
+        calcParams: [{ compName: "", comp: "resistor", },],
         relations: [""],
-        specifications:["Gain Range is -1 to -10","Input Amplitude Range is 0-10mV", "Invered output"],
-        prerequisites:[]
+        specifications: ["Gain Range is -1 to -10", "Input Amplitude Range is 0-10mV", "Invered output"],
+        prerequisites: []
     };
     const [formData, setFormData] = useState(initialFormData);
     const [categories, setCategories] = useState([]);
     const [file, setFile] = useState(null);
     const [previewFile, setPreviewFile] = useState(null);
-    const [submitting,setSubmitting]=useState(false);
-    const [components, setComponents]=useState([]);
-    const [newComponents, setNewComponents] = useState([]); 
-    const [AdminArr,setAdminArr] = useState([]); 
+    const [submitting, setSubmitting] = useState(false);
+    const [components, setComponents] = useState([]);
+    const [newComponents, setNewComponents] = useState([]);
+    const [AdminArr, setAdminArr] = useState([]);
+    const [isAnalyzing, setIsAnalyzing] = useState(false);
+    const [assumptions, setAssumptions] = useState([]);
+    const [showAssumptions, setShowAssumptions] = useState(false);
 
     useEffect(() => {
         const fetchCategories = async () => {
@@ -63,12 +70,12 @@ const AddModel = () => {
             }
         };
         fetchComponents();
-        const fetchAdminIds=async ()=>{
-            try{
-            const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`,{
-                headers: { Authorization: `Bearer ${token}` }
-            });
-            setAdminArr(res.data.adminIds);
+        const fetchAdminIds = async () => {
+            try {
+                const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/auth/admins`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                setAdminArr(res.data.adminIds);
             } catch (error) {
                 console.error("Error fetching adminIds", error);
             }
@@ -87,25 +94,25 @@ const AddModel = () => {
                 notify.error("Please fill all required fields");
                 return;
             }
-        }else if(currentStep===2){
-            if(!file){
+        } else if (currentStep === 2) {
+            if (!file) {
                 notify.error("Please upload a circuit file");
                 return;
             }
-        }else{
+        } else {
             const hasInvalidDesignParams = formData.designParameters?.some(para => para.parameter.trim().length === 0);
             const hasInvalidCalcParams = formData.calcParams?.some(para => para.compName.trim().length === 0);
-            const hasInvalidRelations=formData.relations?.some(rel => rel.trim().length === 0);
+            const hasInvalidRelations = formData.relations?.some(rel => rel.trim().length === 0);
 
             if (hasInvalidDesignParams || hasInvalidCalcParams || hasInvalidRelations) {
                 notify.error("Please delete invalid parameters or relations");
                 return;
             }
-            if(formData.designParameters.length>0 && formData.calcParams.length===0){
+            if (formData.designParameters.length > 0 && formData.calcParams.length === 0) {
                 notify.error("atleast one calculation parameter is required for designing model");
                 return;
             }
-            if(formData.relations.length<formData.calcParams.length){
+            if (formData.relations.length < formData.calcParams.length) {
                 notify.error("Atleast one relation should be defined for each calculation parameter");
                 return;
             }
@@ -114,8 +121,59 @@ const AddModel = () => {
     };
 
 
+    const handleAIAnalyzeCircuit = async () => {
+        if (!previewFile) {
+            notify.error("Please upload circuit image before using AI")
+            return;
+        }
+        if (formData.designParameters.length === 0) {
+            notify.error("Please define design parameters before using AI")
+            return;
+        }
+
+        setIsAnalyzing(true);
+        try {
+            const result = await Circuitanalyze(previewFile, formData.designParameters, formData.modelName, formData.typeName, formData.description);
+            console.log("here", result);
+            if (result) {
+                for (const key in result) {
+                    if (key === "design_relations") {
+                        setFormData(prev => ({ ...prev, relations: [] }));
+                        const newRelations = [];
+                        for (const rel in result[key]) {
+                            const ans = rel + "=" + result[key][rel];
+                            newRelations.push(ans);
+                        }
+                        setFormData(prev => ({ ...prev, relations: newRelations }));
+                    }
+                    if (key === "to_be_modified_components") {
+                        setFormData(prev => ({ ...prev, calcParams: [] }));
+                        const newCalcParams = [];
+                        result[key].forEach((calc) => {
+                            const ans = {};
+                            ans.compName = calc.name;
+                            ans.comp = calc.type;
+                            newCalcParams.push(ans);
+                        })
+                        setFormData(prev => ({ ...prev, calcParams: newCalcParams }));
+                    }
+                    if (key === "assumptions" && Array.isArray(result[key])) {
+                        setAssumptions(result[key]);
+                    }
+                }
+                notify.success("AI Analysis Complete! Relations and Components updated.");
+            }
+        } catch (error) {
+            console.error("AI Analysis error:", error);
+            notify.error("AI Analysis failed. Please try again.");
+        } finally {
+            setIsAnalyzing(false);
+        }
+        console.log(formData);
+
+    }
     const handleBack = () => {
-        if (currentStep > 1) setCurrentStep((prevstep)=>(prevstep-1));
+        if (currentStep > 1) setCurrentStep((prevstep) => (prevstep - 1));
     };
 
     const handleSubmit = async (e) => {
@@ -166,8 +224,8 @@ const AddModel = () => {
 
             //Step 1c: Add new components if created in datbase 
             let createdComponentIds = [];
-            if(newComponents.length>0){
-                for(let comp of newComponents){
+            if (newComponents.length > 0) {
+                for (let comp of newComponents) {
                     if (!comp.name.trim()) {
                         notify.error("New component name cannot be empty");
                         setSubmitting(false);
@@ -181,11 +239,11 @@ const AddModel = () => {
                         const fileForm = new FormData();
                         fileForm.append("file", f.file);
 
-                        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/componentfile`,fileForm,
+                        const uploadRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/files/componentfile`, fileForm,
                             {
                                 headers: {
-                                'Content-Type': 'multipart/form-data',
-                                Authorization: `Bearer ${token}`
+                                    'Content-Type': 'multipart/form-data',
+                                    Authorization: `Bearer ${token}`
                                 }
                             }
                         );
@@ -193,7 +251,7 @@ const AddModel = () => {
                         uploadedFiles.push({
                             type: f.type,
                             downloadUrl: uploadRes.data.fileUrl,
-                            public_id:uploadRes.data.public_id,
+                            public_id: uploadRes.data.public_id,
                             savePath: f.savePath
                         });
                     }
@@ -206,7 +264,7 @@ const AddModel = () => {
                         },
                         {
                             withCredentials: true,
-                            headers: {Authorization: `Bearer ${token}` },
+                            headers: { Authorization: `Bearer ${token}` },
                         }
                     );
                     if (compRes.data?.component?._id) {
@@ -216,7 +274,7 @@ const AddModel = () => {
                         setSubmitting(false);
                         return;
                     }
-                    
+
                 }
             }
 
@@ -230,7 +288,7 @@ const AddModel = () => {
             const finalData = {
                 ...formData,
                 fileUrl: uploadedUrl2,
-                previewImg:previewImgData,
+                previewImg: previewImgData,
                 prerequisites: prerequisiteIds
             };
             const modelRes = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/models`, finalData, {
@@ -238,9 +296,9 @@ const AddModel = () => {
                 headers: { Authorization: `Bearer ${token}` },
             });
             if (modelRes.data.added) {
-                const roomId =import.meta.env.VITE_PUBLIC_ROOM;
-                let updateMessage1=`Your Model "${formData.modelName}" is submitted for approval `;
-                let updateMessage2=`Model "${formData.modelName}" is waiting for approval (created by @${user.name})`;
+                const roomId = import.meta.env.VITE_PUBLIC_ROOM;
+                let updateMessage1 = `Your Model "${formData.modelName}" is submitted for approval `;
+                let updateMessage2 = `Model "${formData.modelName}" is waiting for approval (created by @${user.name})`;
 
                 emitPrivateMessage(
                     user.name,
@@ -266,7 +324,7 @@ const AddModel = () => {
             } else {
                 notify.error(modelRes.data.message || "Failed to submit model.");
             }
-            
+
         } catch (err) {
             console.log("Error during submission:", err);
             const backendMsg = err.response?.data?.message;
@@ -279,7 +337,7 @@ const AddModel = () => {
     const addinput = () => {
         setFormData((prev) => ({
             ...prev,
-            designParameters: [...prev.designParameters,{ parameter: "", upperLimit: 10, lowerLimit: 0 },],
+            designParameters: [...prev.designParameters, { parameter: "", upperLimit: 10, lowerLimit: 0 },],
         }));
     };
 
@@ -304,10 +362,10 @@ const AddModel = () => {
         }));
     };
 
-    const addPreRequisite  = () => {
+    const addPreRequisite = () => {
         setFormData((prev) => ({
             ...prev,
-            prerequisites: [...(prev.prerequisites||[]),""],
+            prerequisites: [...(prev.prerequisites || []), ""],
         }));
     };
 
@@ -372,7 +430,7 @@ const AddModel = () => {
             designParameters: prev.designParameters.filter((_, i) => i !== index),
         }));
     };
-    
+
     const removeCalcParam = (index) => {
         setFormData((prev) => ({
             ...prev,
@@ -411,7 +469,7 @@ const AddModel = () => {
     // Add new empty file entry to a new component
     const addNewComponentFile = (compIdx) => {
         const updated = [...newComponents];
-        updated[compIdx].files.push({ type: "Symbol", file: null, savePath:""}); // file will be uploaded before submit
+        updated[compIdx].files.push({ type: "Symbol", file: null, savePath: "" }); // file will be uploaded before submit
         setNewComponents(updated);
     };
 
@@ -441,270 +499,345 @@ const AddModel = () => {
         switch (currentStep) {
             case 1:
                 return (
-                <>
-                <div className="addLa">
-                    <label>Model Name</label><br />
-                    <input
-                        type="text"
-                        name="modelName"
-                        value={formData.modelName}
-                        onChange={handleChange}
-                        // style={{marginTop:"0"}}
-                        required
-                    />
-                </div>
+                    <>
+                        <div className="addLa">
+                            <label>Model Name</label><br />
+                            <input
+                                type="text"
+                                name="modelName"
+                                value={formData.modelName}
+                                onChange={handleChange}
+                                // style={{marginTop:"0"}}
+                                required
+                            />
+                        </div>
 
-                <div className="addLa">
-                    <label>Category</label><br />
-                    <select
-                        name="typeName"
-                        value={formData.typeName}
-                        onChange={handleChange}
-                        required
-                        className="select-category"
-                    >
-                        <option value="" className="category-options">Select Type</option>
-                        {categories.map((cat) => (
-                            <option key={cat._id} value={cat.name} className="category-options">
-                                {cat.name}
-                            </option>
-                        ))}
-                    </select>
-                </div>
+                        <div className="addLa">
+                            <label>Category</label><br />
+                            <select
+                                name="typeName"
+                                value={formData.typeName}
+                                onChange={handleChange}
+                                required
+                                className="select-category"
+                            >
+                                <option value="" className="category-options">Select Type</option>
+                                {categories.map((cat) => (
+                                    <option key={cat._id} value={cat.name} className="category-options">
+                                        {cat.name}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
 
-                <div className="addLa">
-                    <label>Description</label><br />
-                    <textarea
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        rows={14}
-                        style={{ width: "100%", padding: "8px"}}
-                    />
-                </div>
-                </>
+                        <div className="addLa">
+                            <label>Description</label><br />
+                            <textarea
+                                name="description"
+                                value={formData.description}
+                                onChange={handleChange}
+                                className="addmodel-textarea"
+                                rows={14}
+                            />
+                        </div>
+                    </>
                 );
             case 2:
                 return (
-                <div className="addmodel-upload-section">
-                   <div >
-                        <label >Upload your circuit file (.asc): </label>
-                        <AscFileUploadBox file={file} setFile={setFile} />
-                    </div>
+                    <div className="addmodel-upload-section">
+                        <div >
+                            <label >Upload your circuit file (.asc): </label>
+                            <AscFileUploadBox file={file} setFile={setFile} />
+                        </div>
 
-                    <div >
-                        <label>Upload your circuit preview image (optional):</label>
-                        <ImageUploadBox initialPreview={previewFile ? URL.createObjectURL(previewFile) : null} setPreviewFile={setPreviewFile} boxSize={200} />
+                        <div >
+                            <label>Upload your circuit preview image (optional):</label>
+                            <ImageUploadBox initialPreview={previewFile ? URL.createObjectURL(previewFile) : null} setPreviewFile={setPreviewFile} boxSize={200} />
+                        </div>
                     </div>
-                </div>
                 );
             case 3:
                 return (
-                <div className="addmodel-inputs">
-                    <label>Add Design Parameters<button type="button" onClick={addinput} style={{ marginTop: "10px" }}>
-                        <AddIcon/>
-                    </button></label><br />
+                    <div className="addmodel-inputs">
+                        <div className="addmodel-section-card">
+                            <div className="addmodel-header-row">
+                                <label className="addmodel-label-nomargin">Add Design Parameters
+                                    <button type="button" onClick={addinput} className="addmodel-btn-margin-left">
+                                        <AddIcon />
+                                    </button>
+                                </label>
+                            </div>
 
-                    {formData.designParameters.length>0&&
-                    <div style={{justifyContent:"space-around",marginRight:"10%", gap:"0%"}}>
-                        <label>Parameter name</label>
-                        <label>Upper limit</label>
-                        <label>Lower limit</label>
+                            {formData.designParameters.length > 0 &&
+                                <div className="addmodel-param-headers">
+                                    <label>Parameter name</label>
+                                    <label>Upper limit</label>
+                                    <label>Lower limit</label>
+                                </div>
+                            }
+
+                            {formData.designParameters && formData.designParameters.map((param, index) => (
+                                <div key={index} className="addmodel-designparam-box">
+                                    <div>
+                                        <input
+                                            type="text"
+                                            value={param.parameter}
+                                            onChange={(e) => handleDesignParamChange(index, "parameter", e.target.value)}
+                                            placeholder={`name Parameter`}
+                                        />
+                                    </div>
+                                    <div>
+
+                                        <input
+                                            type="number"
+                                            value={param.upperLimit}
+                                            onChange={(e) => handleDesignParamChange(index, "upperLimit", parseFloat(e.target.value) || 0)}
+                                            placeholder="Upper Limit"
+                                        />
+                                    </div>
+                                    <div>
+
+                                        <input
+                                            type="number"
+                                            value={param.lowerLimit}
+                                            onChange={(e) => handleDesignParamChange(index, "lowerLimit", parseFloat(e.target.value) || 0)}
+                                            placeholder="Lower Limit"
+                                        />
+                                    </div>
+
+                                    <button onClick={() => removeDesignParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon /></button>
+
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="ai-assumptions-modal">
+                            <Dialog
+                                open={showAssumptions}
+                                onClose={() => setShowAssumptions(false)}
+                                maxWidth="sm"
+                                fullWidth
+                                PaperProps={{
+                                    className: 'ai-modal-paper'
+                                }}
+                            >
+                                <DialogTitle className="ai-modal-title">
+                                    <AutoAwesomeIcon /> AI Assumptions
+                                </DialogTitle>
+                                <DialogContent dividers>
+                                    <Typography variant="body1" gutterBottom>
+                                        The following assumptions were made during the circuit analysis:
+                                    </Typography>
+                                    <List>
+                                        {assumptions.map((assumption, idx) => (
+                                            <ListItem key={idx} className="ai-list-item">
+                                                <ListItemIcon className="ai-list-icon">
+                                                    <InfoIcon fontSize="small" color="info" />
+                                                </ListItemIcon>
+                                                <ListItemText primary={assumption} />
+                                            </ListItem>
+                                        ))}
+                                    </List>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={() => setShowAssumptions(false)} variant="contained" className="btn-close-modal">
+                                        Close
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
+                        </div>
+
+                        <div className="addmodel-section-card">
+                            <div className="addmodel-header-row">
+                                <label className="addmodel-label-nomargin">Add calculation Components
+                                    <button type="button" onClick={addCalcParam} className="addmodel-btn-margin-left">
+                                        <AddIcon />
+                                    </button>
+                                </label>
+                                <div className="addmodel-ai-actions">
+                                    {assumptions.length > 0 && (
+                                        <Button
+                                            variant="outlined"
+                                            size="small"
+                                            startIcon={<InfoIcon />}
+                                            onClick={() => setShowAssumptions(true)}
+                                            className="btn-view-assumptions"
+                                        >
+                                            View Assumptions
+                                        </Button>
+                                    )}
+                                    <Button
+                                        variant="contained"
+                                        onClick={handleAIAnalyzeCircuit}
+                                        disabled={isAnalyzing}
+                                        startIcon={isAnalyzing ? <CircularProgress size={20} color="inherit" /> : <AutoAwesomeIcon />}
+                                        className="btn-auto-fill"
+                                    >
+                                        {isAnalyzing ? "Analyzing..." : "Auto-fill with AI"}
+                                    </Button>
+                                </div>
+                            </div>
+                            <br />
+                            {formData.calcParams.map((param, index) => (
+                                <div key={index} >
+                                    <input
+                                        type="text"
+                                        value={param.compName}
+                                        onChange={(e) => handleCalcParamChange(index, "compName", e.target.value)}
+                                        placeholder={`name component`}
+                                    />
+                                    <select
+                                        value={param.comp}
+                                        onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
+                                        className=""
+                                    >
+                                        <option value="resistor" className="category-options">Resistor</option>
+                                        <option value="capacitor" className="category-options">Capacitor</option>
+                                        <option value="inductor" className="category-options">Inductor</option>
+                                        <option value="text">Text variable</option>
+                                        {/* Add more if needed */}
+                                    </select>
+                                    <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon /></button>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="addmodel-section-card">
+                            <div className="addmodel-header-row">
+                                <label className="addmodel-label-nomargin">Create Relations<button type="button" onClick={addRelation} className="addmodel-btn-margin-left">
+                                    <AddIcon className="icon-large" />
+                                </button></label>
+                            </div>
+
+                            {formData.relations.map((relation, index) => (
+                                <div key={index}>
+                                    <input
+                                        type="text"
+                                        value={relation}
+                                        onChange={(e) => handleRelationChange(index, e.target.value)}
+                                        placeholder={`Give relation between parameters, components`}
+                                    />
+                                    <button onClick={() => removeRelation(index)} className="addmodel-deletebtn" type="button"><DeleteIcon /></button>
+                                </div>
+                            ))}
+                        </div>
+
                     </div>
-                    }
-                    
-                    {formData.designParameters && formData.designParameters.map((param, index) => (
-                        <div key={index} className="addmodel-designparam-box">
-                            <div>
-                                <input
-                                    type="text"
-                                    value={param.parameter}
-                                    onChange={(e) => handleDesignParamChange(index, "parameter", e.target.value)}
-                                    placeholder={`name Parameter`}
-                                />
-                            </div>
-                            <div>
-                                
-                                <input
-                                    type="number"
-                                    value={param.upperLimit}
-                                    onChange={(e) => handleDesignParamChange(index, "upperLimit", parseFloat(e.target.value)||0)}
-                                    placeholder="Upper Limit"
-                                />
-                            </div>
-                            <div>
-                                
-                                <input
-                                    type="number"
-                                    value={param.lowerLimit}
-                                    onChange={(e) => handleDesignParamChange(index, "lowerLimit", parseFloat(e.target.value)||0)}
-                                    placeholder="Lower Limit"
-                                />
-                            </div>
-                            
-                            <button onClick={() => removeDesignParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>                            
-                        
-                        </div>
-                    ))}
-
-                    <label>Add calculation Components<button type="button" onClick={addCalcParam}>
-                        <AddIcon/>
-                    </button></label><br />
-                    {formData.calcParams.map((param, index) => (
-                        <div key={index} >
-                        <input
-                            type="text"
-                            value={param.compName}
-                            onChange={(e) => handleCalcParamChange(index, "compName", e.target.value)}
-                            placeholder={`name component`}
-                        />
-                        <select
-                            value={param.comp}
-                            onChange={(e) => handleCalcParamChange(index, "comp", e.target.value)}
-                            className=""
-                        >
-                            <option value="resistor" className="category-options">Resistor</option>
-                            <option value="capacitor" className="category-options">Capacitor</option>
-                            <option value="inductor" className="category-options">Inductor</option>
-                            <option value="text">Text variable</option>
-                            {/* Add more if needed */}
-                        </select>
-                        <button onClick={() => removeCalcParam(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>   
-                        </div>
-                    ))}
-
-                    <label>Create Relations<button type="button" onClick={addRelation}>
-                        <AddIcon sx={{fontSize:"1.6rem"}}/>
-                    </button></label><br />
-
-                    {formData.relations.map((relation, index) => (
-                        <div key={index}>
-                            <input
-                            type="text"
-                            value={relation}
-                            onChange={(e) => handleRelationChange(index, e.target.value)}
-                            placeholder={`Give relation between parameters, components`}
-                            />
-                            <button onClick={() => removeRelation(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
-                        </div>
-                    ))}
-                    
-                </div>
                 );
             case 4:
                 return <div className="addmodel-inputs lastStep">
                     <label>Add Specification<button type="button" onClick={addSpecification}>
-                        <AddIcon sx={{fontSize:"1.6rem"}}/>
+                        <AddIcon className="icon-large" />
                     </button></label><br />
 
                     {formData.specifications.map((specification, index) => (
                         <div key={index}>
                             <input
-                            type="text"
-                            value={specification}
-                            onChange={(e) => handleSpecificationChange(index, e.target.value)}
-                            placeholder={`Give Specification - ${index}`}
+                                type="text"
+                                value={specification}
+                                onChange={(e) => handleSpecificationChange(index, e.target.value)}
+                                placeholder={`Give Specification - ${index}`}
                             />
-                            <button onClick={() => removeSpecification(index)} className="addmodel-deletebtn" type="button"><DeleteIcon/></button>   
+                            <button onClick={() => removeSpecification(index)} className="addmodel-deletebtn" type="button"><DeleteIcon /></button>
                         </div>
                     ))}
 
                     <label>Create or Link pre-requisite components
-                        <button type="button" onClick={addPreRequisite} style={{padding:"0.4rem"}} title="Link existing component as prerequisite">
-                        <AddLinkIcon/>
+                        <button type="button" onClick={addPreRequisite} className="btn-padding-small" title="Link existing component as prerequisite">
+                            <AddLinkIcon />
                         </button>
-                        <button type="button" onClick={addNewComponent} style={{padding:"0.4rem"}} title="Create new component as prerequisite">
-                        <AddIcon/>
+                        <button type="button" onClick={addNewComponent} className="btn-padding-small" title="Create new component as prerequisite">
+                            <AddIcon />
                         </button>
                     </label><br />
-                    
+
                     {formData.prerequisites?.map((prerequisite, index) => (
                         <div key={index} >
-                        <select
-                            value={prerequisite}
-                            onChange={(e) => handlePreRequisiteChange(index,e.target.value)}
-                            className="select-category"
-                        >
-                            <option value="" className="category-options">Select component</option>
-                            {components.map(comp => (
-                                <option key={comp._id} value={comp._id} className="category-options">
-                                {comp.name}
-                                </option>
-                            ))}
-                        </select>
-                        <button onClick={() => removePreRequisite(index)} type="button" className="addmodel-deletebtn"><DeleteIcon/></button>
+                            <select
+                                value={prerequisite}
+                                onChange={(e) => handlePreRequisiteChange(index, e.target.value)}
+                                className="select-category"
+                            >
+                                <option value="" className="category-options">Select component</option>
+                                {components.map(comp => (
+                                    <option key={comp._id} value={comp._id} className="category-options">
+                                        {comp.name}
+                                    </option>
+                                ))}
+                            </select>
+                            <button onClick={() => removePreRequisite(index)} type="button" className="addmodel-deletebtn"><DeleteIcon /></button>
                         </div>
                     ))}
 
-                    <section style={{width:"100%", marginBottom:"1rem"}}>
-                    {newComponents.map((comp, idx) => (
-                        <div key={idx} className="new-component-form">
-                            <div>
-                                <input
-                                    type="text"
-                                    placeholder="Component Name"
-                                    value={comp.name}
-                                    onChange={(e) => handleNewComponentChange(idx, "name", e.target.value)}
-                                />
-                                <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponent(idx)}><DeleteIcon/>Delete Component</button>
-                            </div>
-                            <textarea
-                                placeholder="Description"
-                                value={comp.description}
-                                onChange={(e) => handleNewComponentChange(idx, "description", e.target.value)}
-                            />
-
-                            {/* File inputs */}
-                            <label>Create files for this component
-                                <button style={{padding:"0.4rem"}} type="button" onClick={() => addNewComponentFile(idx)}>
-                                <AddIcon/>
-                                </button>
-                            </label><br />
-
-                            {comp.files.map((fileObj, fIdx) => (
-                            <section key={fIdx} style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
-
+                    <section className="new-component-section-wrapper">
+                        {newComponents.map((comp, idx) => (
+                            <div key={idx} className="new-component-form">
                                 <div>
-                                    {/* File picker */}
-                                    <input
-                                    type="file"
-                                    accept={
-                                        fileObj.type === "Symbol" ? ".asy" :
-                                        fileObj.type === "Model" ? ".sub,.lib,.301,.cir" :
-                                        ".asc"
-                                    }
-                                    onChange={(e) => handleNewComponentFileUpload(idx, fIdx, e.target.files[0])}
-                                    />
-
-                                    {/* Type selector */}
-                                    <select
-                                        value={fileObj.type}
-                                        onChange={(e) => handleNewComponentFileChange(idx, fIdx, "type", e.target.value)}
-                                        className="select-category"
-                                        >
-                                        <option value="Symbol" className="category-options">Symbol (.asy)</option>
-                                        <option value="Model" className="category-options">Model (.sub, .lib, .301, .cir)</option>
-                                        <option value="Schematic" className="category-options">Schematic (.asc)</option>
-                                    </select>
-                                </div>
-
-                                <div>
-                                    {/*Save path */}
                                     <input
                                         type="text"
-                                        placeholder="Path to save file in local storage"
-                                        value={fileObj.savePath}
-                                        onChange={(e) => handleNewComponentFileChange(idx, fIdx, "savePath", e.target.value)}
+                                        placeholder="Component Name"
+                                        value={comp.name}
+                                        onChange={(e) => handleNewComponentChange(idx, "name", e.target.value)}
                                     />
-
-                                    <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponentFile(idx, fIdx)}><ContentCutIcon/>Delete File</button>
-                                    
+                                    <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponent(idx)}><DeleteIcon />Delete Component</button>
                                 </div>
-                            </section>
-                            ))}
-                        </div>
-                    ))}
-                    </section>   
+                                <textarea
+                                    placeholder="Description"
+                                    value={comp.description}
+                                    onChange={(e) => handleNewComponentChange(idx, "description", e.target.value)}
+                                />
+
+                                {/* File inputs */}
+                                <label>Create files for this component
+                                    <button className="btn-padding-small" type="button" onClick={() => addNewComponentFile(idx)}>
+                                        <AddIcon />
+                                    </button>
+                                </label><br />
+
+                                {comp.files.map((fileObj, fIdx) => (
+                                    <section key={fIdx} className="new-component-file-row">
+
+                                        <div>
+                                            {/* File picker */}
+                                            <input
+                                                type="file"
+                                                accept={
+                                                    fileObj.type === "Symbol" ? ".asy" :
+                                                        fileObj.type === "Model" ? ".sub,.lib,.301,.cir" :
+                                                            ".asc"
+                                                }
+                                                onChange={(e) => handleNewComponentFileUpload(idx, fIdx, e.target.files[0])}
+                                            />
+
+                                            {/* Type selector */}
+                                            <select
+                                                value={fileObj.type}
+                                                onChange={(e) => handleNewComponentFileChange(idx, fIdx, "type", e.target.value)}
+                                                className="select-category"
+                                            >
+                                                <option value="Symbol" className="category-options">Symbol (.asy)</option>
+                                                <option value="Model" className="category-options">Model (.sub, .lib, .301, .cir)</option>
+                                                <option value="Schematic" className="category-options">Schematic (.asc)</option>
+                                            </select>
+                                        </div>
+
+                                        <div>
+                                            {/*Save path */}
+                                            <input
+                                                type="text"
+                                                placeholder="Path to save file in local storage"
+                                                value={fileObj.savePath}
+                                                onChange={(e) => handleNewComponentFileChange(idx, fIdx, "savePath", e.target.value)}
+                                            />
+
+                                            <button type="button" className="new-component-delete-btn" onClick={() => removeNewComponentFile(idx, fIdx)}><ContentCutIcon />Delete File</button>
+
+                                        </div>
+                                    </section>
+                                ))}
+                            </div>
+                        ))}
+                    </section>
 
                 </div>
             default:
@@ -725,30 +858,29 @@ const AddModel = () => {
                     <form onSubmit={handleSubmit} className="addmodel-form" >
                         {renderStepContent()}
                         <div className="addmodel-nav-btns">
-                            {currentStep > 1 && 
-                                <button type="button" 
-                                    className="addmodel-navigate-btn" 
+                            {currentStep > 1 &&
+                                <button type="button"
+                                    className="addmodel-navigate-btn"
                                     onClick={handleBack}
-                                    ><NavigateBeforeIcon/>Back</button>}
-                            {currentStep < stepNames.length && 
-                                <button type="button" 
-                                    className="addmodel-navigate-btn" 
+                                ><NavigateBeforeIcon />Back</button>}
+                            {currentStep < stepNames.length &&
+                                <button type="button"
+                                    className="addmodel-navigate-btn"
                                     onClick={handleNext}
-                                    >Next <NavigateNextIcon/></button>}
+                                >Next <NavigateNextIcon /></button>}
                             {currentStep === stepNames.length &&
-                                <button type="submit" 
-                                    className="addmodel-navigate-btn" 
-                                    style={{backgroundColor:"green"}}
+                                <button type="submit"
+                                    className="addmodel-navigate-btn btn-submit-green"
                                     disabled={submitting}>
                                     {submitting ? (
                                         <>
-                                        Submitting...
-                                        <CircularProgress size={20} color="inherit" />
+                                            Submitting...
+                                            <CircularProgress size={20} color="inherit" />
                                         </>
                                     ) : (
                                         "Submit for Approval"
                                     )}
-                                    </button>
+                                </button>
                             }
                         </div>
                     </form>

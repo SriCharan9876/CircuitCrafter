@@ -11,6 +11,7 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@react-oauth/google": "^0.12.2",
     "axios": "^1.10.0",
     "bcryptjs": "^3.0.2",
@@ -25,7 +26,7 @@
     "lodash": "^4.17.21",
     "mongodb": "^6.17.0",
     "mongoose": "^8.16.0",
-    "multer": "^2.0.1",
+    "multer": "^2.0.2",
     "multer-storage-cloudinary": "^4.0.0",
     "nodemailer": "^7.0.5",
     "react-toastify": "^11.0.5",

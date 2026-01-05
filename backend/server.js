@@ -13,6 +13,7 @@ import authenticationRouter from './routes/auth.js';
 import filesRouter from './routes/files.js';
 import communityRouter from "./routes/community.js";
 import componentsRouter from "./routes/component.js";
+import analyzeCircuitRouter from "./routes/aiCircuit.js";
 
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
@@ -75,6 +76,7 @@ app.use("/api/components", componentsRouter);
 //File handling routes (for client usage of models)
 app.use("/api/files", filesRouter);
 app.use("/community", communityRouter);
+app.use("/api/analyze-circuit", analyzeCircuitRouter);
 
 
 // app.use((req, res, next) => {
