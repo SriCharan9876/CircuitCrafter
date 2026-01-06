@@ -1,19 +1,14 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
+import dotenv from 'dotenv';
+dotenv.config();
 
-async function main() {
-    const dbUrl=process.env.ATLASDB_URL;
-    await mongoose.connect(dbUrl);
-}
+export const mainDB = mongoose.createConnection(process.env.ATLASDB_URL, {
+  dbName: "test"              // Your existing website DB
+});
 
-const connectDB=()=>{
+export const aiDB = mongoose.createConnection(process.env.ATLASDB_URL, {
+  dbName: "ai_system"         // AI brain DB
+});
 
-    return main()
-        .then(()=>{
-            console.log("Connected to DB");
-        }).catch((err)=>{
-            console.log("Mongoose connection error:");
-            console.log(err);
-        });
-}
-
-export default connectDB;
+mainDB.once("open", () => console.log("Main DB connected"));
+aiDB.once("open", () => console.log("AI DB connected"));

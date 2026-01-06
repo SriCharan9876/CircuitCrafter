@@ -2,6 +2,7 @@ import { Outlet } from "react-router-dom";
 import Sidebar from "./features/sideBar";
 import NavBar from "./features/navBar";
 import Footer from "./features/footer";
+import Chatbot from "./features/Chatbot";
 import { useState, useRef, useEffect } from "react";
 import "./App.css";
 
@@ -43,6 +44,7 @@ export default function Layout() {
       </div>
 
       <Footer />
+      <Chatbot />
     </div>
   );
 }

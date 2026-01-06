@@ -1,21 +1,24 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
+import dotenv from 'dotenv';
+dotenv.config();
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 export const analyzeCircuit = async (req, res) => {
-    try {
-        const { designParams, modelName, categoryName, description } = req.body;
-        const image = req.file;
+  console.log("Hello");
+  try {
+    const { designParams, modelName, categoryName, description } = req.body;
+    const image = req.file;
 
-        if (!image) {
-            return res.status(400).json({ error: "Circuit image required" });
-        }
+    if (!image) {
+      return res.status(400).json({ error: "Circuit image required" });
+    }
 
-        const model = genAI.getGenerativeModel({
-            model: "gemini-2.5-flash"
-        });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-2.5-flash"
+    });
 
-        const prompt = `
+    const prompt = `
 You are an expert analog electronics engineer and circuit analyst.
 
 You MUST rely strictly on the uploaded circuit image and details provided below.
@@ -125,47 +128,47 @@ You must:
 This is **mandatory**
 `;
 
-        const imagePart = {
-            inlineData: {
-                data: image.buffer.toString("base64"),
-                mimeType: image.mimetype
-            }
-        };
+    const imagePart = {
+      inlineData: {
+        data: image.buffer.toString("base64"),
+        mimeType: image.mimetype
+      }
+    };
 
-        const result = await model.generateContent([prompt, imagePart]);
-        const rawText = result.response.text();
-        console.log("here2", rawText);
-        let parsedJSON;
-        try {
-            parsedJSON = extractJSONFromLLM(rawText);
-        } catch (err) {
-            console.error("JSON parse failed:", rawText);
-            return res.status(500).json({
-                error: "AI returned invalid JSON",
-                raw: rawText
-            });
-        }
-
-        res.json({
-            success: true,
-            data: parsedJSON
-        });
-
-
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: "AI processing failed" });
+    const result = await model.generateContent([prompt, imagePart]);
+    const rawText = result.response.text();
+    console.log("here2", rawText);
+    let parsedJSON;
+    try {
+      parsedJSON = extractJSONFromLLM(rawText);
+    } catch (err) {
+      console.error("JSON parse failed:", rawText);
+      return res.status(500).json({
+        error: "AI returned invalid JSON",
+        raw: rawText
+      });
     }
+
+    res.json({
+      success: true,
+      data: parsedJSON
+    });
+
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "AI processing failed" });
+  }
 };
 function extractJSONFromLLM(text) {
-    // Match ```json ... ``` OR fallback to {...}
-    const jsonBlockRegex = /```json\s*([\s\S]*?)\s*```/i;
-    const match = text.match(jsonBlockRegex);
+  // Match ```json ... ``` OR fallback to {...}
+  const jsonBlockRegex = /```json\s*([\s\S]*?)\s*```/i;
+  const match = text.match(jsonBlockRegex);
 
-    let jsonString = match ? match[1] : text;
+  let jsonString = match ? match[1] : text;
 
-    // Trim whitespace
-    jsonString = jsonString.trim();
+  // Trim whitespace
+  jsonString = jsonString.trim();
 
-    return JSON.parse(jsonString);
+  return JSON.parse(jsonString);
 }

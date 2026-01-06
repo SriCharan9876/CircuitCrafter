@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { mainDB } from "../config/db.js";
 
 const fileSchema = new mongoose.Schema({
   type: {
@@ -14,9 +15,9 @@ const fileSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  public_id:{
-    type:String,
-    required:true
+  public_id: {
+    type: String,
+    required: true
   },
   savePath: {
     type: String,
@@ -32,16 +33,16 @@ const componentSchema = new mongoose.Schema({
   },
   description: String,
   files: [fileSchema],
-  approved:{
-    type:Boolean,
-    default:false
+  approved: {
+    type: Boolean,
+    default: false
   },
-  createdBy: { 
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required:true
+    required: true
   },
 }, { timestamps: true });
 
-const Component = mongoose.model('Component', componentSchema);
+const Component = mainDB.model('Component', componentSchema);
 export default Component;

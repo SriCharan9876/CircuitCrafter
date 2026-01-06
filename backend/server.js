@@ -14,6 +14,7 @@ import filesRouter from './routes/files.js';
 import communityRouter from "./routes/community.js";
 import componentsRouter from "./routes/component.js";
 import analyzeCircuitRouter from "./routes/aiCircuit.js";
+import aiRoutes from "./routes/ai.js";
 
 // import userRouter from "./routes/user.js";
 // import modelRouter from"./routes/baseModel.js";
@@ -54,11 +55,11 @@ app.use(cors({
   },
   credentials: true
 }))
+
+
 app.use(session(sessionOptions));
 const port = 5000;
-import connectDB from './config/db.js';
-connectDB();
-
+import { mainDB, aiDB } from './config/db.js'; //import itself triggers connection
 
 server.listen(port, () => {
   console.log("Server started at port ", port)
@@ -77,6 +78,7 @@ app.use("/api/components", componentsRouter);
 app.use("/api/files", filesRouter);
 app.use("/community", communityRouter);
 app.use("/api/analyze-circuit", analyzeCircuitRouter);
+app.use("/api/ai", aiRoutes);
 
 
 // app.use((req, res, next) => {

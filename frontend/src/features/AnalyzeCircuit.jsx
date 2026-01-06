@@ -32,7 +32,6 @@ export const Circuitanalyze = async (imageFile, designParams, modelName, typeNam
                 }
             }
         );
-        console.log("here1", response.data);
         const data = await response.data.data;
         return data;
     } catch (err) {

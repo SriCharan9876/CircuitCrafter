@@ -1,86 +1,88 @@
 import mongoose from "mongoose";
-const Schema= mongoose.Schema;
+import { mainDB } from "../config/db.js";
+const Schema = mongoose.Schema;
 
 //Schema for baseModels
-const baseModelSchema=new Schema({
-    modelName:{
-        type:String,
-        required:true,
+const baseModelSchema = new Schema({
+    modelName: {
+        type: String,
+        required: true,
     },
     typeName: {
         type: String,
         required: true
     },
-    description:String,
-    fileUrl:{
-        type:String,
-        required:true
+    description: String,
+    fileUrl: {
+        type: String,
+        required: true
     },
     previewImg: {
         public_id: { type: String },
-        url: { type: String,
-            default:"https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
+        url: {
+            type: String,
+            default: "https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
         },
     },
-    createdBy: { 
+    createdBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
-        required:true
+        required: true
     },
-    designParameters:{
-        type:[
+    designParameters: {
+        type: [
             {
-                parameter:{type:String,required:true},
-                upperLimit:{type:Number,required:true},
-                lowerLimit:{type:Number,required:true}
+                parameter: { type: String, required: true },
+                upperLimit: { type: Number, required: true },
+                lowerLimit: { type: Number, required: true }
             }
         ],
-        default:[]
+        default: []
     },
-    calcParams:{
-        type:[
+    calcParams: {
+        type: [
             {
-                compName:{type:String,required:true},
-                comp:{type:String,required:true}
+                compName: { type: String, required: true },
+                comp: { type: String, required: true }
             }
         ],
-        default:[]
+        default: []
     },
-    relations:{
-        type:[String],
-        required:true,
-        default:[]
+    relations: {
+        type: [String],
+        required: true,
+        default: []
     },
-    status:{
-        type:String,
-        enum:["approved","rejected","pending"],
-        default:"pending",
-        required:true
+    status: {
+        type: String,
+        enum: ["approved", "rejected", "pending"],
+        default: "pending",
+        required: true
     },
-    likes:[
+    likes: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }
     ],
-    views:[
+    views: [
         {
-            type:mongoose.Schema.Types.ObjectId,
-            ref:'User'
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
         }
     ],
-    createdAt:{
-        type:Date,
-        default:Date.now
+    createdAt: {
+        type: Date,
+        default: Date.now
     },
-    designCount:{
-        type:Number,
-        default:0
+    designCount: {
+        type: Number,
+        default: 0
     },
-    specifications:{
-        type:[String],
-        required:true,
-        default:[]
+    specifications: {
+        type: [String],
+        required: true,
+        default: []
     },
     prerequisites: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -88,5 +90,5 @@ const baseModelSchema=new Schema({
     }],
 });
 
-const BaseModel=mongoose.model("BaseModel",baseModelSchema);
+const BaseModel = mainDB.model("BaseModel", baseModelSchema);
 export default BaseModel;

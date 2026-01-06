@@ -1,4 +1,6 @@
 import mongoose from "mongoose";
+import { mainDB } from "../config/db.js";
+
 const postSchema = new mongoose.Schema({
   title: {
     type: String,
@@ -75,5 +77,5 @@ const postSchema = new mongoose.Schema({
   }
 });
 
-const Post=mongoose.model("Post", postSchema);
+const Post = mainDB.model("Post", postSchema);
 export default Post;
