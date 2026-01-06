@@ -6,12 +6,12 @@ import { notify } from '../toastManager';
 import axios from 'axios';
 import { useAuth } from '../../contexts/authContext';
 
-const SaveButton = ({ modelId, savedModels, token ,refreshFavorites,size,theme="light-theme"}) => {
-  const {setUser} =useAuth();
+const SaveButton = ({ modelId, savedModels, token, refreshFavorites, size, theme = "light-theme" }) => {
+  const { setUser } = useAuth();
   const [saved, setSaved] = useState(savedModels.includes(modelId));
   const [isLoading, setIsLoading] = useState(false);
-  const iconSize= size ==="small"?22:32;
-  const color=(theme==="dark-theme")?"white":"#3a6df0";
+  const iconSize = size === "small" ? 22 : 32;
+  const color = (theme === "dark-theme") ? "white" : "#3a6df0";
 
   const toggleSave = async () => {
     if (isLoading) return;
@@ -50,10 +50,10 @@ const SaveButton = ({ modelId, savedModels, token ,refreshFavorites,size,theme="
 
 
   return (
-    <div className="save-section" style={{display:"flex",alignItems:"center", margin:"0",padding:"0", height:"2.5rem"}}>
+    <div className="save-section" style={{ display: "flex", alignItems: "center", margin: "0", padding: "0", height: "2.5rem" }}>
       <Tooltip title={saved ? 'Unsave Model' : 'Save Model'}>
         <IconButton onClick={toggleSave} disabled={isLoading} color={saved ? 'primary' : 'default'}>
-          {saved ? <BookmarkIcon sx={{ fontSize: iconSize, color:{color} }}/> : <BookmarkBorderIcon sx={{ fontSize: iconSize, color:{color} }}/>}
+          {saved ? <BookmarkIcon sx={{ fontSize: iconSize, color: { color } }} /> : <BookmarkBorderIcon sx={{ fontSize: iconSize, color: { color } }} />}
         </IconButton>
       </Tooltip>
     </div>

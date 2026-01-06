@@ -35,7 +35,6 @@ export const getPostlogged=async(req,res)=>{
     try{
         const {id}=req.params;
         const puser=req.user?.userId;
-        console.log("checking:",puser)
         const posts = await Post.findOne({_id:id}).populate("author").populate("comments.user");
         if(puser&&(!posts.views.includes(puser) || posts.views==[])){
           posts.views.push(puser);

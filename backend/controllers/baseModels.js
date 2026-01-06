@@ -2,124 +2,129 @@ import BaseModel from '../models/baseModel.js';
 import Component from "../models/component.js";
 import User from "../models/user.js";
 
-export const index=async(req,res)=>{
-    const { category } = req.query;
-    const filter=category?{typeName:category}:{}  //find({status:"approved"})
-    filter.status="approved";
-    try{
-        const allModels=await BaseModel.find(filter).populate("createdBy");
-        return res.json({message:"Success",allModels});
-    }catch(err){
+export const index = async (req, res) => {
+    const { category, search } = req.query;
+    const filter = category ? { typeName: category } : {}  //find({status:"approved"})
+
+    if (search) {
+        filter.modelName = { $regex: search, $options: "i" };
+    }
+
+    filter.status = "approved";
+    try {
+        const allModels = await BaseModel.find(filter).populate("createdBy");
+        return res.json({ message: "Success", allModels });
+    } catch (err) {
         console.error("Error fetching models:", err);
         res.status(500).json({ message: "Failed to fetch models" });
     }
 }//To show all models
 
-export const createModel=async(req,res)=>{
-    try{
+export const createModel = async (req, res) => {
+    try {
         if (!req.body.previewImg?.url.trimStart()) {
             req.body.previewImg = {
                 public_id: "",
                 url: "https://res.cloudinary.com/du1tos77l/image/upload/v1752053624/ChatGPT_Image_Jul_9_2025_03_01_00_PM-removebg-preview_ejn4b9.jpg"
             };
         }
-        const finalData=req.body;
-        const newmodel=new BaseModel({
-            ... finalData,
-            createdBy:req.user.userId
+        const finalData = req.body;
+        const newmodel = new BaseModel({
+            ...finalData,
+            createdBy: req.user.userId
         });
         await newmodel.save();
 
-        await User.findByIdAndUpdate(req.user.userId,{ $inc: { contributionCount: 1 } });
+        await User.findByIdAndUpdate(req.user.userId, { $inc: { contributionCount: 1 } });
 
-        return res.json({added:true,message:"Successfully added"});
-    }catch(err){
+        return res.json({ added: true, message: "Successfully added" });
+    } catch (err) {
         console.log(err);
         if (err.name === 'ValidationError') {
             const messages = Object.values(err.errors).map((val) => val.message);
             return res.status(400).json({ message: messages.join(', ') });
         }
-        return res.status(500).json({added:false,message:"server error"});
+        return res.status(500).json({ added: false, message: "server error" });
     }
 }//to Add Model
 
-export const getModel=async(req,res)=>{
-    try{
-        const {id}=req.params;
-        const model=await BaseModel.findById(id).populate("createdBy").populate("prerequisites");
+export const getModel = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const model = await BaseModel.findById(id).populate("createdBy").populate("prerequisites");
 
         if (!model) {
             return res.status(404).json({ found: false, message: "Model not found" });
         }
 
-        const currUser=req.user?.userId;
-        if(currUser&&!model.views.includes(currUser)){
+        const currUser = req.user?.userId;
+        if (currUser && !model.views.includes(currUser)) {
             model.views.push(currUser);
             await model.save();
         }
-        return res.json({found:true,model:model});
-    }catch(err){
+        return res.json({ found: true, model: model });
+    } catch (err) {
         console.log(err);
-        return res.json({found:false,message:"Failed to fetch model"});
+        return res.json({ found: false, message: "Failed to fetch model" });
     }
 }//To show a model
 
-export const deleteModel=async(req,res)=>{
-    try{
-        const {id}=req.params;
-        const deletedModel=await BaseModel.findByIdAndDelete(id);
-        await User.findByIdAndUpdate(deletedModel.createdBy,{ $inc: { contributionCount: -1 } });
+export const deleteModel = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const deletedModel = await BaseModel.findByIdAndDelete(id);
+        await User.findByIdAndUpdate(deletedModel.createdBy, { $inc: { contributionCount: -1 } });
         console.log("Model deleted successfully: ");
-        return res.json({deleted:true,message:"Model deleted successfully"});
-    }catch(err){
+        return res.json({ deleted: true, message: "Model deleted successfully" });
+    } catch (err) {
         console.log(err);
         return res.status(500).json({ deleted: false, message: "Failed to delete model" });
     }
 }//To delete model
 
-export const getPendingModels= async (req,res)=>{
+export const getPendingModels = async (req, res) => {
 
-    const filter={status:"pending"};
-    try{
-        const allModels=await BaseModel.find(filter).populate("createdBy");
-        return res.json({message:"Success",allModels});
-    }catch(err){
+    const filter = { status: "pending" };
+    try {
+        const allModels = await BaseModel.find(filter).populate("createdBy");
+        return res.json({ message: "Success", allModels });
+    } catch (err) {
         console.error("Error fetching models:", err);
         res.status(500).json({ message: "Failed to fetch models" });
     }
 };//to Show all pending models for admin (to be accepted or rejected)
 
-export const getMyModels=async(req,res)=>{
-    const currUser=req.user.userId;
-    const filter={createdBy:currUser};   
+export const getMyModels = async (req, res) => {
+    const currUser = req.user.userId;
+    const filter = { createdBy: currUser };
 
-    try{
-        const allModels=await BaseModel.find(filter).populate("createdBy");
-        return res.json({message:"Success",allModels});
-    }catch(err){
+    try {
+        const allModels = await BaseModel.find(filter).populate("createdBy");
+        return res.json({ message: "Success", allModels });
+    } catch (err) {
         console.error("Error fetching models:", err);
         res.status(500).json({ message: "Failed to fetch models" });
     }
 };//to show models created by current user for user
 
-export const updateModelStatus=async(req,res)=>{
-    const {id}=req.params;
-    const {status}=req.body;
-    if(status!=="pending"&&req.user.role!=="admin"){
-        return res.status(403).json({updated:false, message:"Model can be Approved or rejected only by admins"})
+export const updateModelStatus = async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+    if (status !== "pending" && req.user.role !== "admin") {
+        return res.status(403).json({ updated: false, message: "Model can be Approved or rejected only by admins" })
     }
 
-    const model=await BaseModel.findById(id);
-    model.status=status;
+    const model = await BaseModel.findById(id);
+    model.status = status;
     await model.save();
-    if(model.prerequisites){
-        for (const compId of model.prerequisites){
-            if(model.status==="approved"){
-                await Component.findByIdAndUpdate(compId,{approved:true});
+    if (model.prerequisites) {
+        for (const compId of model.prerequisites) {
+            if (model.status === "approved") {
+                await Component.findByIdAndUpdate(compId, { approved: true });
             }
         }
     }
-    return res.json({updated:true})
+    return res.json({ updated: true })
 };// to approve pending model created by user (access to admin)
 
 export const editModel = async (req, res) => {
@@ -141,7 +146,7 @@ export const editModel = async (req, res) => {
         model.calcParams = updatedData.calcParams;
         model.relations = updatedData.relations;
         model.specifications = updatedData.specifications;
-        model.prerequisites=updatedData.prerequisites;
+        model.prerequisites = updatedData.prerequisites;
 
         // Conditionally update previewImg
         if (updatedData.previewImg && typeof updatedData.previewImg === "object") {
@@ -151,10 +156,10 @@ export const editModel = async (req, res) => {
             };
         }
 
-        if(model.status==="approved"){
-            model.status="pending";
+        if (model.status === "approved") {
+            model.status = "pending";
         }
-        
+
         await model.save();
 
         res.status(200).json({ updated: true, message: "Model updated successfully.", model });
@@ -164,45 +169,45 @@ export const editModel = async (req, res) => {
     }
 };
 
-export const toggleLike=async (req,res)=>{
-    const {id}=req.params;
-    const userId = req.user.userId; 
-    const model=await BaseModel.findById(id);
-    const hasLiked=model.likes.includes(userId);
-    if(hasLiked){
+export const toggleLike = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.userId;
+    const model = await BaseModel.findById(id);
+    const hasLiked = model.likes.includes(userId);
+    if (hasLiked) {
         model.likes.pull(userId);
-    }else{
+    } else {
         model.likes.push(userId);
     }
-    await model.save();    
+    await model.save();
     return res.status(200).json({
-        message:hasLiked?"Unliked":"Liked",
-        likesCount:model.likes.length
+        message: hasLiked ? "Unliked" : "Liked",
+        likesCount: model.likes.length
     })
 }
 
-export const updateViews=async(req,res)=>{
-    const {id}=req.params;
-    const userId=req.user.userId;
-    const model=await BaseModel.findById(id);
-    const hasViewed=model.views.includes(userId);
-    if(!hasViewed){
+export const updateViews = async (req, res) => {
+    const { id } = req.params;
+    const userId = req.user.userId;
+    const model = await BaseModel.findById(id);
+    const hasViewed = model.views.includes(userId);
+    if (!hasViewed) {
         model.views.push(userId);
         await model.save();
     }
 }
 
-export const modelExist=async(req,res)=>{
-    try{
-        const {value}=req.params;
+export const modelExist = async (req, res) => {
+    try {
+        const { value } = req.params;
         console.log(value);
-        const model=await BaseModel.findOne({modelName:value})
-        if(model){
-          return res.json({exist:true,model:model})
-        }else{
-          return res.json({exist:false})
+        const model = await BaseModel.findOne({ modelName: value })
+        if (model) {
+            return res.json({ exist: true, model: model })
+        } else {
+            return res.json({ exist: false })
         }
-    }catch(err){
+    } catch (err) {
         console.log(err)
         return res.status(500).json({ error: "Server error" });
     }

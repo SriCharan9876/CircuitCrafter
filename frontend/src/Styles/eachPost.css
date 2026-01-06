@@ -1,10 +1,10 @@
-.post-view-page{
+.post-view-page {
   padding: 4rem;
 }
 
 /* App.css */
 .post-detail {
-  max-width: 850px;
+  max-width: 1000px;
   margin: 2rem auto;
   background: var(--bg-secondary);
   border-radius: 10px;
@@ -28,7 +28,7 @@
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  background-color: crimson;
+  background-color: var(--bg-tertiary, #ccc);
   /* color: white; */
 }
 
@@ -65,15 +65,25 @@
   transition: color 0.3s ease;
 }
 
+.post-actions button svg {
+  fill: currentColor;
+  /* Ensure SVG takes the text color */
+}
+
+.post-actions button.liked-active {
+  color: red !important;
+}
+
 .post-actions button:hover {
-  color: #000;
+  color: var(--accent);
 }
 
 .post-actions button:disabled {
   cursor: not-allowed;
   color: #aaa;
 }
-.post-content2 p{
+
+.post-content2 p {
   white-space: pre-wrap;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -85,10 +95,11 @@
 
 }
 
-.post-content2 h2{
-  color: var(--text-primary);  
+.post-content2 h2 {
+  color: var(--text-primary);
   font-family: var(--font-body);
 }
+
 .comment-section {
   margin-top: 2rem;
   display: flex;
@@ -121,7 +132,7 @@
 .comment-input-box button {
   background: none;
   border: none;
-  color: #007bff;
+  color: var(--text-primary);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -129,7 +140,7 @@
 }
 
 .comment-input-box button:hover {
-  color: #0056b3;
+  color: var(--accent);
 }
 
 .comments-list {
@@ -161,15 +172,38 @@
 }
 
 .no-comments {
-  color: #999;
+  color: var(--text-primary);
   font-style: italic;
   font-size: 0.95rem;
+  opacity: 0.7;
 }
 
 
-#tl2{
+#tl2 {
   margin-top: 3rem;
 }
-.taghead{
+
+.taghead {
   color: var(--text-primary);
+}
+
+.eachTag {
+  margin-top: 0.5rem;
+  color: var(--text-primary);
+}
+
+.sideTags {
+  margin-right: 0.5rem;
+  color: var(--text-primary);
+}
+
+.tag {
+  background: var(--bg-primary);
+  /* or any distinct background */
+  color: var(--text-primary);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  margin-right: 0.5rem;
+  font-size: 0.9rem;
+  display: inline-block;
 }

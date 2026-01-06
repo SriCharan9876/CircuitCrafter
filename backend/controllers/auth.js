@@ -13,17 +13,17 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString(); // 6-digit OTP
 };
 
-export const signup=async(req,res)=>{
-    try {
-    const { name,email,role,password,profilePic } = req.body;
+export const signup = async (req, res) => {
+  try {
+    const { name, email, role, password, profilePic } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already in use" });
     }
     const hashedPassword = await bcrypt.hash(password, 10);
-    const new_user = new User({ name, email, password: hashedPassword,role,profilePic });
+    const new_user = new User({ name, email, password: hashedPassword, role, profilePic });
     await new_user.save();
-    res.status(201).json({ message: "User created",added:true }); 
+    res.status(201).json({ message: "User created", added: true });
   } catch (error) {
     console.error("Signup Error:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -55,7 +55,7 @@ export const login = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        savedModels:user.savedModels
+        savedModels: user.savedModels
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
@@ -64,7 +64,7 @@ export const login = async (req, res) => {
     // Remove password before sending user
     const { password: _, ...safeUser } = user.toObject();
 
-    res.status(200).json({ token, user: safeUser  });
+    res.status(200).json({ token, user: safeUser });
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal Server Error" });
@@ -77,7 +77,7 @@ export const sendOtp = async (req, res) => {
 
     const existing = await User.findOne({ email });
     if (existing) {
-      return res.status(400).json({sent:false, message: "User already exists" });
+      return res.status(400).json({ sent: false, message: "User already exists" });
     }
 
     const otp = generateOTP();
@@ -123,35 +123,35 @@ export const verifyOtp = async (req, res) => {
 
 
 export const getmydata = async (req, res) => {
+  try {
+    const userid = req.user.userId; // req.user is set by your auth middleware
     try {
-        const userid = req.user.userId; // req.user is set by your auth middleware
-        try{
-            const userData=await User.findOne({_id:userid});
-            return res.json({ fetched: true, me: userData });
-        }catch(err){
-            console.error("Error fetching current user details:", err);
-            res.status(500).json({ fetched: false, message: "Failed to fetch user details" });
-        }
-        
+      const userData = await User.findOne({ _id: userid });
+      return res.json({ fetched: true, me: userData });
     } catch (err) {
-        console.error("Error fetching current user data:", err);
-        res.status(500).json({ fetched: false, message: "Error fetching profile" });
+      console.error("Error fetching current user details:", err);
+      res.status(500).json({ fetched: false, message: "Failed to fetch user details" });
     }
+
+  } catch (err) {
+    console.error("Error fetching current user data:", err);
+    res.status(500).json({ fetched: false, message: "Error fetching profile" });
+  }
 };
 
-export const getAdminIds=async(req,res)=>{
-  try{
-    const adminArr=await User.find({role:"admin"}).select("_id");
+export const getAdminIds = async (req, res) => {
+  try {
+    const adminArr = await User.find({ role: "admin" }).select("_id");
     const adminIds = adminArr.map(admin => admin._id);
-    res.status(200).json({ fetched:true, adminIds });    
+    res.status(200).json({ fetched: true, adminIds });
   } catch (error) {
-    res.status(500).json({ fetched:false, message: "Error fetching admin IDs" });
+    res.status(500).json({ fetched: false, message: "Error fetching admin IDs" });
   }
 }
 
 const client = new OAuth2Client(process.env.VITE_GOOGLE_CLIENT_ID);
-export const googleLogin=async(req,res)=>{
-  try{
+export const googleLogin = async (req, res) => {
+  try {
     const { token } = req.body;
     const ticket = await client.verifyIdToken({
       idToken: token,
@@ -175,7 +175,7 @@ export const googleLogin=async(req,res)=>{
           url: picture,
           public_id: "google-oauth", // or leave blank
         },
-        googleId:googleId
+        googleId: googleId
       });
       await user.save();
     }
@@ -185,15 +185,15 @@ export const googleLogin=async(req,res)=>{
         name: user.name,
         email: user.email,
         role: user.role,
-        savedModels:user.savedModels
+        savedModels: user.savedModels
       },
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
-    res.json({ token: token2});
-  }catch(err){
+    res.json({ token: token2 });
+  } catch (err) {
     console.log(err);
-    return res.json({logged:false})
+    return res.json({ logged: false })
   }
 }
 export const getFavModels = async (req, res) => {
@@ -293,15 +293,15 @@ export const postNotificationsAllUsers = async (req, res) => {
       roomId: notifi.roomId,
       time: notifi.time || Date.now(),
     };
-    if(notifi.receiverId){
-      const id=notifi.receiverId;
-      const user=await User.findById(id);
+    if (notifi.receiverId) {
+      const id = notifi.receiverId;
+      const user = await User.findById(id);
       if (!user || user.length === 0) {
         return res.status(404).json({ posted: false, error: "No users found" });
       }
       user.notifications.push(notificationData);
       await user.save();
-    }else{
+    } else {
       const users = await User.find();
 
       if (!users || users.length === 0) {
@@ -314,7 +314,7 @@ export const postNotificationsAllUsers = async (req, res) => {
         await user.save();
       }
     }
-    
+
 
     return res.status(200).json({ posted: true, message: "Notification sent accordingly" });
 
@@ -387,19 +387,40 @@ export const deleteNotification = async (req, res) => {
 export const checkExist = async (req, res) => {
   try {
     const { value } = req.params;
-    console.log("value: ",value)
+    console.log("value: ", value)
     const user = await User.findOne({ name: value });
 
     if (!user) {
       return res.json({ exist: false });
     } else {
-      return res.json({ exist: true ,user:user});
+      return res.json({ exist: true, user: user });
     }
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: "Server error" });
   }
 };
+
+export const searchUsers = async (req, res) => {
+  try {
+    const { query } = req.query;
+    if (!query) return res.json({ users: [] });
+
+    // Find users by name (case-insensitive regex)
+    // Limit to 10 to avoid huge payloads
+    const users = await User.find({
+      name: { $regex: query, $options: "i" }
+    })
+      .select("name _id profilePic")
+      .limit(10);
+
+    return res.json({ users });
+  } catch (err) {
+    console.error("Search users error:", err);
+    return res.status(500).json({ error: "Server error during search" });
+  }
+};
+
 export const deleteAccount = async (req, res) => {
   try {
     const user = req.user;
@@ -409,6 +430,6 @@ export const deleteAccount = async (req, res) => {
     return res.json({ success: true, message: "Account and related data deleted successfully" });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ success:false,error: "Failed to delete account" });
+    return res.status(500).json({ success: false, error: "Failed to delete account" });
   }
 };

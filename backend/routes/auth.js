@@ -1,7 +1,11 @@
 import express from "express";
-import {signup, login,getmydata, googleLogin,getFavModels, saveModel,sendOtp,deleteNotification,verifyOtp,postNotifications,getNotifications,postNotificationsAllUsers,checkExist,getAdminIds,deleteAccount} from "../controllers/auth.js";
-const router=express.Router();
-import {auth} from '../middlewares/authenticate.js';
+import { signup, login, getmydata, googleLogin, getFavModels, saveModel, sendOtp, deleteNotification, verifyOtp, postNotifications, getNotifications, postNotificationsAllUsers, checkExist, getAdminIds, deleteAccount, searchUsers } from "../controllers/auth.js";
+const router = express.Router();
+import { auth } from '../middlewares/authenticate.js';
+
+router
+    .route("/search")
+    .get(auth, searchUsers)
 
 //Categories routes
 router
@@ -18,19 +22,19 @@ router
 
 router
     .route("/me")
-    .get(auth,getmydata)
+    .get(auth, getmydata)
 
 router
     .route("/admins")
-    .get(auth,getAdminIds)
+    .get(auth, getAdminIds)
 
 router
     .route("/favModels")
-    .get(auth,getFavModels)
+    .get(auth, getFavModels)
 
 router
     .route("/save")
-    .put(auth,saveModel)
+    .put(auth, saveModel)
 
 router
     .route("/send-otp")
@@ -42,15 +46,15 @@ router
 
 router
     .route("/notifications")
-    .post(auth,postNotificationsAllUsers)
-    .get(auth,getNotifications)
-    .put(auth,deleteNotification)
+    .post(auth, postNotificationsAllUsers)
+    .get(auth, getNotifications)
+    .put(auth, deleteNotification)
 
 router
     .route("/check-exist/:value")
-    .get(auth,checkExist)
+    .get(auth, checkExist)
 
 router
     .route("/deleteAccount")
-    .delete(auth,deleteAccount)
+    .delete(auth, deleteAccount)
 export default router;

@@ -1,134 +1,379 @@
-#community-wrapper {
-  padding-left: 3rem;
-  padding-right: 3rem;
+/* --- Community Page Container --- */
+.community-page-container {
+  /* Increased padding to avoid navbar overlap */
   padding-top: 12vh;
-  /* background-color: #f9f9f9; */
+  padding-bottom: 5vh;
+  min-height: 100vh;
+  width: 100%;
   display: flex;
-  gap: 0.5rem;
+  justify-content: center;
+  /* Use transparent or primary bg, relying on global background attachment fixed usually */
+  background-color: transparent;
+}
+
+/* --- Content Wrapper (Grid Layout) --- */
+.community-content-wrapper {
+  display: grid;
+  /*
+     Col 1: Flexible space
+     Col 2: Feed (Centered, wider)
+     Col 3: Sidebar + Flexible space
+  */
+  grid-template-columns: 1fr minmax(auto, 1000px) 1fr;
+  /* Increased to 1000px */
+  gap: 2rem;
+  width: 100%;
+  max-width: 100%;
+  padding: 0 2rem;
+  box-sizing: border-box;
+}
+
+/* --- Feed Section --- */
+.community-feed-section {
+  grid-column: 2;
+  display: flex;
   flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
 }
 
-.post-card {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-  border-radius: 12px;
-  padding: 1rem;
-  margin-bottom: 0;
+/* --- Sidebar Section --- */
+.community-sidebar-section {
+  grid-column: 3;
+  justify-self: end;
+  /* Align to right edge */
+  width: 400px;
+  /* Increased from 350px */
+  min-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: sticky;
+  top: 14vh;
+  height: fit-content;
+}
+
+/* --- Mobile / Tablet Responsiveness --- */
+@media (max-width: 1400px) {
+
+  /* Adjusted breakpoint for wider feed */
+  .community-content-wrapper {
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 2rem;
+  }
+
+  .community-feed-section {
+    max-width: 900px;
+  }
+
+  .community-sidebar-section {
+    width: 100%;
+    max-width: 600px;
+    position: static;
+    justify-self: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .sidebar-widget {
+    flex: 1;
+    min-width: 300px;
+  }
+}
+
+/* --- Post Card Styling --- */
+.community-post-card {
+  background: var(--bg-translucent);
+  /* Glass effect */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--bg-hover2);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  /* Reduced padding (Top/Bottom 1.25rem, Side 1.5rem) */
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  /* Reduced gap between elements from 1.25rem */
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   cursor: pointer;
-  height:auto;
-  /* box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05); */
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  /* Softer, glass-like shadow */
 }
 
-.post-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+.community-post-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+  border-color: var(--secondary-blue);
+  background: var(--bg-hover);
+  /* Slightly more opaque on hover maybe? Or keep same? */
 }
 
-.post-header {
+.post-header-row {
   display: flex;
   align-items: center;
-  margin-bottom: 1rem;
-  font-family: var(--font-heading);
+  gap: 1rem;
+  margin-bottom: 0.25rem;
+  /* Slightly tighten header to title */
 }
 
-.profile-img {
-  width: 45px;
-  height: 45px;
+.post-user-avatar {
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 1rem;
-  border: 1px solid #ddd;
+  border: 2px solid var(--bg-hover);
 }
 
-.user-info {
+.post-user-meta {
   display: flex;
   flex-direction: column;
-  font-size: 0.9rem;
-  justify-content: center;
-  gap: 0.5rem;
 }
 
-.username {
-  font-weight: bold;
-  margin: 0;
-  /* color: #333; */
-}
-
-.time {
-  /* color: #777; */
-  font-size: 0.8rem;
-  margin: 0;
-}
-
-.post-title {
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin: 0.5rem 0;
-  /* color: #111; */
-}
-
-.post-content {
-  /* color: #444; */
-  font-size: 0.95rem;
-  line-height: 1.5;
-  max-height: 4.5rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-family: var(--font-body);
-
-}
-
-.post-footer {
-  margin-top: 1rem;
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.9rem;
-  font-family: var(--font-body);
-
-  /* color: #555; */
-}
-.post-footer span{
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  cursor: pointer;
-}
-hr {
-  border: none;
-  border-top: 1px solid black;
-  width: 100%;
-  margin: 0;
-  align-self: center;
-}
-.menHead {
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--text-primary); /* choose your color */
-  padding-bottom: 4px;             /* space between text and border */
-  display: inline-block;           /* so border fits text width */
-}
-.com-buts{
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  margin-bottom: 2rem;
-}
-.com-men button{
-  width: auto;
-  height: auto;
-  min-width: 15vw;
-  cursor: pointer;
-  min-height: 5vh;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  font-size: larger;
+.post-user-name {
   font-family: var(--font-heading);
-  background: var(--bg-translucent);
-  gap: 0.5rem;
+  font-weight: 700;
+  font-size: 1.05rem;
   color: var(--text-primary);
+}
+
+.post-timestamp {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  opacity: 0.8;
+}
+
+.post-main-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.2;
+}
+
+.post-excerpt {
+  margin: 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  opacity: 0.95;
+  font-family: var(--font-body);
+}
+
+.post-actions-row {
+  margin-top: 0.5rem;
+  /* Reduced margin */
+  padding-top: 1rem;
+  /* Reduced padding */
+  border-top: 1px solid var(--bg-hover2);
+  display: flex;
+  gap: 2rem;
+}
+
+.action-btn {
+  background: transparent;
   border: none;
-  border-radius: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background-color: var(--bg-hover2);
+  color: var(--text-primary);
+}
+
+.action-btn.liked {
+  color: #ef4444;
+}
+
+.action-btn.liked:hover {
+  background-color: rgba(239, 68, 68, 0.15);
+}
+
+/* --- Sidebar Widgets --- */
+.sidebar-widget {
+  background: var(--bg-translucent);
+  /* Glass effect */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 1.5rem;
+  border: 1px solid var(--bg-hover2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.widget-title {
+  margin: 0 0 1.25rem 0;
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--bg-hover2);
+  padding-bottom: 0.75rem;
+  display: inline-block;
+}
+
+/* Action Buttons in Sidebar */
+.primary-action-btn,
+.secondary-action-btn {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 12px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  border: none;
+  margin-bottom: 1rem;
+}
+
+.primary-action-btn {
+  background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+  color: #ffffff;
+}
+
+.primary-action-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+}
+
+.secondary-action-btn {
+  background-color: var(--bg-hover2);
+  /* More subtle for secondary */
+  color: var(--text-primary);
+  border: 1px solid var(--bg-hover2);
+  margin-bottom: 0;
+}
+
+.secondary-action-btn:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Info Widget Text */
+.info-widget p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  opacity: 0.9;
+  margin-bottom: 1.5rem;
+}
+
+.stats-row {
+  display: flex;
+  gap: 2rem;
+}
+
+.stat-box {
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-num {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--secondary-blue, #6366f1);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  font-weight: 700;
+  margin-top: 0.4rem;
+}
+
+/* --- Skeleton & Empty States --- */
+.no-posts-state {
+  text-align: center;
+  padding: 5rem 2rem;
+  background: var(--bg-translucent);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  color: var(--text-secondary);
+  border: 1px solid var(--bg-hover2);
+}
+
+.skeleton-card {
+  background: var(--bg-translucent);
+  border: 1px solid var(--bg-hover2);
+  padding: 2rem;
+  border-radius: 16px;
+  margin-bottom: 1.5rem;
+  animation: pulse 1.5s infinite;
+}
+
+.sk-header {
+  display: flex;
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+}
+
+.sk-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: var(--bg-hover);
+}
+
+.sk-lines {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+.sk-line {
+  background-color: var(--bg-hover);
+  height: 14px;
+  border-radius: 4px;
+}
+
+.sk-line.long {
+  width: 70%;
+}
+
+.sk-line.short {
+  width: 40%;
+}
+
+.sk-body {
+  height: 20px;
+  background-color: var(--bg-hover);
+  border-radius: 4px;
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+@keyframes pulse {
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 0.3;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
 }

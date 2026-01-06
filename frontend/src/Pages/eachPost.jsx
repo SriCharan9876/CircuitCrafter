@@ -93,7 +93,7 @@ const PostDetail = () => {
       headers: { Authorization: `Bearer ${token}` }
     });
     if (res.data.liked) {
-      notify.success(res.data.message);
+      // notify.success(res.data.message);
       getPost();
     } else {
       notify.error(res.data.message);
@@ -108,94 +108,99 @@ const PostDetail = () => {
   return (
     <div className="allPages">
       <div className="post-view-page">
-        <div className="post-header">
-          <img
-            className="avatar"
-            src={post.author?.profilePic?.url}
-            alt="Avatar"
-          />
-          <div>
-            <h3>{post.author?.name || "Anonymous User"}</h3>
-            <p className="date">{new Date(post.createdAt).toLocaleString()}</p>
-          </div>
-        </div>
-
-        <div className="post-content2">
-          <h2>{post.title}</h2>
-          <p>{post.content}</p>
-
-          {/* Tags Section */}
-          <div className="tag-lists" id="tl2">
-            <h2 className="taghead">Tagged:</h2>
-            {post.people?.length > 0 && (
-              <div className="eachTag">
-                <strong className="sideTags">People:</strong>
-                {post.people.map((p, i) => (
-                  <span key={i} className="tag">{p}</span>
-                ))}
-              </div>
-            )}
-
-            {post.posts?.length > 0 && (
-              <div className="eachTag">
-                <strong className="sideTags">Posts:</strong>
-                {post.posts.map((p, i) => (
-                  <span key={i} className="tag">{p}</span>
-                ))}
-              </div>
-            )}
-
-            {post.models?.length > 0 && (
-              <div className="eachTag">
-                <strong className="sideTags">Models:</strong>
-                {post.models.map((m, i) => (
-                  <span key={i} className="tag">{m}</span>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-
-        <div className="post-actions">
-          <button onClick={() => onLike(post._id)} style={{ color: token && post.likes?.includes(user?._id) ? "red" : "inherit" }}>
-            <ThumbUpIcon /> {post.likes?.length || 0}
-          </button>
-          <button>
-            <VisibilityIcon /> {post.views?.length || 0}
-          </button>
-          <button>
-            <ChatBubbleOutlineIcon /> {post.comments?.length || 0}
-          </button>
-          <button onClick={handleShare}>
-            <ShareIcon />
-          </button>
-        </div>
-        <div className="comment-section">
-          <div className="comment-input-box">
-            <input
-              type="text"
-              placeholder="Add a comment..."
-              value={commentText}
-              onChange={(e) => setCommentText(e.target.value)}
+        <div className="post-detail">
+          <div className="post-header">
+            <img
+              className="avatar"
+              src={post.author?.profilePic?.url}
+              alt="Avatar"
             />
-            <button onClick={handleCommentSubmit}>
-              <SendIcon />
+            <div>
+              <h3>{post.author?.name || "Anonymous User"}</h3>
+              <p className="date">{new Date(post.createdAt).toLocaleString()}</p>
+            </div>
+          </div>
+
+          <div className="post-content2">
+            <h2>{post.title}</h2>
+            <p>{post.content}</p>
+
+            {/* Tags Section */}
+            <div className="tag-lists" id="tl2">
+              <h2 className="taghead">Tagged:</h2>
+              {post.people?.length > 0 && (
+                <div className="eachTag">
+                  <strong className="sideTags">People:</strong>
+                  {post.people.map((p, i) => (
+                    <span key={i} className="tag">{p}</span>
+                  ))}
+                </div>
+              )}
+
+              {post.posts?.length > 0 && (
+                <div className="eachTag">
+                  <strong className="sideTags">Posts:</strong>
+                  {post.posts.map((p, i) => (
+                    <span key={i} className="tag">{p}</span>
+                  ))}
+                </div>
+              )}
+
+              {post.models?.length > 0 && (
+                <div className="eachTag">
+                  <strong className="sideTags">Models:</strong>
+                  {post.models.map((m, i) => (
+                    <span key={i} className="tag">{m}</span>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+
+          <div className="post-actions">
+            <button
+              onClick={() => onLike(post._id)}
+              className={token && post.likes?.includes(user?._id) ? "liked-active" : ""}
+            >
+              <ThumbUpIcon /> {post.likes?.length || 0}
+            </button>
+            <button>
+              <VisibilityIcon /> {post.views?.length || 0}
+            </button>
+            <button>
+              <ChatBubbleOutlineIcon /> {post.comments?.length || 0}
+            </button>
+            <button onClick={handleShare}>
+              <ShareIcon />
             </button>
           </div>
+          <div className="comment-section">
+            <div className="comment-input-box">
+              <input
+                type="text"
+                placeholder="Add a comment..."
+                value={commentText}
+                onChange={(e) => setCommentText(e.target.value)}
+              />
+              <button onClick={handleCommentSubmit}>
+                <SendIcon />
+              </button>
+            </div>
 
-          <div className="comments-list">
-            {post.comments?.length > 0 ? (
-              post.comments.map((comment, index) => (
-                <div className="comment-card" key={index}>
-                  <strong>{comment.user?.name || "Anonymous"}:</strong>
-                  <p>{comment.text}</p>
-                  <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
-                </div>
-              ))
-            ) : (
-              <p className="no-comments">No comments yet. Be the first!</p>
-            )}
+            <div className="comments-list">
+              {post.comments?.length > 0 ? (
+                post.comments.map((comment, index) => (
+                  <div className="comment-card" key={index}>
+                    <strong>{comment.user?.name || "Anonymous"}:</strong>
+                    <p>{comment.text}</p>
+                    <span className="comment-date">{new Date(comment.createdAt).toLocaleString()}</span>
+                  </div>
+                ))
+              ) : (
+                <p className="no-comments">No comments yet. Be the first!</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
