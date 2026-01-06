@@ -6,12 +6,12 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-await mongoose.connect("mongodb+srv://whitedwarf3407:xEQ87DgcRx9g6U7N@cluster0.bpj2etn.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
+await mongoose.connect(process.env.ATLASDB_URL, {
   dbName: "ai_system"
 });
 
-const genAI = new GoogleGenerativeAI("AIzaSyDGnqLL1HGfHSBR_DH9vLAz71pI2d2J3BA");
-const model = genAI.getGenerativeModel({ model: "gemini-embedding-001" });
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genAI.getGenerativeModel({ model: process.env.EMBED_MODEL });
 
 const files = fs.readdirSync("./rag_docs");
 
