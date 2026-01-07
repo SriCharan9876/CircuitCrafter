@@ -9,6 +9,7 @@ import ImageUploadBox from "../features/ImageUploadBox";
 import { useNavigate } from "react-router-dom";
 import PersonIcon from '@mui/icons-material/Person';
 import { useAuth } from "../contexts/authContext";
+import circuitArt from "../assets/circuit_crafter_art.png";
 
 const SignUp = () => {
   const initialFormData = {
@@ -25,7 +26,7 @@ const SignUp = () => {
   const [otpVerified, setOtpVerified] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const { login } = useAuth();
 
 
@@ -108,12 +109,12 @@ const SignUp = () => {
 
       if (res.data.added) {
         notify.success("Signup Successful!!");
-        const res=await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`,{
-          email:formData.email,
-          password:formData.password
-        },{withCredentials:true})
+        const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/login`, {
+          email: formData.email,
+          password: formData.password
+        }, { withCredentials: true })
         if (res.data.token && res.data.user) {
-            login(res.data.token, res.data.user); // from useAuth()
+          login(res.data.token, res.data.user); // from useAuth()
         }
         navigate("/models");
       } else {
@@ -129,108 +130,140 @@ const SignUp = () => {
       const errMsg =
         error.response?.data?.message || "Signup failed. Please try again.";
       notify.error(errMsg);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="signup-page">
     <div className="auth-wrapper">
-      <form className="auth-form" onSubmit={handleSubmit}>
-        <h2 className="auth-form-title">Create an Account</h2>
-
-        <label>Name</label>
-        <input
-          type="text"
-          name="name"
-          value={formData.name}
-          placeholder="Create username"
-          onChange={handleChange}
-          required
-        />
-
-        <label>Email</label>
-        <div className="signup-div">
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            placeholder="Enter your email address"
-            onChange={handleChange}
-            required
-          />
-          <button type="button" onClick={handleSendOtp} disabled={otpSent} className="optSec">
-            {otpSent ? "OTP Sent" : "Send OTP"}
-          </button>
-        </div>
-
-        {otpSent && (
-          <div className="signup-div">
-            <input
-              type="text"
-              placeholder="Enter OTP"
-              value={otp}
-              onChange={(e) => setOtp(e.target.value)}
-              required
-            />
-            <button type="button" onClick={handleVerifyOtp} className="optSec">
-              Verify OTP
-            </button>
+      <div className="auth-container">
+        {/* Left Panel */}
+        <div className="auth-left" style={{ backgroundImage: `url(${circuitArt})` }}>
+          <div className="auth-left-content">
+            <h1>Circuit Crafter</h1>
+            <p>Join the community to design, simulate, and share your circuits.</p>
           </div>
-        )}
-
-        <label>Password</label>
-        <div className="signup-div">
-          <input
-            type={showPassword ? "text" : "password"}
-            name="password"
-            value={formData.password}
-            placeholder="Setup password"
-            onChange={handleChange}
-            required
-          />
-          <button type="button" onClick={() => setShowPassword(!showPassword)} style={{border:"none",backgroundColor:"transparent",padding:"0",display: "flex",alignItems:"center",justifyContent:"center"}}>
-            {showPassword ? <VisibilityOffIcon sx={{ fontSize: 24 }}/> : <VisibilityIcon sx={{ fontSize: 24 }}/>}
-          </button>
         </div>
 
-        <label style={{marginBottom:"1rem"}}>Profile picture</label>
-        <div className="signup-div">
-          <ImageUploadBox onImageSelect={(file)=>setFile(file)} boxSize={200} />
-        </div>
-        
+        {/* Right Panel */}
+        <div className="auth-right">
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <h2 className="auth-form-title">Sign Up</h2>
+            <p className="auth-form-subtitle">Join us to explore and share circuit designs.</p>
 
-        <button type="submit" className="auth-submit-btn">
-          {loading ? "Signing up..." : "Sign Up"}
-        </button>
+            <div className="input-group">
+              <label>Full Name</label>
+              <div className="input-wrapper">
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  placeholder="e.g. John Doe"
+                  onChange={handleChange}
+                  required
+                />
+                <PersonIcon className="input-icon" />
+              </div>
+            </div>
 
-        <div style={{ display: "flex", alignItems: "center", margin: "20px 0" }}>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#ccc" }}></div>
-          <p style={{ margin: "0 10px", textAlign: "center" }}>OR</p>
-          <div style={{ flex: 1, height: "1px", backgroundColor: "#ccc" }}></div>
-        </div>
+            <div className="input-group">
+              <label>Email Address</label>
+              <div className="input-wrapper">
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  placeholder="name@example.com"
+                  onChange={handleChange}
+                  required
+                />
+                <svg className="input-icon" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M20 4H4C2.897 4 2 4.897 2 6V18C2 19.103 2.897 20 4 20H20C21.103 20 22 19.103 22 18V6C22 4.897 21.103 4 20 4ZM20 6V6.511L12 11.011L4 6.511V6H20ZM4 18V9.011L12 13.511L20 9.011V18H4Z"></path>
+                </svg>
+              </div>
+              <div style={{ marginTop: '0.8rem', display: 'flex', justifyContent: 'flex-end' }}>
+                <button type="button" onClick={handleSendOtp} disabled={otpSent} className="optSec">
+                  {otpSent ? "Resend OTP" : "Send OTP"}
+                </button>
+              </div>
+            </div>
 
-        <GoogleLoginButton />
-        <p className="auth-footer-link" style={{display:"flex", justifyContent:"center", fontFamily:"'Poppins', sans-serif",fontSize:"1.2rem"}}>
-          Already have an account? &nbsp;<a href="/login">Log In</a>
-        </p>
+            {otpSent && (
+              <div className="input-group" style={{ animation: 'fadeIn 0.5s' }}>
+                <label>Enter OTP</label>
+                <div className="signup-div">
+                  <input
+                    type="text"
+                    placeholder="XXXXXX"
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value)}
+                    required
+                    style={{ textAlign: 'center', letterSpacing: '4px' }}
+                  />
+                  <button type="button" onClick={handleVerifyOtp} className="optSec">
+                    Verify
+                  </button>
+                </div>
+              </div>
+            )}
 
-        <div className="auth-guest-access">
-            <p style={{ display:"flex", justifyContent:"center", textAlign: "center", marginTop: "1rem" }}>
+            <div className="input-group">
+              <label>Password</label>
+              <div className="input-wrapper">
+                <input
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
+                  placeholder="Create a strong password"
+                  onChange={handleChange}
+                  required
+                />
+                <div
+                  className="input-icon"
+                  style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                </div>
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>Profile Picture</label>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <ImageUploadBox onImageSelect={(file) => setFile(file)} boxSize={150} />
+              </div>
+            </div>
+
+
+            <button type="submit" className="auth-submit-btn">
+              {loading ? "Creating Account..." : "Sign Up"}
+            </button>
+
+            <div className="divider">
+              <span>OR REGISTER WITH</span>
+            </div>
+
+            <GoogleLoginButton />
+
+            <p className="auth-footer-link">
+              Already have an account? <a href="/login">Log In</a>
+            </p>
+
+            <div className="auth-guest-access">
               <button
                 type="button"
                 onClick={() => navigate("/models")}
                 className="auth-guest-btn"
-                style={{display:"flex", gap:"0.5rem", alignItems:"center"}}
               >
-                <PersonIcon/> Continue as Guest
+                <PersonIcon fontSize="small" /> Continue as Guest
               </button>
-            </p>
-          </div>
+            </div>
 
-      </form>
-    </div>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
